@@ -2,9 +2,6 @@ jui.define("chart.brush.donut", [ "util.base", "util.math", "util.color" ], func
 
     /**
      * @class chart.brush.donut 
-     * 
-     * implements donut brush 
-     *  
      * @extends chart.brush.pie
      * 
      */
@@ -12,21 +9,6 @@ jui.define("chart.brush.donut", [ "util.base", "util.math", "util.color" ], func
         var self = this,
             cache_active = {};
 
-        /**
-         * @method drawDonut 
-         * 
-         * donut 을 그린다.
-         *   
-         * @param {Number} centerX 중앙 위치 x
-         * @param {Number} centerY 중앙 위치 y
-         * @param {Number} innerRadius 안쪽 반지름
-         * @param {Number} outerRadius 바깥쪽 반지름
-         * @param {Number} startAngle 시작 지점 각도
-         * @param {Number} endAngle 시작지점에서 끝지점까지의 각도
-         * @param {Object} attr donut 설정될 svg 속성 리스트
-         * @param {Boolean} hasCircle
-         * @return {util.svg.element}
-         */
 		this.drawDonut = function(centerX, centerY, innerRadius, outerRadius, startAngle, endAngle, attr, hasCircle) {
 		    hasCircle = hasCircle || false;
 
@@ -88,21 +70,6 @@ jui.define("chart.brush.donut", [ "util.base", "util.math", "util.color" ], func
 			return g;
 		}
 
-        /**
-         * @method drawDonut3d
-         *
-         * donut 을 그린다.
-         *
-         * @param {Number} centerX 중앙 위치 x
-         * @param {Number} centerY 중앙 위치 y
-         * @param {Number} innerRadius 안쪽 반지름
-         * @param {Number} outerRadius 바깥쪽 반지름
-         * @param {Number} startAngle 시작 지점 각도
-         * @param {Number} endAngle 시작지점에서 끝지점까지의 각도
-         * @param {Object} attr donut 설정될 svg 속성 리스트
-         * @param {Boolean} hasCircle
-         * @return {util.svg.element}
-         */
 		this.drawDonut3d = function(centerX, centerY, innerRadius, outerRadius, startAngle, endAngle, attr, hasCircle, isLast) {
 			var g = this.chart.svg.group(),
 				path = this.chart.svg.path(attr),

@@ -2,10 +2,7 @@ jui.define("chart.widget.topologyctrl", [ "util.base" ], function(_) {
 
     /**
      * @class chart.widget.topologyctrl
-     * 
-     * 토폴로지 이벤트 핸들러
-     * 
-     * @extends chart.widget.core 
+     * @extends chart.widget.core
      */
     var TopologyControlWidget = function(chart, axis, widget) {
         var self = this;

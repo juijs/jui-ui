@@ -1,0 +1,135 @@
+.switch {
+    width: @switchWidth;
+    height: @switchHeight;
+    margin-left: 5px;
+    margin-right: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+
+    .area {
+        border: 1px solid @switchBorderColor;
+        border-radius: @switchBorderRadius;
+        .bar {
+            .transition(@switchBackgroundTransition);
+            background: @switchOffBackgroundColor;
+        }
+    }
+
+    .handle {
+        margin-top: -(@switchHandleHeight/2);
+        left: 0;
+        margin-left: -(@switchHandleWidth/2) + 10px;
+        width: @switchHandleWidth;
+        height: @switchHandleHeight;
+        border-radius: @switchHandleBorderRadius;
+        border: 1px solid @switchHandleBorderColor;
+        box-shadow: @switchHandleBoxShadow;
+        background: @switchHandleBackgroundColor;
+        .transition(@switchTransition);
+    }
+
+    &.on {
+        .area {
+            .bar {
+                background: @switchOnBackgroundColor;
+            }
+        }
+        .handle {
+            left: 100%;
+            margin-left: -(@switchHandleWidth/2) - 10px;
+        }
+    }
+
+    &.mini {
+        .switch-outer-size(0.6);
+    }
+    &.small {
+        .switch-outer-size(0.8);
+    }
+    &.large {
+        .switch-outer-size(1.2);
+    }
+
+    /* Inner type switch */
+    &.inner {
+        margin-left: 0;
+        margin-right: 0;
+        padding-left: 0;
+        padding-right: 0;
+
+        .handle {
+            margin-top: -(@switchInnerWidth/2) + @switchInnerPadding/4;
+            left: @switchInnerPadding/2;
+            margin-left: 0px;
+            width: @switchInnerWidth - @switchInnerPadding/2;
+            height: @switchInnerHeight - @switchInnerPadding/2;
+            box-shadow: @switchInnerHandleBoxShadow;
+        }
+
+        &.on {
+            .handle {
+                left: 100%;
+                margin-left: -@switchInnerWidth - @switchInnerPadding/4;
+                border: 1px solid @switchOnBackgroundColor;
+            }
+        }
+
+        &.mini {
+            .switch-inner-size(0.6);
+        }
+        &.small {
+            .switch-inner-size(0.8);
+        }
+        &.large {
+            .switch-inner-size(1.2);
+        }
+    }
+
+    .switch-outer-size(@rate) {
+        width: @switchWidth * @rate;
+        height: @switchHeight * @rate;
+        padding-left: 10px * @rate;
+        padding-right: 10px * @rate;
+        display:inline-block;
+
+        .area {
+            border-radius: @switchBorderRadius * @rate;
+        }
+
+        .handle {
+            margin-top: -((@switchHandleHeight * @rate)/2);
+            left: 0;
+            margin-left: -((@switchHandleWidth * @rate)/2) + (10px * @rate);
+            width: @switchHandleWidth * @rate;
+            height: @switchHandleHeight * @rate;
+            border-radius: @switchHandleBorderRadius * @rate;
+        }
+
+        &.on {
+            .handle {
+                left: 100%;
+                margin-left: -((@switchHandleWidth * @rate)/2) - (10px * @rate);
+            }
+        }
+    }
+
+    .switch-inner-size(@rate) {
+        .area {
+            border-radius: @switchBorderRadius * @rate;
+        }
+
+        .handle {
+            margin-top: -((@switchInnerHeight * @rate)/2) + @switchInnerPadding/4;
+            left: @switchInnerPadding/2;
+            width: @switchInnerWidth * @rate - @switchInnerPadding/2;
+            height: @switchInnerWidth * @rate - @switchInnerPadding/2;
+        }
+
+        &.on {
+            .handle {
+                left: 100%;
+                margin-left: -(@switchInnerWidth * @rate) - @switchInnerPadding/4;
+            }
+        }
+    }
+}

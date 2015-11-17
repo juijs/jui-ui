@@ -9,7 +9,6 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
      * @requires util.base
      *
      */
-
     var LegendWidget = function(chart, axis, widget) {
         var columns = [];
         var colorIndex = {};
@@ -73,12 +72,6 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
             chart.emit("legend.filter", [ target ]);
         }
 
-        /**
-         * brush 에서 생성되는 legend 아이콘 리턴 
-         * 
-         * @param {object} chart
-         * @param {object} brush
-         */
 		this.getLegendIcon = function(brush) {
             var arr = [],
                 data = brush.target,
@@ -306,6 +299,12 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
             format: null
         };
     }
+
+    /**
+     * @event legend_filter
+     * Event that occurs when the filter function of the legend widget is activated. (real name ``` legend.filter ```)
+     * @param {String} target The selected data field.
+     */
 
     return LegendWidget;
 }, "chart.widget.core");

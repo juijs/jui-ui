@@ -29,17 +29,26 @@ jui.define("chart.theme.gradient", [], function() {
         // Grid styles
         gridXFontSize : 11,
         gridYFontSize : 11,
+        gridZFontSize : 10,
         gridCFontSize : 11,
         gridXFontColor : "#666",
         gridYFontColor : "#666",
+        gridZFontColor : "#666",
         gridCFontColor : "#666",
         gridXFontWeight : "normal",
         gridYFontWeight : "normal",
+        gridZFontWeight : "normal",
         gridCFontWeight : "normal",
         gridXAxisBorderColor : "#efefef",
         gridYAxisBorderColor : "#efefef",
+        gridZAxisBorderColor : "#efefef",
         gridXAxisBorderWidth : 2,
         gridYAxisBorderWidth : 2,
+        gridZAxisBorderWidth : 2,
+
+        // Full 3D 전용 테마
+        gridFaceBackgroundColor: "#dcdcdc",
+        gridFaceBackgroundOpacity: 0.3,
 
         gridActiveFontColor : "#ff7800",
         gridActiveBorderColor : "#ff7800",
@@ -58,6 +67,7 @@ jui.define("chart.theme.gradient", [], function() {
         tooltipPointRadius : 5, // common
         tooltipPointBorderWidth : 1, // common
         tooltipPointFontWeight : "bold", // common
+        tooltipPointFontColor : "#333",
         barFontSize : 11,
         barFontColor : "#333",
         barBorderColor : "none",
@@ -210,6 +220,12 @@ jui.define("chart.theme.gradient", [], function() {
         // Map Widgets
         mapControlButtonColor : "#3994e2",
         mapControlScrollColor : "#000",
-        mapControlScrollLineColor : "#fff"
+        mapControlScrollLineColor : "#fff",
+
+        // Polygon Brushes
+        polygonColumnBackgroundOpacity: 0.6,
+        polygonColumnBorderOpacity: 0.5,
+        polygonScatterRadialOpacity: 0.7,
+        polygonScatterBackgroundOpacity: 0.8
     }
 });

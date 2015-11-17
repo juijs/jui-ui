@@ -2,7 +2,6 @@ jui.define("chart.brush.map.selector", [ "jquery" ], function($) {
 
     /**
      * @class chart.brush.over 
-     * implements over brush 
      * @extends chart.brush.core
      */
 	var MapSelectorBrush = function(chart, axis, brush) {

@@ -1887,7 +1887,8 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
                 if (e.type.toLowerCase().indexOf("animation") != -1)
                     settingEventAnimation(e);
                 else {
-                    if (e.target != "body" && e.target != window) { // body와 window일 경우에만 이벤트 중첩이 가능
+					// body, window, document 경우에만 이벤트 중첩이 가능
+                    if (e.target != "body" && e.target != window && e.target != document) {
                         $(e.target).off(e.type);
                     }
 
@@ -2340,7 +2341,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 	
 	return UICore;
 });
-jui.define("util.math", [], function() {
+jui.define("util.math", [ "util.base" ], function(_) {
 
 	/**
 	 * @class util.math
@@ -2441,6 +2442,82 @@ jui.define("util.math", [], function() {
             }
 		},
 
+		getFixed : function (a, b) {
+			var aArr = (a+"").split(".");
+			var aLen = (aArr.length < 2) ? 0 : aArr[1].length;
+
+			var bArr = (b+"").split(".");
+			var bLen = (bArr.length < 2) ? 0 : bArr[1].length;
+
+			return (aLen > bLen) ? aLen : bLen;
+
+		},
+
+		fixed : function (fixed) {
+
+
+			var fixedNumber = this.getFixed(fixed, 0);
+			var pow = Math.pow(10, fixedNumber);
+
+			var func = function (value) {
+				return Math.round(value * pow) / pow;
+			};
+
+			func.plus = function (a, b) {
+				return Math.round((a * pow) + (b * pow)) / pow;
+			};
+
+			func.minus = function (a, b) {
+				return Math.round((a * pow) - (b * pow)) / pow;
+			};
+
+			func.multi = function (a, b) {
+				return Math.round((a * pow) * (b * pow)) / pow;
+			};
+
+			func.div = function (a, b) {
+				return Math.round((a * pow) / (b * pow)) / pow;
+			};
+
+			func.remain = function (a, b) {
+				return Math.round((a * pow) % (b * pow)) / pow;
+			};
+
+			return func;
+		},
+
+		round: function (num, fixed) {
+			var fixedNumber = Math.pow(10, fixed);
+
+			return Math.round(num * fixedNumber) / fixedNumber;
+		},
+
+		plus : function (a, b) {
+			var pow = Math.pow(10, this.getFixed(a, b));
+
+			return Math.round((a * pow) + (b * pow)) / pow;
+		},
+
+		minus : function (a, b) {
+			var pow = Math.pow(10, this.getFixed(a, b));
+			return Math.round((a * pow) - (b * pow)) / pow;
+		},
+
+		multi : function (a, b) {
+			var pow = Math.pow(10, this.getFixed(a, b));
+			return Math.round((a * pow) * (b * pow)) / pow;
+		},
+
+		div : function (a, b) {
+			var pow = Math.pow(10, this.getFixed(a, b));
+			return Math.round((a * pow) / (b * pow));
+		},
+
+		remain : function (a, b) {
+			var pow = Math.pow(10, this.getFixed(a, b));
+			return Math.round((a * pow) % (b * pow)) / pow;
+		},
+
 		/**
 		 * 특정 구간의 값을 자동으로 계산 
 		 * 
@@ -2470,8 +2547,6 @@ jui.define("util.math", [], function() {
 				var exponent = Math.floor(Math.log(range) / Math.LN10);
 				var fraction = range / Math.pow(10, exponent);
 				var nickFraction;
-
-				//console.log(range, exponent, fraction, _ticks);
 
 				if (round) {
 					if (fraction < 1.5)
@@ -2504,6 +2579,7 @@ jui.define("util.math", [], function() {
 				_tickSpacing = (isNice) ? niceNum(_range / _ticks, true) : _range / _ticks;
 				_niceMin = (isNice) ? Math.floor(_min / _tickSpacing) * _tickSpacing : _min;
 				_niceMax = (isNice) ? Math.floor(_max / _tickSpacing) * _tickSpacing : _max;
+
 			}
 
 			caculate();
@@ -2514,12 +2590,225 @@ jui.define("util.math", [], function() {
 				range : _range,
 				spacing : _tickSpacing
 			}
-		}		
+		},
+
+		matrix: function(a, b) {
+			// 2x1 or 3x1 or ?x1 형태의 매트릭스 연산
+			function matrix(a, b) {
+				var m = [];
+
+				for(var i = 0, len = a.length; i < len; i++) {
+					var sum = 0;
+
+					for(var j = 0, len2 = a[i].length; j < len2; j++) {
+						sum += a[i][j] * b[j];
+					}
+
+					m.push(sum);
+				}
+
+				return m;
+			}
+
+
+			// 2x2 or 3x3 형태의 매트릭스 연산
+			function deepMatrix(a, b) {
+				var m = [], nm = [];
+
+				for(var i = 0, len = b.length; i < len; i++) {
+					m[i] = [];
+					nm[i] = [];
+				}
+
+				for(var i = 0, len = b.length; i < len; i++) {
+					for(var j = 0, len2 = b[i].length; j < len2; j++) {
+						m[j].push(b[i][j]);
+					}
+				}
+
+				for(var i = 0, len = m.length; i < len; i++) {
+					var mm = matrix(a, m[i]);
+
+					for(var j = 0, len2 = mm.length; j < len2; j++) {
+						nm[j].push(mm[j]);
+					}
+				}
+
+				return nm;
+			}
+
+			if(_.typeCheck("array", b[0])) {
+				return deepMatrix(a, b);
+			}
+
+			return matrix(a, b);
+		},
+
+		scaleValue: function(value, minValue, maxValue, minScale, maxScale) {
+			// 최소/최대 값이 같을 경우 처리
+			minValue = (minValue == maxValue) ? 0 : minValue;
+
+			var range = maxScale - minScale,
+				tg = range * getPer();
+
+			function getPer() {
+				var range = maxValue - minValue,
+					tg = value - minValue,
+					per = tg / range;
+
+				return per;
+			}
+
+			return tg + minScale;
+		}
 	}
 
 	return self;
 });
 
+jui.define("util.transform", [ "util.math" ], function(math) {
+    var Transform = function(points) {
+        function calculate(m) {
+            for(var i = 0, count = points.length; i < count; i++) {
+                points[i] = math.matrix(m, points[i]);
+            }
+
+            return points;
+        }
+
+        // 매트릭스 맵
+        this.matrix = function() {
+            var a = arguments,
+                type = a[0];
+
+            var map = {
+                // 2D 행렬, 3x3
+                move: [
+                    [ 1, 0, a[1] ],
+                    [ 0, 1, a[2] ],
+                    [ 0, 0, 1 ]
+                ],
+                scale: [
+                    [ a[1], 0, 0 ],
+                    [ 0, a[2], 0 ],
+                    [ 0, 0, 1 ]
+                ],
+                rotate: [
+                    [ Math.cos(math.radian(a[1])), -Math.sin(math.radian(a[1])), 0 ],
+                    [ Math.sin(math.radian(a[1])), Math.cos(math.radian(a[1])), 0 ],
+                    [ 0, 0, 1 ]
+                ],
+
+                // 3D 행렬, 4x4
+                move3d: [
+                    [ 1, 0, 0, a[1] ],
+                    [ 0, 1, 0, a[2] ],
+                    [ 0, 0, 1, a[3] ],
+                    [ 0, 0, 0, 1 ]
+                ],
+                scale3d: [
+                    [ a[1], 0, 0, 0 ],
+                    [ 0, a[2], 0, 0 ],
+                    [ 0, 0, a[3], 0 ],
+                    [ 0, 0, 0, 1 ]
+                ],
+                rotate3dz: [
+                    [ Math.cos(math.radian(a[1])), -Math.sin(math.radian(a[1])), 0, 0 ],
+                    [ Math.sin(math.radian(a[1])), Math.cos(math.radian(a[1])), 0, 0 ],
+                    [ 0, 0, 1, 0 ],
+                    [ 0, 0, 0, 1 ]
+                ],
+                rotate3dx: [
+                    [ 1, 0, 0, 0 ],
+                    [ 0, Math.cos(math.radian(a[1])), -Math.sin(math.radian(a[1])), 0 ],
+                    [ 0, Math.sin(math.radian(a[1])), Math.cos(math.radian(a[1])), 0 ],
+                    [ 0, 0, 0, 1 ]
+                ],
+                rotate3dy: [
+                    [ Math.cos(math.radian(a[1])), 0, Math.sin(math.radian(a[1])), 0 ],
+                    [ 0, 1, 0, 0 ],
+                    [ -Math.sin(math.radian(a[1])), 0, Math.cos(math.radian(a[1])), 0 ],
+                    [ 0, 0, 0, 1 ]
+                ]
+            }
+
+            return map[type];
+        }
+
+        // 2차원 이동
+        this.move = function(dx, dy) {
+            return calculate(this.matrix("move", dx, dy));
+        }
+
+        // 3차원 이동
+        this.move3d = function(dx, dy, dz) {
+            return calculate(this.matrix("move3d", dx, dy, dz));
+        }
+
+        // 2차원 스케일
+        this.scale = function(sx, sy) {
+            return calculate(this.matrix("scale", sx, sy));
+        }
+
+        // 3차원 스케일
+        this.scale3d = function(sx, sy, sz) {
+            return calculate(this.matrix("scale3d", sx, sy, sz));
+        }
+
+        // 2차원 회전
+        this.rotate = function(angle) {
+            return calculate(this.matrix("rotate", angle));
+        }
+
+        // Z축 중심 3차원 회전 - 롤(ROLL)
+        this.rotate3dz = function(angle) {
+            return calculate(this.matrix("rotate3dz", angle));
+        }
+
+        // X축 중심 3차원 회전 - 롤(PITCH)
+        this.rotate3dx = function(angle) {
+            return calculate(this.matrix("rotate3dx", angle));
+        }
+
+        // Y축 중심 3차원 회전 - 요(YAW)
+        this.rotate3dy = function(angle) {
+            return calculate(this.matrix("rotate3dy", angle));
+        }
+
+        // 임의의 행렬 처리
+        this.custom = function(m) {
+            return calculate(m);
+        }
+
+        // 행렬의 병합
+        this.merge = function() {
+            var a = arguments,
+                m = this.matrix.apply(this, a[0]);
+
+            for(var i = 1; i < a.length; i++) {
+                m = math.matrix(m, this.matrix.apply(this, a[i]));
+            }
+
+            return calculate(m);
+        }
+
+        // 행렬의 병합 (콜백 형태)
+        this.merge2 = function(callback) {
+            for(var i = 0, count = points.length; i < count; i++) {
+                var a = callback.apply(null, points[i]),
+                    m = this.matrix.apply(this, a[0]);
+
+                for(var j = 1; j < a.length; j++) {
+                    m = math.matrix(m, this.matrix.apply(this, a[j]));
+                }
+
+                points[i] = math.matrix(m, points[i]);
+            }
+        }
+    }
+
+    return Transform;
+});
 jui.define("util.time", [ "util.base" ], function(_) {
 
 	/**
@@ -2527,6 +2816,12 @@ jui.define("util.time", [ "util.base" ], function(_) {
 	 * 
 	 */
 	var self = {
+
+		//constant
+		MILLISECOND : 1000,
+		MINUTE : 1000 * 60,
+		HOUR : 1000 * 60 * 60,
+		DAY : 1000 * 60 * 60 * 24,
 
 		// unit
 		years : "years",
@@ -2537,6 +2832,22 @@ jui.define("util.time", [ "util.base" ], function(_) {
 		seconds : "seconds",
 		milliseconds : "milliseconds",
 		weeks : "weeks",
+
+		diff : function (type, a, b) {
+			var milliseconds =  (+a) - (+b);
+
+			if (type == 'seconds') {
+				return Math.abs(Math.floor(milliseconds / self.MILLISECOND));
+			} else if (type == 'minutes') {
+				return Math.abs(Math.floor(milliseconds / self.MINUTE));
+			} else if (type == 'hours') {
+				return Math.abs(Math.floor(milliseconds / self.HOUR));
+			} else if (type == 'days') {
+				return Math.abs(Math.floor(milliseconds / self.DAY));
+			}
+
+			return milliseconds;
+		},
 
 		/**
 		 * 시간 더하기 
@@ -3214,8 +3525,9 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 				return f(y);
 			}
 
-			func.ticks = function(count, isNice, intNumber, reverse) {
-				intNumber = intNumber || 10000;
+			func.ticks = function(count, isNice, /** @deprecated */intNumber, reverse) {
+
+				//intNumber = intNumber || 10000;
 				reverse = reverse || false;
 				var max = func.max();
 
@@ -3227,18 +3539,18 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 
 				var arr = [];
 
-				var start = (reverse ? obj.max : obj.min) * intNumber;
-				var end = (reverse ? obj.min : obj.max) * intNumber;
+				var start = (reverse ? obj.max : obj.min);
+				var end = (reverse ? obj.min : obj.max);
+				var unit = obj.spacing;
+				var fixed = math.fixed(unit);
+
 				while ((reverse ? end <= start : start <= end)) {
-
-					arr.push(start / intNumber);
-
-					var unit = obj.spacing * intNumber;
+					arr.push(start/* / intNumber*/);
 
 					if (reverse) {
-						start -= unit;
+						start = fixed.minus(start, unit);
 					} else {
-						start += unit;
+						start = fixed.plus(start, unit);
 					}
 
 				}
@@ -3254,8 +3566,8 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 					//arr.reverse();
 
 				} else {
-					if (arr[arr.length - 1] * intNumber != end && start > end) {
-						arr.push(end / intNumber);
+					if (arr[arr.length - 1] != end && start > end) {
+						arr.push(end);
 					}
 
 					if (_domain[0] > _domain[1]) {
@@ -3278,30 +3590,181 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 	return self;
 });
 
-jui.define("util.color", [], function() {
+jui.define("util.color", ["jquery"], function($) {
 
 	/**
 	 *  @class util.color
-     * color parser for chart
+	 * color parser for chart
 	 * @singleton
 	 */
 	var self = {
-		
+
 		regex  : /(linear|radial)\((.*)\)(.*)/i,
-		
-		trim : function (str) {
-			return (str || "").replace(/^\s+|\s+$/g, '');	
+
+		format : function(obj, type) {
+			if (type == 'hex') {
+				var r = obj.r.toString(16);
+				if (r < 10) r = "0" + r;
+
+				var g = obj.g.toString(16);
+				if (g < 10) g = "0" + g;
+
+				var b = obj.b.toString(16);
+				if (b < 10) b = "0" + b;
+
+				return "#" + [r,g,b].join("").toUpperCase();
+			} else if (type == 'rgb') {
+				if (typeof obj.a == 'undefined') {
+					return "rgb(" + [obj.r, obj.g, obj.b].join(",") + ")";
+				} else {
+					return "rgba(" + [obj.r, obj.g, obj.b, obj.a].join(",") + ")";
+				}
+			}
+
+			return obj;
 		},
 
-        /**
-         * @method lighten 
-         * 
-         * rgb 컬러 밝은 농도로 변환  
-         *  
-         * @param {String} color   RGB color code 
-         * @param {Number} rate 밝은 농도 
-         * @return {String}
-         */
+		scale : function() {
+			var startColor, endColor;
+
+			function func(t, type) {
+
+				var obj = {
+					r : parseInt(startColor.r + (endColor.r - startColor.r) * t, 10) ,
+					g : parseInt(startColor.g + (endColor.g - startColor.g) * t, 10),
+					b : parseInt(startColor.b + (endColor.b - startColor.b) * t, 10)
+				};
+
+				return self.format(obj, type);
+			}
+
+			func.domain = function(start, end) {
+				startColor = self.rgb(start);
+				endColor = self.rgb(end);
+
+				return func;
+			}
+
+			return func;
+		},
+
+		rgb : function (str) {
+			if (str.indexOf("rgb(") > -1) {
+				var arr = str.replace("rgb(", "").replace(")","").split(",");
+
+				for(var i = 0, len = arr.length; i < len; i++) {
+					arr[i] = parseInt($.trim(arr[i]), 10);
+				}
+
+				return { r : arr[0], g : arr[1], b : arr[2], a : 1	};
+			} else if (str.indexOf("rgba(") > -1) {
+				var arr = str.replace("rgba(", "").replace(")","").split(",");
+
+				for(var i = 0, len = arr.length; i < len; i++) {
+
+					if (len - 1 == i) {
+						arr[i] = parseFloat($.trim(arr[i]));
+					} else {
+						arr[i] = parseInt($.trim(arr[i]), 10);
+					}
+				}
+
+				return { r : arr[0], g : arr[1], b : arr[2], a : arr[3]};
+			} else if (str.indexOf("#") == 0) {
+
+				str = str.replace("#", "");
+
+				var arr = [];
+				if (str.length == 3) {
+					for(var i = 0, len = str.length; i < len; i++) {
+						var char = str.substr(i, 1);
+						arr.push(parseInt(char+char, 16));
+					}
+				} else {
+					for(var i = 0, len = str.length; i < len; i+=2) {
+						arr.push(parseInt(str.substr(i, 2), 16));
+					}
+				}
+
+				return { r : arr[0], g : arr[1], b : arr[2], a : 1	};
+			}
+		},
+
+		HSVtoRGB : function (H, S, V) {
+
+			if (H == 360) {
+				H = 0;
+			}
+
+			var C = S * V;
+			var X = C * (1 -  Math.abs((H/60) % 2 -1)  );
+			var m = V - C;
+
+			var temp = [];
+
+			if (0 <= H && H < 60) { temp = [C, X, 0]; }
+			else if (60 <= H && H < 120) { temp = [X, C, 0]; }
+			else if (120 <= H && H < 180) { temp = [0, C, X]; }
+			else if (180 <= H && H < 240) { temp = [0, X, C]; }
+			else if (240 <= H && H < 300) { temp = [X, 0, C]; }
+			else if (300 <= H && H < 360) { temp = [C, 0, X]; }
+
+			return {
+				r : Math.ceil((temp[0] + m) * 255),
+				g : Math.ceil((temp[1] + m) * 255),
+				b : Math.ceil((temp[2] + m) * 255)
+			};
+		},
+
+		RGBtoHSV : function (R, G, B) {
+
+			var R1 = R / 255;
+			var G1 = G / 255;
+			var B1 = B / 255;
+
+			var MaxC = Math.max(R1, G1, B1);
+			var MinC = Math.min(R1, G1, B1);
+
+			var DeltaC = MaxC - MinC;
+
+			var H = 0;
+
+			if (DeltaC == 0) { H = 0; }
+			else if (MaxC == R1) {
+				H = 60 * (( (G1 - B1) / DeltaC) % 6);
+			} else if (MaxC == G1) {
+				H  = 60 * (( (B1 - R1) / DeltaC) + 2);
+			} else if (MaxC == B1) {
+				H  = 60 * (( (R1 - G1) / DeltaC) + 4);
+			}
+
+			if (H < 0) {
+				H = 360 + H;
+			}
+
+			var S = 0;
+
+			if (MaxC == 0) S = 0;
+			else S = DeltaC / MaxC;
+
+			var V = MaxC;
+
+			return { h : H, s : S, v :  V };
+		},
+
+		trim : function (str) {
+			return (str || "").replace(/^\s+|\s+$/g, '');
+		},
+
+		/**
+		 * @method lighten
+		 *
+		 * rgb 컬러 밝은 농도로 변환
+		 *
+		 * @param {String} color   RGB color code
+		 * @param {Number} rate 밝은 농도
+		 * @return {String}
+		 */
 		lighten : function(color, rate) {
 			color = color.replace(/[^0-9a-f]/gi, '');
 			rate = rate || 0;
@@ -3316,15 +3779,15 @@ jui.define("util.color", [], function() {
 			return "#" + rgb.join("");
 		},
 
-        /**
-         * @method darken
-         *
-         * rgb 컬러 어두운 농도로 변환
-         *
-         * @param {String} color   RGB color code
-         * @param {Number} rate 어두운 농도
-         * @return {String}
-         */
+		/**
+		 * @method darken
+		 *
+		 * rgb 컬러 어두운 농도로 변환
+		 *
+		 * @param {String} color   RGB color code
+		 * @param {Number} rate 어두운 농도
+		 * @return {String}
+		 */
 		darken : function(color, rate) {
 			return this.lighten(color, -rate)
 		},
@@ -3340,46 +3803,46 @@ jui.define("util.color", [], function() {
 		parse : function(color) {
 			return this.parseGradient(color);
 		},
-		
+
 		/**
-		 * @method parseGrident 
-         *
-         * gradient parser
-		 * 
+		 * @method parseGrident
+		 *
+		 * gradient parser
+		 *
 		 *      @example
 		 *      linear(left) #fff,#000
 		 *      linear(right) #fff,50 yellow,black
 		 *      radial(50%,50%,50%,50,50)
-		 *  
- 		 * @param {String} color
+		 *
+		 * @param {String} color
 		 */
 		parseGradient : function(color) {
 			var matches = color.match(this.regex);
-			
-			if (!matches) return color; 
-			
+
+			if (!matches) return color;
+
 			var type = this.trim(matches[1]);
 			var attr = this.parseAttr(type, this.trim(matches[2]));
 			var stops = this.parseStop(this.trim(matches[3]));
-			
+
 			var obj = { type : type + "Gradient", attr : attr, children : stops };
 
-			return obj; 
-			
+			return obj;
+
 		},
-		
+
 		parseStop : function(stop) {
 			var stop_list = stop.split(",");
-			
+
 			var stops = [];
-			
+
 			for(var i = 0, len = stop_list.length; i < len; i++) {
 				var stop = stop_list[i];
-				
+
 				var arr = stop.split(" ");
-				
+
 				if (arr.length == 0) continue;
-				
+
 				if (arr.length == 1) {
 					stops.push({ type : "stop", attr : {"stop-color" : arr[0] } })
 				} else if (arr.length == 2) {
@@ -3388,87 +3851,86 @@ jui.define("util.color", [], function() {
 					stops.push({ type : "stop", attr : {"offset" : arr[0], "stop-color" : arr[1], "stop-opacity" : arr[2] } })
 				}
 			}
-			
+
 			var start = -1;
-			var end = -1; 
+			var end = -1;
 			for(var i = 0, len = stops.length; i < len; i++) {
 				var stop = stops[i];
-				
+
 				if (i == 0) {
-					if (!stop.offset) stop.offset = 0; 
+					if (!stop.offset) stop.offset = 0;
 				} else if (i == len - 1) {
 					if (!stop.offset) stop.offset = 1;
 				}
-				
+
 				if (start == -1 && typeof stop.offset == 'undefined') {
 					start = i;
 				} else if (end == -1 && typeof stop.offset == 'undefined') {
-					end = i; 
-					
+					end = i;
+
 					var count = end - start;
-					
-					var endOffset = stops[end].offset.indexOf("%") > -1 ? parseFloat(stops[end].offset)/100 : stops[end].offset;  
-					var startOffset = stops[start].offset.indexOf("%") > -1 ? parseFloat(stops[start].offset)/100 : stops[start].offset;  
-					 
+
+					var endOffset = stops[end].offset.indexOf("%") > -1 ? parseFloat(stops[end].offset)/100 : stops[end].offset;
+					var startOffset = stops[start].offset.indexOf("%") > -1 ? parseFloat(stops[start].offset)/100 : stops[start].offset;
+
 					var dist = endOffset - startOffset
-					var value = dist/ count; 
-					
-					var offset = startOffset + value; 
+					var value = dist/ count;
+
+					var offset = startOffset + value;
 					for(var index = start + 1; index < end; index++) {
-						stops[index].offset = offset; 
-						
-						offset += value; 
-					} 
-					
+						stops[index].offset = offset;
+
+						offset += value;
+					}
+
 					start = end;
-					end = -1; 
+					end = -1;
 				}
 			}
-			
+
 			return stops;
 		},
-		
+
 		parseAttr : function(type, str) {
-			
-			
+
+
 			if (type == 'linear') {
 				switch(str) {
-				case "":
-				case "left": return { x1 : 0, y1 : 0, x2 : 1, y2 : 0, direction : str || "left" }; 
-				case "right": return { x1 : 1, y1 : 0, x2 : 0, y2 : 0, direction : str }; 
-				case "top": return { x1 : 0, y1 : 0, x2 : 0, y2 : 1, direction : str }; 
-				case "bottom": return { x1 : 0, y1 : 1, x2 : 0, y2 : 0, direction : str }; 
-				case "top left": return { x1 : 0, y1 : 0, x2 : 1, y2 : 1, direction : str }; 
-				case "top right": return { x1 : 1, y1 : 0, x2 : 0, y2 : 1, direction : str }; 
-				case "bottom left": return { x1 : 0, y1 : 1, x2 : 1, y2 : 0, direction : str }; 
-				case "bottom right": return { x1 : 1, y1 : 1, x2 : 0, y2 : 0, direction : str };
-				default : 
-					var arr = str.split(",");
-					for(var i = 0, len = arr.length; i < len; i++) {
-						if (arr[i].indexOf("%") == -1)
-							arr[i] = parseFloat(arr[i]);
-					}
-					
-					return { x1 : arr[0], y1 : arr[1],x2 : arr[2], y2 : arr[3] };  
-				}				
+					case "":
+					case "left": return { x1 : 0, y1 : 0, x2 : 1, y2 : 0, direction : str || "left" };
+					case "right": return { x1 : 1, y1 : 0, x2 : 0, y2 : 0, direction : str };
+					case "top": return { x1 : 0, y1 : 0, x2 : 0, y2 : 1, direction : str };
+					case "bottom": return { x1 : 0, y1 : 1, x2 : 0, y2 : 0, direction : str };
+					case "top left": return { x1 : 0, y1 : 0, x2 : 1, y2 : 1, direction : str };
+					case "top right": return { x1 : 1, y1 : 0, x2 : 0, y2 : 1, direction : str };
+					case "bottom left": return { x1 : 0, y1 : 1, x2 : 1, y2 : 0, direction : str };
+					case "bottom right": return { x1 : 1, y1 : 1, x2 : 0, y2 : 0, direction : str };
+					default :
+						var arr = str.split(",");
+						for(var i = 0, len = arr.length; i < len; i++) {
+							if (arr[i].indexOf("%") == -1)
+								arr[i] = parseFloat(arr[i]);
+						}
+
+						return { x1 : arr[0], y1 : arr[1],x2 : arr[2], y2 : arr[3] };
+				}
 			} else {
 				var arr = str.split(",");
 				for(var i = 0, len = arr.length; i < len; i++) {
-					
+
 					if (arr[i].indexOf("%") == -1)
 						arr[i] = parseFloat(arr[i]);
 				}
-				
+
 				return { cx : arr[0], cy : arr[1],r : arr[2], fx : arr[3], fy : arr[4] };
 			}
 
 		}
-	
+
 	}
 
 	return self;
 });
-
 jui.define("util.svg.element", [], function() {
     /**
      * @class util.svg.element
@@ -4935,9 +5397,6 @@ jui.define("util.svg",
 jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
     /**
      * @class chart.draw
-     *
-     * Base Draw Class
-     *
      * @alias Draw
      * @requires util.base
      * @requires jquery
@@ -5111,6 +5570,22 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
                 }
             }, "render");
         }
+
+        this.calculate3d = function() {
+            var w = this.axis.area("width"),
+                h = this.axis.area("height"),
+                d = this.axis.depth,
+                r = this.axis.degree,
+                list = arguments;
+
+            if(_.typeCheck("integer", r)) {
+                r = { x: r, y: r, z: r };
+            }
+
+            for (var i = 0; i < list.length; i++) {
+                list[i].rotate(w, h, d, r);
+            }
+        }
 	}
 
     Draw.setup = function() {
@@ -5180,7 +5655,8 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
         }
 
         function drawGridType(axis, k) {
-            if((k == "x" || k == "y") && !_.typeCheck("object", axis[k])) return null;
+            if((k == "x" || k == "y" || k == "z") && !_.typeCheck("object", axis[k]))
+                return null;
 
             // 축 위치 설정
             axis[k] = axis[k]  || {};
@@ -5189,6 +5665,8 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
                 axis[k].orient = axis[k].orient == "top" ? "top" : "bottom";
             } else if (k == "y") {
                 axis[k].orient = axis[k].orient == "right" ? "right" : "left";
+            } else if (k == "z") {
+                axis[k].orient = "center";
             } else if (k == "c") {
                 axis[k].type = axis[k].type || "panel";
                 axis[k].orient = "custom";
@@ -5208,18 +5686,19 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
 
             var elem = obj.render();
 
-            // 그리드 별 위치 선정하기
-            if(axis[k].orient == "left") {
-                 elem.root.translate(chart.area("x") + self.area("x") - axis[k].dist, chart.area("y"));
-            } else if(axis[k].orient == "right") {
-                elem.root.translate(chart.area("x") + self.area("x2") + axis[k].dist, chart.area("y"));
-            } else if(axis[k].orient == "bottom") {
-                elem.root.translate(chart.area("x") , chart.area("y") + self.area("y2") + axis[k].dist);
-            } else if(axis[k].orient == "top") {
-                elem.root.translate(chart.area("x") , chart.area("y") + self.area("y") - axis[k].dist);
-            } else {
-                // custom
-                if(elem.root) elem.root.translate(chart.area("x") + self.area("x"), chart.area("y") + self.area("y"));
+            // 그리드 별 위치 선정하기 (z축이 없을 때)
+            if(!self.isFull3D()) {
+                if (axis[k].orient == "left") {
+                    elem.root.translate(chart.area("x") + self.area("x") - axis[k].dist, chart.area("y"));
+                } else if (axis[k].orient == "right") {
+                    elem.root.translate(chart.area("x") + self.area("x2") + axis[k].dist, chart.area("y"));
+                } else if (axis[k].orient == "bottom") {
+                    elem.root.translate(chart.area("x"), chart.area("y") + self.area("y2") + axis[k].dist);
+                } else if (axis[k].orient == "top") {
+                    elem.root.translate(chart.area("x"), chart.area("y") + self.area("y") - axis[k].dist);
+                } else {
+                    if (elem.root) elem.root.translate(chart.area("x") + self.area("x"), chart.area("y") + self.area("y"));
+                }
             }
 
             elem.scale.type = axis[k].type;
@@ -5415,7 +5894,10 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
                 index : cloneAxis.index,
                 page : cloneAxis.page,
                 start : cloneAxis.start,
-                end : cloneAxis.end
+                end : cloneAxis.end,
+
+                degree : cloneAxis.degree,
+                depth : cloneAxis.depth
             });
 
             // 원본 데이터 설정
@@ -5472,6 +5954,7 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             _.extend(this, {
                 x : options.x,
                 y : options.y,
+                z : options.z,
                 c : options.c,
                 map : options.map
             });
@@ -5492,6 +5975,7 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
 
             this.x = drawGridType(this, "x");
             this.y = drawGridType(this, "y");
+            this.z = drawGridType(this, "z");
             this.c = drawGridType(this, "c");
             this.map = drawMapType(this, "map");
         }
@@ -5546,8 +6030,8 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
          */
         this.updateGrid = function(type, grid, isReset) {
             if(isReset === true) {
-                originAxis[type] = _.deppClone(grid);
-                cloneAxis[type] = _.deppClone(grid);
+                originAxis[type] = _.deepClone(grid);
+                cloneAxis[type] = _.deepClone(grid);
             } else {
                 _.extend(originAxis[type], grid);
                 _.extend(cloneAxis[type], grid);
@@ -5642,6 +6126,10 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             if(chart.isRender()) chart.render();
         }
 
+        this.isFull3D = function() {
+            return !_.typeCheck([ "undefined", "null" ], this.z);
+        }
+
         init();
     }
 
@@ -5667,6 +6155,8 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             x: null,
             /** @cfg {chart.grid.core} [y=null]  Sets a grid on the Y axis (see the grid tab). */
             y: null,
+            /** @cfg {chart.grid.core} [z=null] Sets a grid on the Z axis (see the grid tab). */
+            z: null,
             /** @cfg {chart.grid.core} [c=null] Sets a grid on the C axis (see the grid tab). */
             c: null,
             /** @cfg {chart.map.core} [map=null] Sets a map on the Map axis */
@@ -5717,7 +6207,6 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
 jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], function($, _, math, SVG) {
     /**
      * @class chart.grid.core
-     * Grid Core 객체
      * @extends chart.draw
      * @abstract
      */
@@ -5911,13 +6400,6 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
             }
         }
 
-        /**
-         * @method addEvent
-         * 맵 패스 엘리먼트에 대한 공통 이벤트 정의
-         *
-         * @param {Element} element
-         * @param {Object} obj
-         */
         function addEvent(elem, obj) {
             var chart = self.chart;
 
@@ -6051,15 +6533,6 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
             }
         }
 
-        /**
-         * @method drawGrid
-         * draw base grid structure
-         * @protected
-         * @param {chart.builder} chart
-         * @param {String} orient
-         * @param {String} cls
-         * @param {Map} map
-         */
         this.draw = function() {
             var root = this.chart.svg.group();
 
@@ -6089,14 +6562,6 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
             };
         }
 
-        /**
-         * @method drawAfter
-         *
-         *
-         *
-         * @param {Object} obj
-         * @protected
-         */
         this.drawAfter = function(obj) {
             obj.root.attr({ "clip-path": "url(#" + this.axis.get("clipRectId") + ")" });
         }
@@ -6122,6 +6587,55 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
             height: -1
         };
     }
+
+    /**
+     * @event map_click
+     * Event that occurs when clicking on the map area. (real name ``` map.click ```)
+     * @param {jQueryEvent} e The event object.
+     * @param {Number} index Axis index.
+     */
+    /**
+     * @event map_dblclick
+     * Event that occurs when double clicking on the map area. (real name ``` map.dblclick ```)
+     * @param {jQueryEvent} e The event object.
+     * @param {Number} index Axis index.
+     */
+    /**
+     * @event map_rclick
+     * Event that occurs when right clicking on the map area. (real name ``` map.rclick ```)
+     * @param {jQueryEvent} e The event object.
+     * @param {Number} index Axis index.
+     */
+    /**
+     * @event map_mouseover
+     * Event that occurs when placing the mouse over the map area. (real name ``` map.mouseover ```)
+     * @param {jQueryEvent} e The event object.
+     * @param {Number} index Axis index.
+     */
+    /**
+     * @event map_mouseout
+     * Event that occurs when moving the mouse out of the map area. (real name ``` map.mouseout ```)
+     * @param {jQueryEvent} e The event object.
+     * @param {Number} index Axis index.
+     */
+    /**
+     * @event map_mousemove
+     * Event that occurs when moving the mouse over the map area. (real name ``` map.mousemove ```)
+     * @param {jQueryEvent} e The event object.
+     * @param {Number} index Axis index.
+     */
+    /**
+     * @event map_mousedown
+     * Event that occurs when left clicking on the map area. (real name ``` map.mousedown ```)
+     * @param {jQueryEvent} e The event object.
+     * @param {Number} index Axis index.
+     */
+    /**
+     * @event map_mouseup
+     * Event that occurs after left clicking on the map area. (real name ``` map.mouseup ```)
+     * @param {jQueryEvent} e The event object.
+     * @param {Number} index Axis index.
+     */
 
     return Map;
 }, "chart.draw"); 
@@ -6171,6 +6685,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         var _padding, _area,  _theme, _hash = {};
         var _initialize = false, _options = null, _handler = { render: [], renderAll: [] }; // 리셋 대상 커스텀 이벤트 핸들러
         var _scale = 1, _xbox = 0, _ybox = 0; // 줌인/아웃, 뷰박스X/Y 관련 변수
+        var _isDelay = false; // 렌더링 딜레이
 
         function calculate(self) {
             var max = self.svg.size();
@@ -6961,6 +7476,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
          * @param {Boolean} isAll
          */
         this.render = function(isAll) {
+            if(_isDelay) return;
+
             // SVG 메인 리셋
             this.svg.reset(isAll);
 
@@ -6988,8 +7505,17 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             // 커스텀 이벤트 발생
             this.emit("render", [ _initialize ]);
 
-            // 초기화 설정
+            // 초기화 및 렌더링 체크 설정
             _initialize = true;
+
+            // 렌더링 딜레이 설정
+            if(_options.delay > 0) {
+                _isDelay = true;
+
+                setTimeout(function () {
+                    _isDelay = false;
+                }, _options.delay);
+            }
         }
 
         /**
@@ -7166,6 +7692,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             format: null,
             /** @cfg {Boolean} [render=true] Does not render a chart when a rendering-related method is called with false (although the render method is not included). */
             render: true,
+            /** @cfg {Integer} [delay=0] The minimum delay of the chart rendering. */
+            delay: 0,
 
             /**
              * @cfg {Object} icon Icon-related settings available in the chart.
@@ -7178,47 +7706,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             }
         }
     }
-
-    /**
-     * @event click
-     * Event that occurs when clicking on the brush.
-     * @param {BrushData} obj Related brush data.
-     */
-    /**
-     * @event dblclick
-     * Event that occurs when double clicking on the brush.
-     * @param {BrushData} obj Related brush data.
-     */
-    /**
-     * @event rclick
-     * Event that occurs when right clicking on the brush.
-     * @param {BrushData} obj Related brush data.
-     */
-    /**
-     * @event mouseover
-     * Event that occurs when placing the mouse over the brush.
-     * @param {BrushData} obj Related brush data.
-     */
-    /**
-     * @event mouseout
-     * Event that occurs when moving the mouse out of the brush.
-     * @param {BrushData} obj Related brush data.
-     */
-    /**
-     * @event mousemove
-     * Event that occurs when moving the mouse over the brush.
-     * @param {BrushData} obj Related brush data.
-     */
-    /**
-     * @event mousedown
-     * Event that occurs when left clicking on the brush.
-     * @param {BrushData} obj Related brush data.
-     */
-    /**
-     * @event mouseup
-     * Event that occurs after left clicking on the brush.
-     * @param {BrushData} obj Related brush data.
-     */
 
     /**
      * @event chart_click
@@ -7302,55 +7789,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
      * @param {jQueryEvent} e The event object.
      */
 
-    /**
-     * @event axis_click
-     * Event that occurs when clicking on the axis area. (real name ``` axis.click ```)
-     * @param {jQueryEvent} e The event object.
-     * @param {Number} index Axis index.
-     */
-    /**
-     * @event axis_dblclick
-     * Event that occurs when double clicking on the axis area. (real name ``` axis.dblclick ```)
-     * @param {jQueryEvent} e The event object.
-     * @param {Number} index Axis index.
-     */
-    /**
-     * @event axis_rclick
-     * Event that occurs when right clicking on the axis area. (real name ``` axis.rclick ```)
-     * @param {jQueryEvent} e The event object.
-     * @param {Number} index Axis index.
-     */
-    /**
-     * @event axis_mouseover
-     * Event that occurs when placing the mouse over the axis area. (real name ``` axis.mouseover ```)
-     * @param {jQueryEvent} e The event object.
-     * @param {Number} index Axis index.
-     */
-    /**
-     * @event axis_mouseout
-     * Event that occurs when moving the mouse out of the axis area. (real name ``` axis.mouseout ```)
-     * @param {jQueryEvent} e The event object.
-     * @param {Number} index Axis index.
-     */
-    /**
-     * @event axis_mousemove
-     * Event that occurs when moving the mouse over the axis area. (real name ``` axis.mousemove ```)
-     * @param {jQueryEvent} e The event object.
-     * @param {Number} index Axis index.
-     */
-    /**
-     * @event axis_mousedown
-     * Event that occurs when left clicking on the axis area. (real name ``` axis.mousedown ```)
-     * @param {jQueryEvent} e The event object.
-     * @param {Number} index Axis index.
-     */
-    /**
-     * @event axis_mouseup
-     * Event that occurs after left clicking on the axis area. (real name ``` axis.mouseup ```)
-     * @param {jQueryEvent} e The event object.
-     * @param {Number} index Axis index.
-     */
-
     return UI;
 });
 
@@ -7392,17 +7830,26 @@ jui.define("chart.theme.jennifer", [], function() {
         // Grid styles
         gridXFontSize : 11,
         gridYFontSize : 11,
+        gridZFontSize : 10,
         gridCFontSize : 11,
     	gridXFontColor : "#333",
         gridYFontColor : "#333",
+        gridZFontColor : "#333",
         gridCFontColor : "#333",
         gridXFontWeight : "normal",
         gridYFontWeight : "normal",
+        gridZFontWeight : "normal",
         gridCFontWeight : "normal",
         gridXAxisBorderColor : "#bfbfbf",
         gridYAxisBorderColor : "#bfbfbf",
+        gridZAxisBorderColor : "#bfbfbf",
         gridXAxisBorderWidth : 2,
         gridYAxisBorderWidth : 2,
+        gridZAxisBorderWidth : 2,
+
+        // Full 3D 전용 테마
+        gridFaceBackgroundColor: "#dcdcdc",
+        gridFaceBackgroundOpacity: 0.3,
 
     	gridActiveFontColor : "#ff7800",
         gridActiveBorderColor : "#ff7800",
@@ -7422,6 +7869,7 @@ jui.define("chart.theme.jennifer", [], function() {
         tooltipPointBorderWidth : 1, // common
         tooltipPointFontWeight : "bold", // common
         tooltipPointFontSize : 11,
+        tooltipPointFontColor : "#333",
         barFontSize : 11,
         barFontColor : "#333",
         barBorderColor : "none",
@@ -7572,7 +8020,13 @@ jui.define("chart.theme.jennifer", [], function() {
         // Map Widgets
         mapControlButtonColor : "#3994e2",
         mapControlScrollColor : "#000",
-        mapControlScrollLineColor : "#fff"
+        mapControlScrollLineColor : "#fff",
+
+        // Polygon Brushes
+        polygonColumnBackgroundOpacity: 0.6,
+        polygonColumnBorderOpacity: 0.5,
+        polygonScatterRadialOpacity: 0.7,
+        polygonScatterBackgroundOpacity: 0.8
     }
 });
 jui.define("chart.theme.gradient", [], function() {
@@ -7606,17 +8060,26 @@ jui.define("chart.theme.gradient", [], function() {
         // Grid styles
         gridXFontSize : 11,
         gridYFontSize : 11,
+        gridZFontSize : 10,
         gridCFontSize : 11,
         gridXFontColor : "#666",
         gridYFontColor : "#666",
+        gridZFontColor : "#666",
         gridCFontColor : "#666",
         gridXFontWeight : "normal",
         gridYFontWeight : "normal",
+        gridZFontWeight : "normal",
         gridCFontWeight : "normal",
         gridXAxisBorderColor : "#efefef",
         gridYAxisBorderColor : "#efefef",
+        gridZAxisBorderColor : "#efefef",
         gridXAxisBorderWidth : 2,
         gridYAxisBorderWidth : 2,
+        gridZAxisBorderWidth : 2,
+
+        // Full 3D 전용 테마
+        gridFaceBackgroundColor: "#dcdcdc",
+        gridFaceBackgroundOpacity: 0.3,
 
         gridActiveFontColor : "#ff7800",
         gridActiveBorderColor : "#ff7800",
@@ -7635,6 +8098,7 @@ jui.define("chart.theme.gradient", [], function() {
         tooltipPointRadius : 5, // common
         tooltipPointBorderWidth : 1, // common
         tooltipPointFontWeight : "bold", // common
+        tooltipPointFontColor : "#333",
         barFontSize : 11,
         barFontColor : "#333",
         barBorderColor : "none",
@@ -7787,7 +8251,13 @@ jui.define("chart.theme.gradient", [], function() {
         // Map Widgets
         mapControlButtonColor : "#3994e2",
         mapControlScrollColor : "#000",
-        mapControlScrollLineColor : "#fff"
+        mapControlScrollLineColor : "#fff",
+
+        // Polygon Brushes
+        polygonColumnBackgroundOpacity: 0.6,
+        polygonColumnBorderOpacity: 0.5,
+        polygonScatterRadialOpacity: 0.7,
+        polygonScatterBackgroundOpacity: 0.8
     }
 });
 jui.define("chart.theme.dark", [], function() {
@@ -7818,24 +8288,33 @@ jui.define("chart.theme.dark", [], function() {
         // Grid styles
         gridXFontSize : 11,
         gridYFontSize : 11,
+        gridZFontSize : 10,
         gridCFontSize : 11,
         gridXFontColor : "#868686",
         gridYFontColor : "#868686",
+        gridZFontColor : "#868686",
         gridCFontColor : "#868686",
         gridXFontWeight : "normal",
         gridYFontWeight : "normal",
+        gridZFontWeight : "normal",
         gridCFontWeight : "normal",
         gridXAxisBorderColor : "#464646",
         gridYAxisBorderColor : "#464646",
+        gridZAxisBorderColor : "#464646",
         gridXAxisBorderWidth : 2,
         gridYAxisBorderWidth : 2,
+        gridZAxisBorderWidth : 2,
+
+        // Full 3D 전용 테마
+        gridFaceBackgroundColor: "#dcdcdc",
+        gridFaceBackgroundOpacity: 0.3,
 
     	gridActiveFontColor : "#ff762d",
         gridActiveBorderColor : "#ff7800",
         gridActiveBorderWidth : 1,
         gridPatternColor : "#ababab",
         gridPatternOpacity : 0.1,
-        gridBorderColor : "#464646",
+        gridBorderColor : "#868686",
         gridBorderWidth : 1,
         gridBorderDashArray : "none",
         gridBorderOpacity : 1,
@@ -7848,6 +8327,7 @@ jui.define("chart.theme.dark", [], function() {
         tooltipPointBorderWidth : 1, // common
         tooltipPointFontWeight : "bold", // common
         tooltipPointFontSize : 11,
+        tooltipPointFontColor : "#868686",
         barFontSize : 11,
         barFontColor : "#868686",
         barBorderColor : "none",
@@ -8000,7 +8480,13 @@ jui.define("chart.theme.dark", [], function() {
         // Map Widgets
         mapControlButtonColor : "#3994e2",
         mapControlScrollColor : "#000",
-        mapControlScrollLineColor : "#fff"
+        mapControlScrollLineColor : "#fff",
+
+        // Polygon Brushes
+        polygonColumnBackgroundOpacity: 0.6,
+        polygonColumnBorderOpacity: 0.5,
+        polygonScatterRadialOpacity: 0.7,
+        polygonScatterBackgroundOpacity: 0.8
     }
 });
 jui.define("chart.theme.pastel", [], function() {
@@ -8028,17 +8514,26 @@ jui.define("chart.theme.pastel", [], function() {
 		// Grid styles
 		gridXFontSize : 11,
 		gridYFontSize : 11,
+		gridZFontSize : 10,
 		gridCFontSize : 11,
 		gridXFontColor : "#333",
 		gridYFontColor : "#333",
+		gridZFontColor : "#333",
 		gridCFontColor : "#333",
 		gridXFontWeight : "normal",
 		gridYFontWeight : "normal",
+		gridZFontWeight : "normal",
 		gridCFontWeight : "normal",
 		gridXAxisBorderColor : "#bfbfbf",
 		gridYAxisBorderColor : "#bfbfbf",
+		gridZAxisBorderColor : "#bfbfbf",
 		gridXAxisBorderWidth : 2,
 		gridYAxisBorderWidth : 2,
+		gridZAxisBorderWidth : 2,
+
+		// Full 3D 전용 테마
+		gridFaceBackgroundColor: "#dcdcdc",
+		gridFaceBackgroundOpacity: 0.3,
 
 		gridActiveFontColor : "#ff7800",
 		gridActiveBorderColor : "#ff7800",
@@ -8058,6 +8553,7 @@ jui.define("chart.theme.pastel", [], function() {
 		tooltipPointBorderWidth : 1, // common
 		tooltipPointFontWeight : "bold", // common
 		tooltipPointFontSize : 11,
+		tooltipPointFontColor : "#333",
 		barFontSize : 11,
 		barFontColor : "#333",
 		barBorderColor : "none",
@@ -8210,7 +8706,13 @@ jui.define("chart.theme.pastel", [], function() {
 		// Map Widgets
 		mapControlButtonColor : "#3994e2",
 		mapControlScrollColor : "#000",
-		mapControlScrollLineColor : "#fff"
+		mapControlScrollLineColor : "#fff",
+
+		// Polygon Brushes
+		polygonColumnBackgroundOpacity: 0.6,
+		polygonColumnBorderOpacity: 0.5,
+		polygonScatterRadialOpacity: 0.7,
+		polygonScatterBackgroundOpacity: 0.8
 	}
 }); 
 jui.define("chart.theme.pattern", [], function() {
@@ -8237,17 +8739,26 @@ jui.define("chart.theme.pattern", [], function() {
         // Grid styles
         gridXFontSize : 11,
         gridYFontSize : 11,
+        gridZFontSize : 10,
         gridCFontSize : 11,
         gridXFontColor : "#333",
         gridYFontColor : "#333",
+        gridZFontColor : "#333",
         gridCFontColor : "#333",
         gridXFontWeight : "normal",
         gridYFontWeight : "normal",
+        gridZFontWeight : "normal",
         gridCFontWeight : "normal",
         gridXAxisBorderColor : "#ebebeb",
         gridYAxisBorderColor : "#ebebeb",
+        gridZAxisBorderColor : "#ebebeb",
         gridXAxisBorderWidth : 2,
         gridYAxisBorderWidth : 2,
+        gridZAxisBorderWidth : 2,
+
+        // Full 3D 전용 테마
+        gridFaceBackgroundColor: "#dcdcdc",
+        gridFaceBackgroundOpacity: 0.3,
 
         gridActiveFontColor : "#ff7800",
         gridActiveBorderColor : "#ff7800",
@@ -8267,6 +8778,7 @@ jui.define("chart.theme.pattern", [], function() {
         tooltipPointBorderWidth : 1, // common
         tooltipPointFontWeight : "bold", // common
         tooltipPointFontSize : 11,
+        tooltipPointFontColor : "#333",
         barFontSize : 11,
         barFontColor : "#333",
         barBorderColor : "black",
@@ -8420,7 +8932,13 @@ jui.define("chart.theme.pattern", [], function() {
         // Map Widgets
         mapControlButtonColor : "#3994e2",
         mapControlScrollColor : "#000",
-        mapControlScrollLineColor : "#fff"
+        mapControlScrollLineColor : "#fff",
+
+        // Polygon Brushes
+        polygonColumnBackgroundOpacity: 0.6,
+        polygonColumnBorderOpacity: 0.5,
+        polygonScatterRadialOpacity: 0.7,
+        polygonScatterBackgroundOpacity: 0.8
     }
 });
 jui.define("chart.pattern.jennifer", [], function() {
@@ -8657,112 +9175,795 @@ jui.define("chart.pattern.jennifer", [], function() {
 });
 jui.define("chart.icon.jennifer", [], function() {
 	return {
-		"add-dir" : "\ue600",
-		"add-dir2" : "\ue601",
-		"align-center" : "\ue602",
-		"align-left" : "\ue603",
-		"align-right" : "\ue604",
-		"analysis" : "\ue605",
-		"analysis2" : "\ue606",
-		"arrow1" : "\ue607",
-		"arrow2" : "\ue608",
-		"arrow3" : "\ue609",
-		"bell" : "\ue60a",
-		"blogger" : "\ue60b",
-		"bold" : "\ue60c",
-		"calendar" : "\ue60d",
-		"caution" : "\ue60e",
-		"caution2" : "\ue60f",
-		"chart-area" : "\ue610",
-		"chart-bar" : "\ue611",
-		"chart-candle" : "\ue612",
-		"chart-column" : "\ue613",
-		"chart-gauge" : "\ue614",
-		"chart-line" : "\ue615",
-		"chart-radar" : "\ue616",
-		"chart-scatter" : "\ue617",
-		"chart" : "\ue618",
-		"check" : "\ue619",
-		"checkmark" : "\ue61a",
-		"chevron-left" : "\ue61b",
-		"chevron-right" : "\ue61c",
-		"close" : "\ue61d",
-		"connection" : "\ue61e",
-		"dashboard" : "\ue61f",
-		"dashboardlist" : "\ue620",
-		"db" : "\ue621",
-		"device" : "\ue622",
-		"document" : "\ue623",
-		"download" : "\ue624",
-		"edit" : "\ue625",
-		"etc" : "\ue626",
-		"exit" : "\ue627",
-		"facebook" : "\ue628",
-		"gear" : "\ue629",
-		"github" : "\ue62a",
-		"googleplus" : "\ue62b",
-		"help" : "\ue62c",
-		"hide" : "\ue62d",
-		"home" : "\ue62e",
-		"html" : "\ue62f",
-		"image" : "\ue630",
-		"indent" : "\ue631",
-		"info-message" : "\ue632",
-		"info" : "\ue633",
-		"italic" : "\ue634",
-		"jennifer-server" : "\ue635",
-		"label" : "\ue636",
-		"left" : "\ue637",
-		"like" : "\ue638",
-		"line-height" : "\ue639",
-		"link" : "\ue63a",
-		"loading" : "\ue63b",
-		"menu" : "\ue63c",
-		"message" : "\ue63d",
-		"minus" : "\ue63e",
-		"monitoring" : "\ue63f",
-		"more" : "\ue640",
-		"new-window" : "\ue641",
-		"orderedlist" : "\ue642",
-		"outdent" : "\ue643",
-		"pause" : "\ue644",
-		"play" : "\ue645",
-		"plus" : "\ue646",
-		"preview" : "\ue647",
-		"printer" : "\ue648",
-		"profile" : "\ue649",
-		"realtime" : "\ue64a",
-		"refresh" : "\ue64b",
-		"refresh2" : "\ue64c",
-		"report-build" : "\ue64d",
-		"report-link" : "\ue64e",
-		"report" : "\ue64f",
-		"resize" : "\ue650",
-		"return" : "\ue651",
-		"right" : "\ue652",
-		"rule" : "\ue653",
-		"save" : "\ue654",
-		"search" : "\ue655",
-		"server" : "\ue656",
-		"share" : "\ue657",
-		"statistics" : "\ue658",
-		"stop" : "\ue659",
-		"stoppage" : "\ue65a",
-		"table" : "\ue65b",
-		"text" : "\ue65c",
-		"textcolor" : "\ue65d",
-		"tool" : "\ue65e",
-		"trashcan" : "\ue65f",
-		"twitter" : "\ue660",
-		"underline" : "\ue661",
-		"unorderedlist" : "\ue662",
-		"upload" : "\ue663",
-		"user" : "\ue664",
-		"was" : "\ue665",
-		"ws" : "\ue666"
+		"pin" : "\ue945",
+		"add-dir" : "\ue900",
+		"add-dir2" : "\ue901",
+		"align-center" : "\ue902",
+		"align-left" : "\ue903",
+		"align-right" : "\ue904",
+		"analysis" : "\ue905",
+		"analysis2" : "\ue906",
+		"arrow1" : "\ue907",
+		"arrow2" : "\ue908",
+		"arrow3" : "\ue909",
+		"bell" : "\ue90a",
+		"blogger" : "\ue90b",
+		"bold" : "\ue90c",
+		"calendar" : "\ue90d",
+		"caution" : "\ue90e",
+		"caution2" : "\ue90f",
+		"chart-area" : "\ue910",
+		"chart-bar" : "\ue911",
+		"chart-candle" : "\ue912",
+		"chart-column" : "\ue913",
+		"chart-gauge" : "\ue914",
+		"chart-line" : "\ue915",
+		"chart-radar" : "\ue916",
+		"chart-scatter" : "\ue917",
+		"chart" : "\ue918",
+		"check" : "\ue919",
+		"checkmark" : "\ue91a",
+		"chevron-left" : "\ue91b",
+		"chevron-right" : "\ue91c",
+		"close" : "\ue91d",
+		"connection" : "\ue91e",
+		"dashboard" : "\ue91f",
+		"dashboardlist" : "\ue920",
+		"db" : "\ue921",
+		"device" : "\ue922",
+		"document" : "\ue923",
+		"download" : "\ue924",
+		"edit" : "\ue925",
+		"etc" : "\ue926",
+		"exit" : "\ue927",
+		"facebook" : "\ue928",
+		"gear" : "\ue929",
+		"github" : "\ue92a",
+		"googleplus" : "\ue92b",
+		"help" : "\ue92c",
+		"hide" : "\ue92d",
+		"home" : "\ue92e",
+		"html" : "\ue92f",
+		"image" : "\ue930",
+		"indent" : "\ue931",
+		"info-message" : "\ue932",
+		"info" : "\ue933",
+		"italic" : "\ue934",
+		"jennifer-server" : "\ue935",
+		"label" : "\ue936",
+		"left" : "\ue937",
+		"like" : "\ue938",
+		"line-height" : "\ue939",
+		"link" : "\ue93a",
+		"loading" : "\ue93b",
+		"menu" : "\ue93c",
+		"message" : "\ue93d",
+		"minus" : "\ue93e",
+		"monitoring" : "\ue93f",
+		"more" : "\ue940",
+		"new-window" : "\ue941",
+		"orderedlist" : "\ue942",
+		"outdent" : "\ue943",
+		"pause" : "\ue944",
+		"play" : "\ue946",
+		"plus" : "\ue947",
+		"preview" : "\ue948",
+		"printer" : "\ue949",
+		"profile" : "\ue94a",
+		"realtime" : "\ue94b",
+		"refresh" : "\ue94c",
+		"refresh2" : "\ue94d",
+		"report-build" : "\ue94e",
+		"report-link" : "\ue94f",
+		"report" : "\ue950",
+		"report2" : "\ue951",
+		"resize" : "\ue952",
+		"return" : "\ue953",
+		"right" : "\ue954",
+		"rule" : "\ue955",
+		"save" : "\ue956",
+		"search" : "\ue957",
+		"server" : "\ue958",
+		"share" : "\ue959",
+		"statistics" : "\ue95a",
+		"stop" : "\ue95b",
+		"stoppage" : "\ue95c",
+		"table" : "\ue95d",
+		"template" : "\ue95e",
+		"text" : "\ue95f",
+		"textcolor" : "\ue960",
+		"tool" : "\ue961",
+		"trashcan" : "\ue962",
+		"twitter" : "\ue963",
+		"underline" : "\ue964",
+		"unorderedlist" : "\ue965",
+		"upload" : "\ue966",
+		"user" : "\ue967",
+		"was" : "\ue968",
+		"ws" : "\ue969"
 	}
 });
-jui.define("chart.grid.core", [ "util.base", "util.math" ], function(_, math) {
+jui.define("chart.polygon.core", [ "util.transform", "util.math" ], function(Transform, math) {
+    var PolygonCore = function() {
+        this.perspective = 0.9;
+        this.vertices = [];
+        this.faces = [];
+        this.edges = [];
+
+        this.normalize = function() {
+            for(var i = 0; i < this.vertices.length; i++) {
+                var x = this.vertices[i][0],
+                    y = this.vertices[i][1],
+                    z = this.vertices[i][2],
+                    u = Math.sqrt(x*x + y*y + z*z);
+
+                this.vertices[i][0] /= u;
+                this.vertices[i][1] /= u;
+                this.vertices[i][2] /= u;
+            }
+        }
+
+        this.rotate = function(width, height, depth, degree) {
+            var t = new Transform(this.vertices),
+                p = this.perspective,
+                cx = width / 2,
+                cy = height / 2,
+                cz = depth / 2;
+
+            t.merge2(function(x, y, z, w) {
+                var s = math.scaleValue(z, 0, depth, 1, p);
+
+                return [
+                    [ "move3d", cx, cy, cz ],
+                    [ "rotate3dx", degree.x ],
+                    [ "rotate3dy", degree.y ],
+                    [ "rotate3dz", degree.z ],
+                    [ "scale3d", s, s, 1 ],
+                    [ "move3d", -cx, -cy, -cz ]
+                ]
+            });
+        }
+
+        this.min = function() {
+            var obj = {
+                x: Number.MAX_VALUE,
+                y: Number.MAX_VALUE,
+                z: Number.MAX_VALUE
+            };
+
+            for(var i = 0, len = this.vertices.length; i < len; i++) {
+                obj.x = Math.min(obj.x, this.vertices[i][0]);
+                obj.y = Math.min(obj.y, this.vertices[i][1]);
+                obj.z = Math.min(obj.z, this.vertices[i][2]);
+            }
+
+            return obj;
+        }
+
+        this.max = function() {
+            var obj = {
+                x: Number.MIN_VALUE,
+                y: Number.MIN_VALUE,
+                z: Number.MIN_VALUE
+            };
+
+            for(var i = 0, len = this.vertices.length; i < len; i++) {
+                obj.x = Math.max(obj.x, this.vertices[i][0]);
+                obj.y = Math.max(obj.y, this.vertices[i][1]);
+                obj.z = Math.max(obj.z, this.vertices[i][2]);
+            }
+
+            return obj;
+        }
+    }
+
+    return PolygonCore;
+});
+jui.define("chart.polygon.face", [], function() {
+    var FacePolygon = function(type, width, height, depth) {
+        var matrix = {
+            center: [
+                new Float32Array([ 0, 0, depth, 1 ]),
+                new Float32Array([ width, 0, depth, 1 ]),
+                new Float32Array([ width, height, depth, 1 ]),
+                new Float32Array([ 0, height, depth, 1 ])
+            ],
+            horizontal: [
+                new Float32Array([ 0, height, 0, 1 ]),
+                new Float32Array([ width, height, 0, 1 ]),
+                new Float32Array([ width, height, depth, 1 ]),
+                new Float32Array([ 0, height, depth, 1 ])
+            ],
+            vertical: [
+                new Float32Array([ width, 0, 0, 1 ]),
+                new Float32Array([ width, height, 0, 1 ]),
+                new Float32Array([ width, height, depth, 1 ]),
+                new Float32Array([ width, 0, depth, 1 ])
+            ]
+        };
+
+        this.vertices = matrix[type];
+    }
+
+    return FacePolygon;
+}, "chart.polygon.core");
+jui.define("chart.polygon.line", [], function() {
+    var LinePolygon = function(x1, y1, d1, x2, y2, d2) {
+        this.vertices = [
+            new Float32Array([ x1, y1, d1, 1 ]),
+            new Float32Array([ x2, y2, d2, 1 ])
+        ]
+    }
+
+    return LinePolygon;
+}, "chart.polygon.core");
+jui.define("chart.polygon.point", [], function() {
+    var PointPolygon = function(x, y, d) {
+        this.vertices = [
+            new Float32Array([ x, y, d, 1 ])
+        ]
+    }
+
+    return PointPolygon;
+}, "chart.polygon.core");
+jui.define("chart.polygon.cube", [], function() {
+    var CubePolygon = function(x, y, z, w, h, d) {
+        this.vertices = [
+            new Float32Array([ x,       y,      z,      1 ]),
+            new Float32Array([ x + w,   y,      z,      1 ]),
+            new Float32Array([ x + w,   y,      z + d,  1 ]),
+            new Float32Array([ x,       y,      z + d,  1 ]),
+
+            new Float32Array([ x,       y + h,  z,      1 ]),
+            new Float32Array([ x + w,   y + h,  z,      1 ]),
+            new Float32Array([ x + w,   y + h,  z + d,  1 ]),
+            new Float32Array([ x,       y + h,  z + d,  1 ]),
+        ];
+
+        this.faces = [
+            new Float32Array([ 0, 1, 2, 3 ]),
+            new Float32Array([ 3, 2, 6, 7 ]),
+            new Float32Array([ 0, 3, 7, 4 ]),
+            new Float32Array([ 1, 2, 6, 5 ]),
+            new Float32Array([ 0, 1, 5, 4 ]),
+            new Float32Array([ 4, 5, 6, 7 ])
+        ];
+    }
+
+    return CubePolygon;
+}, "chart.polygon.core");
+jui.define("chart.grid.draw2d", [ "util.base", "util.math" ], function(_, math) {
+
+    /**
+     * @class chart.grid.draw2d
+     * @abstract
+     */
+    var Draw2DGrid = function() {
+
+        this.createGridX = function(position, index, x, isActive, isLast) {
+            var line = this.getLineOption(),
+                axis = this.chart.svg.group().translate(x, 0),
+                size = this.chart.theme("gridTickBorderSize");
+
+            axis.append(this.line({
+                y2 : (position == "bottom") ? size : -size,
+                stroke : this.color(isActive, "gridActiveBorderColor", "gridXAxisBorderColor"),
+                "stroke-width" : this.chart.theme("gridTickBorderWidth")
+            }));
+
+            if (line) {
+                this.drawValueLine(position, axis, isActive, line, index, isLast);
+            }
+
+            return axis;
+        }
+
+        this.createGridY = function(position, index, y, isActive, isLast) {
+            var line = this.getLineOption(),
+                axis = this.chart.svg.group().translate(0, y),
+                size = this.chart.theme("gridTickBorderSize");
+
+            axis.append(this.line({
+                x2 : (position == "left") ? -size : size,
+                stroke : this.color(isActive, "gridActiveBorderColor", "gridYAxisBorderColor"),
+                "stroke-width" : this.chart.theme("gridTickBorderWidth")
+            }));
+
+            if (line) {
+                this.drawValueLine(position, axis, isActive, line, index, isLast);
+            }
+
+            return axis;
+        }
+
+        this.fillRectObject = function(g, line, position, x, y , width, height) {
+            if (line.type.indexOf("gradient") > -1) {
+                g.append(this.chart.svg.rect({
+                    x : x,
+                    y : y,
+                    height : height,
+                    width : width,
+                    fill : this.chart.color(( line.fill ? line.fill : "linear(" + position + ") " + this.chart.theme("gridPatternColor") + ",0.5 " + this.chart.theme("backgroundColor") )),
+                    "fill-opacity" : this.chart.theme("gridPatternOpacity")
+                }));
+            } else if (line.type.indexOf("rect") > -1) {
+                g.append(this.chart.svg.rect({
+                    x : x,
+                    y : y,
+                    height : height,
+                    width : width,
+                    fill : this.chart.color( line.fill ? line.fill : this.chart.theme("gridPatternColor") ),
+                    "fill-opacity" : this.chart.theme("gridPatternOpacity")
+                }));
+            }
+        }
+
+        /**
+         * @method drawAxisLine
+         * theme 이 적용된  axis line 리턴
+         * @param {ChartBuilder} chart
+         * @param {Object} attr
+         */
+        this.drawAxisLine = function(position, g, attr) {
+            var isTopOrBottom = (position == "top" || position == "bottom");
+
+            g.append(this.chart.svg.line(_.extend({
+                x1 : 0,
+                y1 : 0,
+                x2 : 0,
+                y2 : 0,
+                stroke : this.color(isTopOrBottom ? "gridXAxisBorderColor" : "gridYAxisBorderColor"),
+                "stroke-width" : this.chart.theme(isTopOrBottom ? "gridXAxisBorderWidth" : "gridYAxisBorderWidth"),
+                "stroke-opacity" : 1
+            }, attr)));
+        }
+
+        this.drawPattern = function(position, ticks, values, isMove) {
+            if (this.grid.hide) return;
+            if (!position) return;
+            if (!ticks) return;
+            if (!values) return;
+
+            var line = this.getLineOption(),
+                isY = (position == "left" || position == "right");
+
+            var g = this.chart.svg.group({
+                "class" : "grid-pattern grid-pattern-" + this.grid.type
+            });
+
+            g.translate(this.axis.area("x") + this.chart.area("x"), this.axis.area("y") + this.chart.area("y"));
+
+            if (line && (line.type.indexOf("gradient") > -1 || line.type.indexOf("rect") > -1)) {
+                for(var i = 0; i < values.length-1; i += 2) {
+                    var dist = Math.abs(values[i+1] - values[i]),
+                        pos = values[i] - (isMove ?  dist/2 : 0 ),
+                        x = (isY) ? 0 : pos,
+                        y = (isY) ? pos : 0,
+                        width = (isY) ?  this.axis.area("width") : dist,
+                        height = (isY) ?  dist : this.axis.area("height");
+
+                    this.fillRectObject(g, line, position, x, y, width, height);
+                }
+            }
+        }
+
+        this.drawBaseLine = function(position, g) {
+            var obj = this.getGridSize(),
+                pos = {};
+
+            if (position == "bottom" || position == "top") {
+                pos = { x1 : obj.start, x2 : obj.end };
+            } else if (position == "left" || position == "right") {
+                pos = { y1 : obj.start, y2 : obj.end };
+            }
+
+            this.drawAxisLine(position, g, pos)
+        }
+
+        this.drawValueLine = function(position, axis, isActive, line, index, isLast) {
+            var area = {},
+                isDrawLine = false;
+
+            if (position == "top") {
+                isDrawLine = this.checkDrawLineY(index, isLast);
+                area = { x1: 0, x2: 0, y1: 0, y2: this.axis.area("height") };
+            } else if (position == "bottom" ) {
+                isDrawLine = this.checkDrawLineY(index, isLast);
+                area = { x1: 0, x2: 0, y1: 0, y2: -this.axis.area("height") };
+            } else if (position == "left") {
+                isDrawLine = this.checkDrawLineX(index, isLast);
+                area = { x1: 0, x2: this.axis.area("width"), y1: 0, y2: 0 };
+            } else if (position == "right" ) {
+                isDrawLine = this.checkDrawLineX(index, isLast);
+                area = { x1: 0, x2: -this.axis.area("width"), y1: 0, y2: 0 };
+            }
+
+            if(isDrawLine) {
+                var lineObject = this.line(_.extend({
+                    stroke: this.chart.theme(isActive, "gridActiveBorderColor", "gridBorderColor"),
+                    "stroke-width": this.chart.theme(isActive, "gridActiveBorderWidth", "gridBorderWidth")
+                }, area));
+
+                if (line.type.indexOf("dashed") > -1) {
+                    lineObject.attr({ "stroke-dasharray": "5,5" });
+                }
+
+                axis.append(lineObject);
+            }
+        }
+
+        this.drawValueText = function(position, axis, index, xy, domain, move, isActive) {
+            if (this.grid.hideText) return;
+
+            if(position == "top") {
+                axis.append(this.getTextRotate(this.chart.text({
+                    x: move,
+                    y: -(this.chart.theme("gridTickBorderSize") + this.chart.theme("gridTickPadding") * 2),
+                    dy: this.chart.theme("gridXFontSize") / 3,
+                    fill: this.chart.theme(isActive, "gridActiveFontColor", "gridXFontColor"),
+                    "text-anchor": "middle",
+                    "font-size": this.chart.theme("gridXFontSize"),
+                    "font-weight": this.chart.theme("gridXFontWeight")
+                }, domain)));
+            } else if(position == "bottom") {
+                axis.append(this.getTextRotate(this.chart.text({
+                    x: move,
+                    y: this.chart.theme("gridTickBorderSize") + this.chart.theme("gridTickPadding") * 2,
+                    dy: this.chart.theme("gridXFontSize") / 3,
+                    fill: this.chart.theme(isActive, "gridActiveFontColor", "gridXFontColor"),
+                    "text-anchor": "middle",
+                    "font-size": this.chart.theme("gridXFontSize"),
+                    "font-weight": this.chart.theme("gridXFontWeight")
+                }, domain)));
+            } else if(position == "left") {
+                axis.append(this.getTextRotate(this.chart.text({
+                    x: -this.chart.theme("gridTickBorderSize") - this.chart.theme("gridTickPadding"),
+                    y: move,
+                    dy: this.chart.theme("gridYFontSize") / 3,
+                    fill: this.chart.theme(isActive, "gridActiveFontColor", "gridYFontColor"),
+                    "text-anchor": "end",
+                    "font-size": this.chart.theme("gridYFontSize"),
+                    "font-weight": this.chart.theme("gridYFontWeight")
+                }, domain)));
+            } else if(position == "right") {
+                axis.append(this.getTextRotate(this.chart.text({
+                    x: this.chart.theme("gridTickBorderSize") + this.chart.theme("gridTickPadding"),
+                    y: move,
+                    dy: this.chart.theme("gridYFontSize") / 3,
+                    fill: this.chart.theme(isActive, "gridActiveFontColor", "gridYFontColor"),
+                    "text-anchor": "start",
+                    "font-size": this.chart.theme("gridYFontSize"),
+                    "font-weight": this.chart.theme("gridYFontWeight")
+                }, domain)));
+            }
+        }
+
+        this.drawImage = function(orient, g, tick, index, x, y) {
+            if (!_.typeCheck("function", this.grid.image)) return;
+
+            var opts = this.grid.image.apply(this.chart, [ tick, index ]);
+
+            if(_.typeCheck("object", opts)) {
+                var image = this.chart.svg.image({
+                    "xlink:href": opts.uri,
+                    width: opts.width,
+                    height: opts.height
+                });
+
+                if(orient == "top" || orient == "bottom") {
+                    image.attr({
+                        x: (this.grid.type == "block") ? this.scale.rangeBand()/2 - opts.width/2 : -(opts.width/2)
+                    });
+                } else if(orient == "left" || orient == "right") {
+                    image.attr({
+                        y: (this.grid.type == "block") ? this.scale.rangeBand()/2 - opts.height/2 : -(opts.height/2)
+                    })
+                }
+
+                if(orient == "bottom") {
+                    image.attr({ y: opts.dist });
+                } else if(orient == "top") {
+                    image.attr({ y: -(opts.dist + opts.height) });
+                } else if(orient == "left") {
+                    image.attr({ x: -(opts.dist + opts.width) });
+                } else if(orient == "right") {
+                    image.attr({ x: opts.dist });
+                }
+
+                image.translate(x, y)
+                g.append(image);
+            }
+        }
+    }
+
+    return Draw2DGrid;
+}, "chart.draw");
+jui.define("chart.grid.draw3d", [ "util.base", "chart.polygon.face", "chart.polygon.line", "chart.polygon.point" ],
+    function(_, FacePolygon, LinePolygon, PointPolygon) {
+
+    /**
+     * @class chart.grid.draw3d
+     * @abstract
+     */
+    var Draw3DGrid = function() {
+
+        this.createGridX = function(position, index, x, isActive, isLast) {
+            var line = this.getLineOption(),
+                axis = this.chart.svg.group();
+
+            if (line) {
+                this.drawValueLine(position, axis, isActive, line, index, x, isLast);
+            }
+
+            return axis;
+        }
+
+        this.createGridY = function(position, index, y, isActive, isLast) {
+            var line = this.getLineOption(),
+                axis = this.chart.svg.group();
+
+            if (line) {
+                this.drawValueLine(position, axis, isActive, line, index, y, isLast);
+            }
+
+            return axis;
+        }
+
+        /**
+         * @method center
+         *
+         * draw center
+         *
+         * @param {chart.util.svg} g
+         * @param {Array} ticks
+         * @param {Array} values
+         * @param {Number} min
+         * @param {Function} checkActive
+         */
+        this.drawCenter = function(g, ticks, values, checkActive, moveZ) {
+            var axis = this.chart.svg.group(),
+                line = this.getLineOption();
+
+            if(line) {
+                this.drawValueLineCenter(axis, ticks, values, checkActive, moveZ);
+            }
+
+            this.drawValueTextCenter(axis, ticks, values, checkActive, moveZ);
+
+            g.append(axis);
+        }
+
+        this.drawBaseLine = function(position, g) {
+            var axis = this.chart.svg.group();
+            this.drawAxisLine(position, axis);
+
+            g.append(axis);
+        }
+
+        /**
+         * @method axisLine
+         * theme 이 적용된  axis line 리턴
+         * @param {ChartBuilder} chart
+         * @param {Object} attr
+         */
+        this.drawAxisLine = function(position, axis) {
+            var isTopOrBottom = (position == "top" || position == "bottom"),
+                borderColor = (isTopOrBottom) ? "gridXAxisBorderColor" : "gridYAxisBorderColor",
+                borderWidth = (isTopOrBottom) ? "gridXAxisBorderWidth" : "gridYAxisBorderWidth";
+
+            if(position == "center") {
+                borderColor = "gridZAxisBorderColor";
+                borderWidth = "gridZAxisBorderWidth";
+            }
+
+            var face = this.chart.svg.polygon({
+                stroke: this.chart.theme(borderColor),
+                "stroke-width": this.chart.theme(borderWidth),
+                "stroke-opacity" : 1,
+                fill: this.chart.theme("gridFaceBackgroundColor"),
+                "fill-opacity": this.chart.theme("gridFaceBackgroundOpacity")
+            });
+
+            var p = null,
+                w = this.axis.area("width"),
+                h = this.axis.area("height"),
+                d = this.axis.depth;
+
+            if(position == "center") {
+                p = new FacePolygon("center", w, h, d);
+            } else {
+                if(isTopOrBottom) {
+                    h = (position == "bottom") ? h : 0;
+                    p = new FacePolygon("horizontal", w, h, d);
+                } else {
+                    w = (position == "right") ? w : 0;
+                    p = new FacePolygon("vertical", w, h, d);
+                }
+            }
+
+            // 사각면 위치 계산 및 추가
+            this.calculate3d(p);
+            for(var i = 0; i < p.vertices.length; i++) {
+                face.point(p.vertices[i][0], p.vertices[i][1]);
+            }
+
+            axis.append(face);
+        }
+
+        this.drawValueLine = function(position, axis, isActive, line, index, xy, isLast) {
+            var isDrawLine = false,
+                w = this.axis.area("width"),
+                h = this.axis.area("height"),
+                d = this.axis.depth,
+                l1 = null,
+                l2 = null;
+
+            if (position == "top") {
+                isDrawLine = this.checkDrawLineY(index, isLast);
+                l1 = new LinePolygon(xy, 0, 0, xy, 0, d);
+                l2 = new LinePolygon(xy, 0, d, xy, h, d);
+            } else if (position == "bottom" ) {
+                isDrawLine = this.checkDrawLineY(index, isLast);
+                l1 = new LinePolygon(xy, h, 0, xy, h, d);
+                l2 = new LinePolygon(xy, h, d, xy, 0, d);
+            } else if (position == "left") {
+                isDrawLine = this.checkDrawLineX(index, isLast);
+                l1 = new LinePolygon(0, xy, 0, 0, xy, d);
+                l2 = new LinePolygon(0, xy, d, w, xy, d);
+            } else if (position == "right" ) {
+                isDrawLine = this.checkDrawLineX(index, isLast);
+                l1 = new LinePolygon(w, xy, 0, w, xy, d);
+                l2 = new LinePolygon(w, xy, d, 0, xy, d);
+            }
+
+            if(isDrawLine) {
+                // 폴리곤 계산
+                this.calculate3d(l1, l2);
+
+                var lo1 = this.line({
+                    stroke: this.chart.theme("gridBorderColor"),
+                    "stroke-width": this.chart.theme("gridBorderWidth"),
+                    x1: l1.vertices[0][0],
+                    y1: l1.vertices[0][1],
+                    x2: l1.vertices[1][0],
+                    y2: l1.vertices[1][1]
+                });
+
+                var lo2 = this.line({
+                    stroke: this.chart.theme("gridBorderColor"),
+                    "stroke-width": this.chart.theme("gridBorderWidth"),
+                    x1: l2.vertices[0][0],
+                    y1: l2.vertices[0][1],
+                    x2: l2.vertices[1][0],
+                    y2: l2.vertices[1][1]
+                });
+
+                if (line.type.indexOf("dashed") > -1) {
+                    lo1.attr({ "stroke-dasharray": "5,5" });
+                    lo2.attr({ "stroke-dasharray": "5,5" });
+                }
+
+                axis.append(lo1);
+                axis.append(lo2);
+            }
+        }
+
+        this.drawValueLineCenter = function(axis, ticks, values, checkActive, moveZ) {
+            var len = (this.grid.type != "block") ? ticks.length - 1 : ticks.length,
+                w = this.axis.area("width"),
+                h = this.axis.area("height"),
+                d = this.axis.depth,
+                dx = (this.axis.get("y").orient == "left") ? 0 : w,
+                dy = (this.axis.get("x").orient == "top") ? 0 : h;
+
+            // z축 라인 드로잉
+            for(var i = 1; i < len; i++) {
+                var t = i * (d / len),
+                    p1 = new LinePolygon(0, dy, t, w, dy, t),
+                    p2 = new LinePolygon(dx, 0, t, dx, h, t);
+
+                this.calculate3d(p1, p2);
+
+                axis.append(this.line({
+                    stroke: this.chart.theme("gridBorderColor"),
+                    "stroke-width": this.chart.theme("gridBorderWidth"),
+                    x1: p1.vertices[0][0],
+                    y1: p1.vertices[0][1],
+                    x2: p1.vertices[1][0],
+                    y2: p1.vertices[1][1]
+                }));
+
+                axis.append(this.line({
+                    stroke: this.chart.theme("gridBorderColor"),
+                    "stroke-width": this.chart.theme("gridBorderWidth"),
+                    x1: p2.vertices[0][0],
+                    y1: p2.vertices[0][1],
+                    x2: p2.vertices[1][0],
+                    y2: p2.vertices[1][1]
+                }));
+            }
+        }
+
+        this.drawValueText = function(position, axis, index, xy, domain) {
+            if (this.grid.hideText) return;
+
+            var isVertical = (position == "left" || position == "right");
+
+            var tickSize = this.chart.theme("gridTickBorderSize"),
+                tickPadding = this.chart.theme("gridTickPadding"),
+                w = this.axis.area("width"),
+                h = this.axis.area("height"),
+                x = 0,
+                y = 0;
+
+            if(position == "top") {
+                x = xy;
+                y = -(tickSize + tickPadding * 2);
+            } else if(position == "bottom") {
+                x = xy;
+                y = h + tickSize + tickPadding * 2;
+            } else if(position == "left") {
+                x = -(tickSize + tickPadding);
+                y = xy;
+            } else if(position == "right") {
+                x = w + tickSize + tickPadding;
+                y = xy;
+            }
+
+            var p = new PointPolygon(x, y, 0);
+            this.calculate3d(p);
+
+            axis.append(this.getTextRotate(this.chart.text({
+                x: p.vertices[0][0],
+                y: p.vertices[0][1],
+                dx: !isVertical ? this.chart.theme("gridXFontSize") / 3 : 0,
+                dy: isVertical ? this.chart.theme("gridYFontSize") / 3 : 0,
+                fill: this.chart.theme(isVertical ? "gridYFontColor" : "gridXFontColor"),
+                "text-anchor": isVertical ? (position == "left" ? "end" : "start") : "middle",
+                "font-size": this.chart.theme(isVertical ? "gridYFontSize" : "gridXFontSize"),
+                "font-weight": this.chart.theme(isVertical ? "gridYFontWeight" : "gridXFontWeight")
+            }, domain)));
+        }
+
+        this.drawValueTextCenter = function(axis, ticks, values, checkActive, moveZ) {
+            var margin = this.chart.theme("gridTickBorderSize") + this.chart.theme("gridTickPadding"),
+                isLeft = (this.axis.get("y").orient == "left"),
+                isTop = (this.axis.get("x").orient == "top"),
+                len = (this.grid.type != "block") ? ticks.length - 1 : ticks.length,
+                w = this.axis.area("width"),
+                h = this.axis.area("height"),
+                d = this.axis.depth,
+                x = (isLeft) ? w + margin : -margin,
+                y = (isTop) ? -margin : h + margin;
+
+            // z축 라인 드로잉
+            for(var i = 0; i < ticks.length; i++) {
+                var domain = this.format(ticks[i], i),
+                    t = i * (d / len) + moveZ,
+                    p = new PointPolygon(x, y, t);
+
+                this.calculate3d(p);
+
+                axis.append(this.getTextRotate(this.chart.text({
+                    x: p.vertices[0][0],
+                    y: p.vertices[0][1],
+                    fill: this.chart.theme("gridZFontColor"),
+                    "text-anchor": (isLeft) ? "start" : "end",
+                    "font-size": this.chart.theme("gridZFontSize"),
+                    "font-weight": this.chart.theme("gridZFontWeight")
+                }, domain)));
+            }
+        }
+
+        this.drawPattern = function() {}
+        this.drawImage = function() {}
+    }
+
+    return Draw3DGrid;
+}, "chart.draw");
+jui.define("chart.grid.core", [ "util.base", "util.math", "chart.grid.draw2d", "chart.grid.draw3d" ],
+	function(_, math, Draw2D, Draw3D) {
+
 	/**
 	 * @class chart.grid.core
 	 * Grid Core 객체
@@ -8790,26 +9991,6 @@ jui.define("chart.grid.core", [ "util.base", "util.math" ], function(_, math) {
 		 */
 		this.wrapper = function(scale, key) {
 			return scale;
-		}
-
-		/**
-		 * @method axisLine
-		 * theme 이 적용된  axis line 리턴
-		 * @param {ChartBuilder} chart
-		 * @param {Object} attr
-		 */
-		this.axisLine = function(position, attr) {
-			var isTopOrBottom = (position == "top" || position == "bottom");
-
-			return this.chart.svg.line(_.extend({
-				x1 : 0,
-				y1 : 0,
-				x2 : 0,
-				y2 : 0,
-				stroke : this.color(isTopOrBottom ? "gridXAxisBorderColor" : "gridYAxisBorderColor"),
-				"stroke-width" : this.chart.theme(isTopOrBottom ? "gridXAxisBorderWidth" : "gridYAxisBorderWidth"),
-				"stroke-opacity" : 1
-			}, attr));
 		}
 
 		/**
@@ -8863,6 +10044,79 @@ jui.define("chart.grid.core", [ "util.base", "util.math" ], function(_, math) {
 			return this.axis.data || [];
 		}
 
+		this.getGridSize = function() {
+			var orient = this.grid.orient,
+				depth = this.axis.depth,
+				degree = this.axis.degree,
+				axis = (orient == "left" || orient == "right") ? this.axis.area("y") : this.axis.area("x"),
+				max = (orient == "left" || orient == "right") ? this.axis.area("height") : this.axis.area("width"),
+				start = axis,
+				size = max,
+				end = start + size;
+
+			var result = {
+				start: start,
+				size: size,
+				end: end
+			};
+
+			if(!this.axis.isFull3D()) {
+				if(depth > 0 || degree > 0) {
+					var radian = math.radian(360 - degree),
+						x2 = Math.cos(radian) * depth,
+						y2 = Math.sin(radian) * depth;
+
+					if(orient == "left") {
+						result.start = result.start - y2;
+						result.size = result.size - y2;
+					} else if(orient == "bottom") {
+						result.end = result.end - x2;
+						result.size = result.size - x2;
+					}
+				}
+			} else {
+				if(orient == "center") { // z축
+					result.start = 0;
+					result.size = depth;
+					result.end = depth;
+				}
+			}
+
+			return result;
+		}
+
+		/**
+		 * @method getDefaultOffset
+		 *
+		 * get real size of grid
+		 *
+		 * @param {chart.builder} chart
+		 * @param {Strng} orient
+		 * @param {Object} grid             그리드 옵션
+		 * @return {Object}
+		 * @return {Number} return.start    시작 지점
+		 * @return {Number} return.size     그리드 넓이 또는 높이
+		 * @return {Number} return.end      마지막 지점
+		 */
+		this.getDefaultOffset = function() {
+			var orient = this.grid.orient,
+				area = this.axis.area();
+
+			var width = area.width,
+				height = area.height,
+				axis = (orient == "left" || orient == "right") ? area.y : area.x,
+				max = (orient == "left" || orient == "right") ? height : width,
+				start = axis,
+				size = max,
+				end = start + size;
+
+			return {
+				start: start,
+				size: size,
+				end: end
+			};
+		}
+
 		/**
 		 * @method getTextRotate
 		 * implement text rotate in grid text
@@ -8888,55 +10142,6 @@ jui.define("chart.grid.core", [ "util.base", "util.math" ], function(_, math) {
 			return textElement;
 		}
 
-		/**
-		 * @method getGridSize
-		 *
-		 * get real size of grid
-		 *
-		 * @param {chart.builder} chart
-		 * @param {Strng} orient
-		 * @param {Object} grid             그리드 옵션
-		 * @return {Object}
-		 * @return {Number} return.start    시작 지점
-		 * @return {Number} return.size     그리드 넓이 또는 높이
-		 * @return {Number} return.end      마지막 지점
-		 */
-		this.getGridSize = function() {
-			var orient = this.grid.orient,
-				area = this.axis.area();
-
-			var width = area.width,
-				height = area.height,
-				axis = (orient == "left" || orient == "right") ? area.y : area.x,
-				max = (orient == "left" || orient == "right") ? height : width,
-				depth = this.axis.get("depth"),
-				degree = this.axis.get("degree"),
-				start = axis,
-				size = max,
-				end = start + size;
-
-			var result = {
-				start: start,
-				size: size,
-				end: end
-			};
-
-			if(depth > 0 || degree > 0) {
-				var radian = math.radian(360 - degree),
-					x2 = Math.cos(radian) * depth,
-					y2 = Math.sin(radian) * depth;
-
-				if(orient == "left") {
-					result.start = result.start - y2;
-					result.size = result.size - y2;
-				} else if(orient == "bottom") {
-					result.end = result.end - x2;
-					result.size = result.size - x2;
-				}
-			}
-
-			return result;
-		}
 
 		this.getLineOption = function() {
 			var line = this.grid.line;
@@ -8988,175 +10193,6 @@ jui.define("chart.grid.core", [ "util.base", "util.math" ], function(_, math) {
 			return true;
 		}
 
-		this.createGridX = function(position, index, x, isActive, isLast) {
-			var line = this.getLineOption(),
-				axis = this.chart.svg.group().translate(x, 0),
-				size = this.chart.theme("gridTickBorderSize");
-
-			axis.append(this.line({
-				y2 : (position == "bottom") ? size : -size,
-				stroke : this.color(isActive, "gridActiveBorderColor", "gridXAxisBorderColor"),
-				"stroke-width" : this.chart.theme("gridTickBorderWidth")
-			}));
-
-			if (line) {
-				this.drawValueLine(position, axis, isActive, line, index, isLast);
-			}
-
-			return axis;
-		}
-
-		this.createGridY = function(position, index, y, isActive, isLast) {
-			var line = this.getLineOption(),
-				axis = this.chart.svg.group().translate(0, y),
-				size = this.chart.theme("gridTickBorderSize");
-
-			axis.append(this.line({
-				x2 : (position == "left") ? -size : size,
-				stroke : this.color(isActive, "gridActiveBorderColor", "gridYAxisBorderColor"),
-				"stroke-width" : this.chart.theme("gridTickBorderWidth")
-			}));
-
-			if (line) {
-				this.drawValueLine(position, axis, isActive, line, index, isLast);
-			}
-
-			return axis;
-		}
-
-		this.fillRectObject = function(g, line, position, x, y , width, height) {
-			if (line.type.indexOf("gradient") > -1) {
-				g.append(this.chart.svg.rect({
-					x : x,
-					y : y,
-					height : height,
-					width : width,
-					fill : this.chart.color(( line.fill ? line.fill : "linear(" + position + ") " + this.chart.theme("gridPatternColor") + ",0.5 " + this.chart.theme("backgroundColor") )),
-					"fill-opacity" : this.chart.theme("gridPatternOpacity")
-				}));
-			} else if (line.type.indexOf("rect") > -1) {
-				g.append(this.chart.svg.rect({
-					x : x,
-					y : y,
-					height : height,
-					width : width,
-					fill : this.chart.color( line.fill ? line.fill : this.chart.theme("gridPatternColor") ),
-					"fill-opacity" : this.chart.theme("gridPatternOpacity")
-				}));
-			}
-		}
-
-		this.drawPattern = function(position, ticks, values, isMove) {
-			if (this.grid.hide) return;
-			if (!position) return;
-			if (!ticks) return;
-			if (!values) return;
-
-			var line = this.getLineOption(),
-				isY = (position == "left" || position == "right");
-
-			var g = this.chart.svg.group({
-				"class" : "grid-pattern grid-pattern-" + this.grid.type
-			});
-
-			g.translate(this.axis.area("x") + this.chart.area("x"), this.axis.area("y") + this.chart.area("y"));
-
-			if (line && (line.type.indexOf("gradient") > -1 || line.type.indexOf("rect") > -1)) {
-				for(var i = 0; i < values.length-1; i += 2) {
-					var dist = Math.abs(values[i+1] - values[i]),
-						pos = values[i] - (isMove ?  dist/2 : 0 ),
-						x = (isY) ? 0 : pos,
-						y = (isY) ? pos : 0,
-						width = (isY) ?  this.axis.area("width") : dist,
-						height = (isY) ?  dist : this.axis.area("height");
-
-					this.fillRectObject(g, line, position, x, y, width, height);
-				}
-			}
-		}
-
-		this.drawBaseLine = function(position, g) {
-			var obj = this.getGridSize(),
-				pos = {};
-
-			if (position == "bottom" || position == "top") {
-				pos = { x1 : obj.start, x2 : obj.end };
-			} else if (position == "left" || position == "right") {
-				pos = { y1 : obj.start, y2 : obj.end };
-			}
-
-			g.append(this.axisLine(position, pos));
-		}
-
-		this.drawValueLine = function(position, axis, isActive, line, index, isLast) {
-			var area = {},
-				isDrawLine = false;
-
-			if (position == "top") {
-				isDrawLine = this.checkDrawLineY(index, isLast);
-				area = { x1: 0, x2: 0, y1: 0, y2: this.axis.area("height") };
-			} else if (position == "bottom" ) {
-				isDrawLine = this.checkDrawLineY(index, isLast);
-				area = { x1: 0, x2: 0, y1: 0, y2: -this.axis.area("height") };
-			} else if (position == "left") {
-				isDrawLine = this.checkDrawLineX(index, isLast);
-				area = { x1: 0, x2: this.axis.area("width"), y1: 0, y2: 0 };
-			} else if (position == "right" ) {
-				isDrawLine = this.checkDrawLineX(index, isLast);
-				area = { x1: 0, x2: -this.axis.area("width"), y1: 0, y2: 0 };
-			}
-
-			if(isDrawLine) {
-				var lineObject = this.line(_.extend({
-					stroke: this.chart.theme(isActive, "gridActiveBorderColor", "gridBorderColor"),
-					"stroke-width": this.chart.theme(isActive, "gridActiveBorderWidth", "gridBorderWidth")
-				}, area));
-
-				if (line.type.indexOf("dashed") > -1) {
-					lineObject.attr({ "stroke-dasharray": "5,5" });
-				}
-
-				axis.append(lineObject);
-			}
-		}
-
-		this.drawImage = function(orient, g, tick, index, x, y) {
-			if (!_.typeCheck("function", this.grid.image)) return;
-
-			var opts = this.grid.image.apply(this.chart, [ tick, index ]);
-
-			if(_.typeCheck("object", opts)) {
-				var image = this.chart.svg.image({
-					"xlink:href": opts.uri,
-					width: opts.width,
-					height: opts.height
-				});
-
-				if(orient == "top" || orient == "bottom") {
-					image.attr({
-						x: (this.grid.type == "block") ? this.scale.rangeBand()/2 - opts.width/2 : -(opts.width/2)
-					});
-				} else if(orient == "left" || orient == "right") {
-					image.attr({
-						y: (this.grid.type == "block") ? this.scale.rangeBand()/2 - opts.height/2 : -(opts.height/2)
-					})
-				}
-
-				if(orient == "bottom") {
-					image.attr({ y: opts.dist });
-				} else if(orient == "top") {
-					image.attr({ y: -(opts.dist + opts.height) });
-				} else if(orient == "left") {
-					image.attr({ x: -(opts.dist + opts.width) });
-				} else if(orient == "right") {
-					image.attr({ x: opts.dist });
-				}
-
-				image.translate(x, y)
-				g.append(image);
-			}
-		}
-
 		/**
 		 * @method top
 		 *
@@ -9189,22 +10225,10 @@ jui.define("chart.grid.core", [ "util.base", "util.math" ], function(_, math) {
 				}
 
 				var axis = this.createGridX("top", i, x, isActive, isLast);
-
-				if (!this.grid.hideText) {
-					axis.append(this.getTextRotate(this.chart.text({
-						x: moveX,
-						y: -(this.chart.theme("gridTickBorderSize") + this.chart.theme("gridTickPadding") * 2),
-						dy: this.chart.theme("gridXFontSize") / 3,
-						fill: this.chart.theme(isActive, "gridActiveFontColor", "gridXFontColor"),
-						"text-anchor": "middle",
-						"font-size": this.chart.theme("gridXFontSize"),
-						"font-weight": this.chart.theme("gridXFontWeight")
-					}, domain)));
-				}
+				this.drawValueText("top", axis, i, values[i], domain, moveX, isActive);
 
 				g.append(axis);
 			}
-
 		}
 
 		this.drawBottom = function(g, ticks, values, checkActive, moveX) {
@@ -9228,18 +10252,7 @@ jui.define("chart.grid.core", [ "util.base", "util.math" ], function(_, math) {
 				}
 
 				var axis = this.createGridX("bottom", i, x, isActive, isLast);
-
-				if (!this.grid.hideText) {
-					axis.append(this.getTextRotate(this.chart.text({
-						x: moveX,
-						y: this.chart.theme("gridTickBorderSize") + this.chart.theme("gridTickPadding") * 2,
-						dy: this.chart.theme("gridXFontSize") / 3,
-						fill: this.chart.theme(isActive, "gridActiveFontColor", "gridXFontColor"),
-						"text-anchor": "middle",
-						"font-size": this.chart.theme("gridXFontSize"),
-						"font-weight": this.chart.theme("gridXFontWeight")
-					}, domain)));
-				}
+				this.drawValueText("bottom", axis, i, values[i], domain, moveX, isActive);
 
 				g.append(axis);
 			}
@@ -9266,21 +10279,9 @@ jui.define("chart.grid.core", [ "util.base", "util.math" ], function(_, math) {
 				}
 
 				var axis = this.createGridY("left", i, y, isActive, isLast);
-
-				if (!this.grid.hideText) {
-					axis.append(this.getTextRotate(this.chart.text({
-						x: -this.chart.theme("gridTickBorderSize") - this.chart.theme("gridTickPadding"),
-						y: moveY,
-						dy: this.chart.theme("gridYFontSize") / 3,
-						fill: this.chart.theme(isActive, "gridActiveFontColor", "gridYFontColor"),
-						"text-anchor": "end",
-						"font-size": this.chart.theme("gridYFontSize"),
-						"font-weight": this.chart.theme("gridYFontWeight")
-					}, domain)));
-				}
+				this.drawValueText("left", axis, i, values[i], domain, moveY, isActive);
 
 				g.append(axis);
-
 			}
 		}
 
@@ -9305,18 +10306,7 @@ jui.define("chart.grid.core", [ "util.base", "util.math" ], function(_, math) {
 				}
 
 				var axis = this.createGridY("right", i, y, isActive, isLast);
-
-				if (!this.grid.hideText) {
-					axis.append(this.getTextRotate(this.chart.text({
-						x: this.chart.theme("gridTickBorderSize") + this.chart.theme("gridTickPadding"),
-						y: moveY,
-						dy: this.chart.theme("gridYFontSize") / 3,
-						fill: this.chart.theme(isActive, "gridActiveFontColor", "gridYFontColor"),
-						"text-anchor": "start",
-						"font-size": this.chart.theme("gridYFontSize"),
-						"font-weight": this.chart.theme("gridYFontWeight")
-					}, domain)));
-				}
+				this.drawValueText("right", axis, i, values[i], domain, moveY, isActive);
 
 				g.append(axis);
 			}
@@ -9334,13 +10324,15 @@ jui.define("chart.grid.core", [ "util.base", "util.math" ], function(_, math) {
 		this.drawGrid = function() {
 			// create group
 			var root = this.chart.svg.group(),
-				func = this[this.grid.orient];
+				func = this[this.grid.orient],
+				draw = (this.axis.isFull3D()) ? Draw3D : Draw2D;
 
 			// wrapped scale
 			this.scale = this.wrapper(this.scale, this.grid.key);
 
 			// render axis
 			if(_.typeCheck("function", func)) {
+				draw.call(this);
 				func.call(this, root);
 			}
 
@@ -9358,13 +10350,12 @@ jui.define("chart.grid.core", [ "util.base", "util.math" ], function(_, math) {
 		/**
 		 * @method drawAfter
 		 *
-		 *
-		 *
 		 * @param {Object} obj
 		 * @protected
 		 */
 		this.drawAfter = function(obj) {
 			obj.root.attr({ "class": "grid grid-" + this.grid.type});
+			obj.root.translate(this.chart.area("x") , this.chart.area("y"));
 		}
 	}
 
@@ -9409,12 +10400,11 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 	 * @extends chart.grid.core
 	 */
 	var BlockGrid = function() {
+		this.center = function(g) {
+			this.drawCenter(g, this.domain, this.points, null, this.half_band);
+			this.drawBaseLine("center", g);
+		}
 
-		/**
-		 * @method top
-		 *
-		 * @protected
-		 */
 		this.top = function(g) {
 			this.drawPattern("top", this.domain, this.points, true);
 			this.drawTop(g, this.domain, this.points, null, this.half_band);
@@ -9422,11 +10412,6 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 			g.append(this.createGridX("top", this.domain.length, this.end, null, true));
 		}
 
-		/**
-		 * @method bottom
-		 *
-		 * @protected
-		 */
 		this.bottom = function(g) {
 			this.drawPattern("bottom", this.domain, this.points, true);
 			this.drawBottom(g, this.domain, this.points, null, this.half_band);
@@ -9434,11 +10419,6 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 			g.append(this.createGridX("bottom", this.domain.length, this.end, null, true));
 		}
 
-		/**
-		 * @method left
-		 *
-		 * @protected
-		 */
 		this.left = function(g) {
 			this.drawPattern("left", this.domain, this.points, true);
 			this.drawLeft(g, this.domain, this.points, null, this.half_band);
@@ -9446,11 +10426,6 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 			g.append(this.createGridY("left", this.domain.length, this.end, null, true));
 		}
 
-		/**
-		 * @method right
-		 *
-		 * @protected
-		 */
 		this.right = function(g) {
 			this.drawPattern("right", this.domain, this.points, true);
 			this.drawRight(g, this.domain, this.points, null, this.half_band);
@@ -9458,11 +10433,6 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 			g.append(this.createGridY("right", this.domain.length, this.end, null, true));
 		}
 
-		/**
-		 * @method initDomain
-		 * block grid 에 대한 domain 설정
-		 * @private
-		 */
 		this.initDomain = function() {
 
 			var domain = [];
@@ -9500,11 +10470,6 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 
 		}
 
-		/**
-		 * @method drawBefore
-		 *
-		 * @protected
-		 */
 		this.drawBefore = function() {
 			var domain = this.initDomain(),
 				obj = this.getGridSize(),
@@ -9526,12 +10491,6 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 			this.reverse = this.grid.reverse;
 		}
 
-		/**
-		 * @method draw
-		 *
-		 * @protected
-		 * @return {Mixed}
-		 */
 		this.draw = function() {
 			return this.drawGrid("block");
 		}
@@ -9555,12 +10514,14 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 
 	/**
 	 * @class chart.grid.date
-	 *
-	 * implements date grid
-	 *
 	 * @extends chart.grid.core
 	 */
 	var DateGrid = function() {
+
+		this.center = function(g) {
+			this.drawCenter(g, this.ticks, this.values, null, 0);
+			this.drawBaseLine("center", g);
+		}
 
 		this.top = function(g) {
 			this.drawPattern("top", this.ticks, this.values);
@@ -9601,13 +10562,6 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 			return (key) ? $.extend(new_scale, old_scale) : old_scale;
 		}
 
-
-		/**
-		 * date grid 의 domain 설정
-		 *
-		 * grid 속성중에 domain 이 없고 target 만 있을 때  target 을 기준으로  domain 생성
-		 *
-		 */
 		this.initDomain = function() {
 			var domain = [],
 				interval = [];
@@ -9733,9 +10687,6 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 
 	/**
 	 * @class chart.grid.dateblock
-	 *
-	 * implements date block grid
-	 *
 	 * @extends chart.grid.date
 	 */
 	var DateBlockGrid = function() {
@@ -9751,12 +10702,6 @@ jui.define("chart.grid.dateblock", [ "util.time", "util.scale", "util.base" ], f
 			return old_scale;
 		}
 
-		/**
-		 * date grid 의 domain 설정
-		 *
-		 * grid 속성중에 domain 이 없고 target 만 있을 때  target 을 기준으로  domain 생성
-		 *
-		 */
 		this.initDomain = function() {
 			var domain = [],
 				interval = [];
@@ -9858,19 +10803,13 @@ jui.define("chart.grid.fullblock", [ "util.scale", "util.base" ], function(UtilS
 
     /**
      * @class chart.grid.block
-     * Implements Block Grid
-     *
-     *  { type : "block", domain : [ 'week1', 'week2', 'week3' ] }
-     *
      * @extends chart.grid.core
      */
     var FullBlockGrid = function() {
-
-        /**
-         * @method top
-         *
-         * @protected
-         */
+        this.center = function(g) {
+            this.drawCenter(g, this.domain, this.points, null, 0);
+            this.drawBaseLine("center", g);
+        }
 
         this.top = function(g) {
             this.drawPattern("top", this.domain, this.points);
@@ -9878,44 +10817,24 @@ jui.define("chart.grid.fullblock", [ "util.scale", "util.base" ], function(UtilS
             this.drawBaseLine("top", g);
         }
 
-        /**
-         * @method bottom
-         *
-         * @protected
-         */
         this.bottom = function(g) {
             this.drawPattern("bottom", this.domain, this.points);
             this.drawBottom(g, this.domain, this.points, null, 0);
             this.drawBaseLine("bottom", g);
         }
 
-        /**
-         * @method left
-         *
-         * @protected
-         */
         this.left = function(g) {
             this.drawPattern("left", this.domain, this.points);
             this.drawLeft(g, this.domain, this.points, null, 0);
             this.drawBaseLine("left", g);
         }
 
-        /**
-         * @method right
-         *
-         * @protected
-         */
         this.right = function(g) {
             this.drawPattern("right", this.domain, this.points);
             this.drawRight(g, this.domain, this.points, null, 0);
             this.drawBaseLine("right", g);
         }
 
-        /**
-         * @method initDomain
-         * block grid 에 대한 domain 설정
-         * @private
-         */
         this.initDomain = function() {
 
             var domain = [];
@@ -9953,11 +10872,6 @@ jui.define("chart.grid.fullblock", [ "util.scale", "util.base" ], function(UtilS
 
         }
 
-        /**
-         * @method drawBefore
-         *
-         * @protected
-         */
         this.drawBefore = function() {
             var domain = this.initDomain();
 
@@ -9981,12 +10895,6 @@ jui.define("chart.grid.fullblock", [ "util.scale", "util.base" ], function(UtilS
             this.reverse = this.grid.reverse;
         }
 
-        /**
-         * @method draw
-         *
-         * @protected
-         * @return {Mixed}
-         */
         this.draw = function() {
             return this.drawGrid("block");
         }
@@ -10011,9 +10919,6 @@ jui.define("chart.grid.radar", [ "util.math", "util.base" ], function(math, _) {
 
 	/**
 	 * @class chart.grid.radar
-	 *
-	 * Radar 형태의 그리드
-	 *
 	 * @extends chart.grid.core
 	 */
 	var RadarGrid = function() {
@@ -10105,11 +11010,6 @@ jui.define("chart.grid.radar", [ "util.math", "util.base" ], function(math, _) {
             }
         }
 
-
-		/**
-		 * block,radar grid 에 대한 domain 설정
-		 *
-		 */
 		this.initDomain = function() {
 			var domain = [];
 			if (_.typeCheck("string", this.grid.domain)) {
@@ -10306,16 +11206,23 @@ jui.define("chart.grid.radar", [ "util.math", "util.base" ], function(math, _) {
 	return RadarGrid;
 }, "chart.grid.core");
 
-jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale, _) {
+jui.define("chart.grid.range", [ "util.scale", "util.base", "util.math" ], function(UtilScale, _, math) {
 
 	/**
 	 * @class chart.grid.range
-	 *
-	 * implements range grid
-	 *
 	 * @extends chart.grid.core
 	 */
 	var RangeGrid = function() {
+		this.center = function(g) {
+			var min = this.scale.min(),
+				max = this.scale.max();
+
+			this.drawCenter(g, this.ticks, this.values, function(tick) {
+				return tick == 0 && tick != min && tick != max;
+			}, 0);
+			this.drawBaseLine("center", g);
+		}
+
 		this.top = function(g) {
 			this.drawPattern("top", this.ticks, this.values);
 			var min = this.scale.min(),
@@ -10371,12 +11278,6 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
             return (key) ? $.extend(new_scale, old_scale) : old_scale;
         }
 
-		/**
-		 * range grid 의 domain 설정
-		 *
-		 * grid 속성중에 domain 이 없고 target 만 있을 때  target 을 기준으로  domain 생성
-		 *
-		 */
 		this.initDomain = function() {
 
 			var domain = [];
@@ -10445,13 +11346,21 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 			this.grid.min = min;
 
 			var unit;
-
+			var hasUnit = true;
 			if (_.typeCheck("function", this.grid.unit)) {
 				unit = this.grid.unit.call(this.chart, this.grid);
 			} else if (_.typeCheck("number", this.grid.unit)) {
 				unit = this.grid.unit;
 			} else {
-				unit = Math.ceil((max - min) / this.grid.step);
+				unit = math.div((max - min), this.grid.step);   // (max - min) / this.grid.step
+				var firstNumber = math.remain((unit * 10),  10); // unit * 10 % 10
+
+				if (firstNumber != 5) {
+					unit = Math.round(unit);
+				} else if (firstNumber > 5) {
+					unit = Math.ceil(unit);
+				}
+
 			}
 
 			if (unit == 0) {
@@ -10460,18 +11369,20 @@ jui.define("chart.grid.range", [ "util.scale", "util.base" ], function(UtilScale
 
 				var start = 0;
 
+				var fixed = math.fixed(unit);
 				while (start < max) {
-					start += unit;
+					start = fixed.plus(start, unit);
 				}
 
-        var end = start;
-        while (end > min) {
-          end -= unit;
-        }
+				var end = start;
+				while (end > min) {
+				  end = fixed.minus(end, unit);
+				}
         
 				domain = [end, start];
 
 				this.grid.step = (Math.abs(end - start) / unit);
+
 			}
 
 			if (this.grid.reverse) {
@@ -10560,9 +11471,6 @@ jui.define("chart.grid.log", [ "util.scale", "util.base" ], function(UtilScale, 
 
 	/**
 	 * @class chart.grid.log
-	 *
-	 * implements log grid
-	 *
 	 * @extends chart.grid.range
 	 */
 	var LogGrid = function() {
@@ -10613,9 +11521,7 @@ jui.define("chart.grid.log", [ "util.scale", "util.base" ], function(UtilScale, 
 		return {
 			/** @cfg {Number} [base=10] log's base */
 			base : 10,
-
 			step : 4,
-
 			nice : false
 		};
 	}
@@ -10627,9 +11533,6 @@ jui.define("chart.grid.rule", [ "util.scale", "util.base" ], function(UtilScale,
 
 	/**
 	 * @class chart.grid.rule
-	 *
-	 * implements rule grid
-	 *
 	 * @extends chart.grid.core
 	 */
 	var RuleGrid = function() {
@@ -10824,13 +11727,7 @@ jui.define("chart.grid.rule", [ "util.scale", "util.base" ], function(UtilScale,
 
             return (key) ? $.extend(new_scale, old_scale) : old_scale;
         }
-        
-		/**
-		 * range grid 의 domain 설정
-		 *
-		 * grid 속성중에 domain 이 없고 target 만 있을 때  target 을 기준으로  domain 생성
-		 *
-		 */
+
         this.initDomain = function() {
 
 			var domain = [];
@@ -10995,22 +11892,10 @@ jui.define("chart.grid.panel", [  ], function() {
 
     /**
      * @class chart.grid.panel
-     *
-     * implements default panel grid
-     *
      * @extends chart.grid.core
      */
     var PanelGrid = function() {
 
-        /**
-         * @method custom
-         *
-         * draw sample panel area
-         *
-         * @param {ChartBuilder} chart
-         * @param {SVGElement} g
-         * @protected
-         */
         this.custom = function(g) {
             var obj = this.scale(0);
 
@@ -11025,20 +11910,7 @@ jui.define("chart.grid.panel", [  ], function() {
             g.append(rect);
         }
 
-        /**
-         * @method drawBefore
-         *
-         * initialize grid option before draw grid
-         *
-         */
         this.drawBefore = function() {
-
-            /**
-             * @method scale
-             *
-             * get scale function
-             *
-             */
             this.scale = (function(axis) {
                 return function(i) {
 
@@ -11050,18 +11922,8 @@ jui.define("chart.grid.panel", [  ], function() {
                     }
                 }
             })(this.axis);
-
         }
 
-        /**
-         * @method draw
-         *
-         *
-         * @returns {Object}
-         * @returns {util.scale} scale  return scale be used in grid
-         * @returns {SVGElement} root grid root element
-         * @protected
-         */
         this.draw = function() {
             this.grid.hide = true;
             return this.drawGrid("panel");
@@ -11075,9 +11937,6 @@ jui.define("chart.grid.table", [  ], function() {
 
     /**
      * @class chart.grid.table
-     *
-     * implements table grid 
-     *
      * @extends chart.grid.core
      */
     var TableGrid = function(chart, axis, grid) {
@@ -11136,15 +11995,6 @@ jui.define("chart.grid.table", [  ], function() {
             })(this.axis, row, column, rowUnit, columnUnit);
         }
 
-        /**
-         * @method draw
-         *
-         *
-         * @return {Object}
-         * @return {util.scale} return.scale  return scale be used in grid
-         * @return {SVGElement} return.root grid root element
-         * @protected
-         */
         this.draw = function() {
             this.grid.hide = true;
             return this.drawGrid("table");
@@ -11169,12 +12019,6 @@ jui.define("chart.grid.overlap", [  ], function() {
 
     /**
      * @class chart.grid.overlap
-     *
-     * implements overlap grid be used in multiple pie or donut chart
-     *
-     * @param chart
-     * @param axis
-     * @param grid
      * @extends chart.grid.core
      */
     var OverlapGrid = function() {
@@ -11222,15 +12066,6 @@ jui.define("chart.grid.overlap", [  ], function() {
 
         }
 
-        /**
-         * @method draw
-         *
-         *
-         * @returns {Object}
-         * @returns {util.scale} scale  return scale be used in grid
-         * @returns {SVGElement} root grid root element
-         * @protected
-         */
         this.draw = function() {
             this.grid.hide = true;
             return this.drawGrid("overlap");
@@ -11252,9 +12087,6 @@ jui.define("chart.grid.topologytable", [ "util.base" ], function(_) {
 
     /**
      * @class chart.grid.topologytable
-     *
-     * 토폴로지 배치를 위한 grid
-     *
      * @extends chart.grid.core
      */
     var TopologyTableGrid = function() {
@@ -11341,12 +12173,6 @@ jui.define("chart.grid.topologytable", [ "util.base" ], function(_) {
             }
         }
 
-        /**
-         * @method drawBefore
-         *
-         * initialize grid option before draw grid
-         *
-         */
         this.drawBefore = function() {
             area = this.chart.area();
             size = this.grid.space;
@@ -11363,12 +12189,6 @@ jui.define("chart.grid.topologytable", [ "util.base" ], function(_) {
                 }
             }
 
-            /**
-             * @method scale
-             *
-             * get scale function
-             *
-             */
             this.scale = (function() {
                 return function(index) {
                     var index = (_.typeCheck("string", index)) ? getDataIndex(index) : index;
@@ -11393,16 +12213,7 @@ jui.define("chart.grid.topologytable", [ "util.base" ], function(_) {
                 }
             })(this.axis);
         }
-
-        /**
-         * @method draw
-         *
-         *
-         * @returns {Object}
-         * @returns {util.scale} return.scale  return scale be used in grid
-         * @returns {SVGElement} return.root grid root element
-         * @protected
-         */
+        
         this.draw = function() {
             this.grid.hide = true;
             return this.drawGrid();
@@ -11425,9 +12236,6 @@ jui.define("chart.grid.grid3d", [ "util.base", "util.math" ], function(_, math) 
 
     /**
      * @class chart.grid.grid3d
-     *
-     * 토폴로지 배치를 위한 grid
-     *
      * @extends chart.grid.core
      */
     var Grid3D = function() {
@@ -11448,23 +12256,11 @@ jui.define("chart.grid.grid3d", [ "util.base", "util.math" ], function(_, math) 
             return attr;
         }
 
-        /**
-         * @method drawBefore
-         *
-         * initialize grid option before draw grid
-         *
-         */
         this.drawBefore = function() {
             depth = this.axis.get("depth");
             degree = this.axis.get("degree");
             radian = math.radian(360 - degree);
 
-            /**
-             * @method scale
-             *
-             * get scale function
-             *
-             */
             this.scale = (function() {
                 return function(x, y, z, count) {
                     var step = _.typeCheck("integer", count) ? count : 1,
@@ -11495,15 +12291,6 @@ jui.define("chart.grid.grid3d", [ "util.base", "util.math" ], function(_, math) 
             this.scale.radian = radian;
         }
 
-        /**
-         * @method draw
-         *
-         *
-         * @returns {Object}
-         * @returns {util.scale} return.scale  return scale be used in grid
-         * @returns {SVGElement} return.root grid root element
-         * @protected
-         */
         this.draw = function() {
             var xRoot = this.axis.x.root,
                 yRoot = this.axis.y.root;
@@ -11636,6 +12423,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
             function draw() {
                 return self.chart.svg.group({ "visibility" : "hidden" }, function() {
                     self.chart.text({
+                        fill : self.chart.theme("tooltipPointFontColor"),
                         "font-size" : self.chart.theme("tooltipPointFontSize"),
                         "font-weight" : self.chart.theme("tooltipPointFontWeight"),
                         "text-anchor" : "middle",
@@ -11757,42 +12545,6 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
 				p2 : p2
 			};
 		}
-
-        /**
-         * 
-         * @method getScaleValue
-         *
-         * 값에 비례하여 반지름을 구하는 함수
-         *
-         * @param value
-         * @param minValue
-         * @param maxValue
-         * @param minRadius
-         * @param maxRadius
-         * @return {*}
-         */
-        this.getScaleValue = function(value, minValue, maxValue, minRadius, maxRadius) {
-            // 최소/최대 값이 같을 경우 처리
-            minValue = (minValue == maxValue) ? 0 : minValue;
-
-            var range = maxRadius - minRadius,
-                tg = range * getPer();
-
-            function getPer() {
-                var range = maxValue - minValue,
-                    tg = value - minValue,
-                    per = tg / range;
-
-                return per;
-            }
-
-            return tg + minRadius;
-        }
-
-        /*
-         * 차트 데이터 핸들링 함수
-         *
-         */
 
         /**
          * 
@@ -12107,15 +12859,53 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
         }
     }
 
+    /**
+     * @event click
+     * Event that occurs when clicking on the brush.
+     * @param {BrushData} obj Related brush data.
+     */
+    /**
+     * @event dblclick
+     * Event that occurs when double clicking on the brush.
+     * @param {BrushData} obj Related brush data.
+     */
+    /**
+     * @event rclick
+     * Event that occurs when right clicking on the brush.
+     * @param {BrushData} obj Related brush data.
+     */
+    /**
+     * @event mouseover
+     * Event that occurs when placing the mouse over the brush.
+     * @param {BrushData} obj Related brush data.
+     */
+    /**
+     * @event mouseout
+     * Event that occurs when moving the mouse out of the brush.
+     * @param {BrushData} obj Related brush data.
+     */
+    /**
+     * @event mousemove
+     * Event that occurs when moving the mouse over the brush.
+     * @param {BrushData} obj Related brush data.
+     */
+    /**
+     * @event mousedown
+     * Event that occurs when left clicking on the brush.
+     * @param {BrushData} obj Related brush data.
+     */
+    /**
+     * @event mouseup
+     * Event that occurs after left clicking on the brush.
+     * @param {BrushData} obj Related brush data.
+     */
+
 	return CoreBrush;
 }, "chart.draw"); 
 jui.define("chart.brush.imagebar", [ "util.base" ], function(_) {
 
     /**
      * @class chart.brush.imagebar
-     *
-     * implements column brush
-     *
      * @extends chart.brush.column
      */
 	var ImageBarBrush = function() {
@@ -12230,9 +13020,6 @@ jui.define("chart.brush.imagecolumn", [ "util.base" ], function(_) {
 
     /**
      * @class chart.brush.imagecolumn
-     *
-     * implements column brush
-     *
      * @extends chart.brush.column
      */
 	var ImageColumnBrush = function() {
@@ -12318,9 +13105,6 @@ jui.define("chart.brush.patternbar", [ "util.base" ], function(_) {
 
     /**
      * @class chart.brush.patternbar
-     *
-     * implements column brush
-     *
      * @extends chart.brush.core
      */
 	var PatternBarBrush = function() {
@@ -12414,9 +13198,6 @@ jui.define("chart.brush.patterncolumn", [ "util.base" ], function(_) {
 
     /**
      * @class chart.brush.patterncolumn
-     *
-     * implements column brush
-     *
      * @extends chart.brush.column
      */
 	var PatternColumnBrush = function() {
@@ -12478,25 +13259,14 @@ jui.define("chart.brush.patterncolumn", [ "util.base" ], function(_) {
 jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 
     /**
-     * @class chart.brush.bar 
-     * implements bar brush 
+     * @class chart.brush.bar
+	 *
      * @extends chart.brush.core
      */
 	var BarBrush = function() {
 		var g;
 		var zeroX, height, half_height, bar_height;
 
-        /**
-         * bar style 을 얻어온다. 
-         *  
-         * @return {Object} bar 에 관련된 스타일을 리턴한다. 
-         * @return {String} return.borderColor  
-         * @return {Number} return.borderWidth  
-         * @return {Number} return.borderOpacity  
-         * @return {Number} return.borderRadius  
-         * @return {Number} return.disableOpacity  
-         * @return {String} return.circleColor  
-         */
 		this.getBarStyle = function() {
 			return {
 				borderColor: this.chart.theme("barBorderColor"),
@@ -12508,18 +13278,6 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 			}
 		}
 
-        /**
-         * @method getBarElement 
-         *  
-         * 특정 위치에 맞는 bar element 를 생성한다. 
-         *  
-         * @param {Number} dataIndex
-         * @param {Number} targetIndex
-         * @param {Object} info
-         * @param {Number} info.width bar 넓이
-         * @param {Number} info.height bar 높이
-         * @return {util.svg.element}
-         */
 		this.getBarElement = function(dataIndex, targetIndex, info) {
 			var style = this.getBarStyle(),
 				color = this.color(dataIndex, targetIndex),
@@ -12550,13 +13308,6 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 			return r;
 		}
 
-        /**
-         * @method setActiveEffect 
-         * 
-         * 활성화(active)된 영역 표시   
-         *  
-         * @param {Number} r
-         */
 		this.setActiveEffect = function(r) {
 			var style = this.getBarStyle(),
 				cols = this.barList;
@@ -12571,11 +13322,6 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 			}
 		}
 
-        /**
-         * @method drawBefore 
-         * 
-         * @protected 
-         */
 		this.drawBefore = function() {
 			var op = this.brush.outerPadding,
 				ip = this.brush.innerPadding,
@@ -12595,11 +13341,6 @@ jui.define("chart.brush.bar", [ "util.base" ], function(_) {
 			}
 		}
 
-        /**
-         * @method drawETC
-         * 
-         * @param {util.svg.element} group
-         */
 		this.drawETC = function(group) {
 			if(!_.typeCheck("array", this.barList)) return;
 
@@ -12763,9 +13504,6 @@ jui.define("chart.brush.column", [], function() {
 
     /**
      * @class chart.brush.column 
-     *
-     * implements column brush
-     *
      * @extends chart.brush.bar
      */
 	var ColumnBrush = function() {
@@ -13172,9 +13910,6 @@ jui.define("chart.brush.stackbar", [], function() {
 
 	/**
 	 * @class chart.brush.stackbar
-	 *
-	 * stack 형태의 bar 브러쉬
-	 *
 	 * @extends chart.brush.bar
 	 *
 	 */
@@ -13310,9 +14045,6 @@ jui.define("chart.brush.stackcolumn", [], function() {
 
 	/**
 	 * @class chart.brush.stackcolumn
-	 *
-	 * stack 형태의 column 브러쉬
-	 *
 	 * @extends chart.brush.stackbar
 	 */
 	var ColumnStackBrush = function(chart, axis, brush) {
@@ -13524,10 +14256,7 @@ jui.define("chart.brush.fullstackbar", [], function() {
 
     /**
      * @class chart.brush.fullstackbar 
-     * 
-     * implements fullstack bar brush 
-     *  
-     * @extends chart.brush.stackbar 
+     * @extends chart.brush.stackbar
      */
 	var FullStackBarBrush = function(chart, axis, brush) {
 		var g, zeroX, height, bar_height;
@@ -13624,9 +14353,6 @@ jui.define("chart.brush.fullstackcolumn", [], function() {
 
     /**
      * @class chart.brush.fullstackcolumn 
-     * 
-     * implements fullstack column  
-     *  
      * @extends chart.brush.fullstackbar
      */
 	var FullStackColumnBrush = function(chart, axis, brush) {
@@ -13916,7 +14642,7 @@ jui.define("chart.brush.fullstackcylinder3d", [], function() {
 	return FullStackCylinder3DBrush;
 }, "chart.brush.fullstackcolumn3d");
 
-jui.define("chart.brush.bubble", [], function() {
+jui.define("chart.brush.bubble", [ "util.math" ], function(math) {
 
     /**
      * @class chart.brush.bubble 
@@ -13926,20 +14652,8 @@ jui.define("chart.brush.bubble", [], function() {
 	var BubbleBrush = function() {
         var self = this;
 
-        /**
-         * @method createBubble 
-         *  
-         *  util method for craete bubble
-         *   
-         * @private
-         * @param {chart.builder} chart
-         * @param {Object} brush
-         * @param {Object} pos
-         * @param {Number} index
-         * @return {GroupElement}
-         */
         this.createBubble = function(pos, color) {
-            var radius = this.getScaleValue(pos.value, this.axis.y.min(), this.axis.y.max(), this.brush.min, this.brush.max),
+            var radius = math.scaleValue(pos.value, this.axis.y.min(), this.axis.y.max(), this.brush.min, this.brush.max),
                 circle = this.chart.svg.group();
 
             circle.append(
@@ -13955,15 +14669,6 @@ jui.define("chart.brush.bubble", [], function() {
             return circle;
         }
 
-        /**
-         * @method drawBubble 
-         * 
-         * @protected  
-         * @param {chart.builder} chart
-         * @param {Object} brush
-         * @param {Array} points
-         * @return {GroupElement}
-         */
         this.drawBubble = function(points) {
             var g = this.chart.svg.group();
             
@@ -13981,21 +14686,10 @@ jui.define("chart.brush.bubble", [], function() {
             return g;
         }
 
-        /**
-         * @method draw 
-         * 
-         * @protected 
-         * @return {GroupElement}
-         */
         this.draw = function() {
             return this.drawBubble(this.getXY());
         }
 
-        /**
-         * @method drawAnimate
-         *
-         * @protected
-         */
         this.drawAnimate = function(root) {
             root.each(function(i, elem) {
                 var c = elem.children[0];
@@ -14035,7 +14729,7 @@ jui.define("chart.brush.bubble", [], function() {
 
 	return BubbleBrush;
 }, "chart.brush.core");
-jui.define("chart.brush.bubble3d", [], function() {
+jui.define("chart.brush.bubble3d", [ "util.math" ], function(math) {
 
     /**
      * @class chart.brush.bubble3d
@@ -14069,7 +14763,7 @@ jui.define("chart.brush.bubble3d", [], function() {
                         dy = Math.sin(this.axis.c.radian) * xy.depth,
                         startX = xy.x + dx / 2,
                         startY = xy.y - dy / 2,
-                        rate = this.getScaleValue(count - j, 1, count, 0.6, 1),
+                        rate = math.scaleValue(count - j, 1, count, 0.6, 1),
                         color = this.color(i, j);
 
                     var b = this.createBubble({
@@ -14098,9 +14792,6 @@ jui.define("chart.brush.candlestick", [], function() {
 
     /**
      * @class chart.brush.candlestick 
-     * 
-     * implements candlestick brush
-     *
      * @extends chart.brush.core
      */
     var CandleStickBrush = function() {
@@ -14186,9 +14877,6 @@ jui.define("chart.brush.ohlc", [], function() {
 
     /**
      * @class chart.brush.ohlc 
-     * 
-     * implments ohlc brush 
-     *  
      * @extends chart.brush.candlestick
      */
     var OHLCBrush = function(chart, axis, brush) {
@@ -14254,10 +14942,7 @@ jui.define("chart.brush.equalizer", [], function() {
 
     /**
      * @class chart.brush.equalizer 
-     *  
-     * implements equalizer brush 
-     *  
-     * @extends chart.brush.core   
+     * @extends chart.brush.core
      */
     var EqualizerBrush = function(chart, axis, brush) {
         var g, zeroY, width, barWidth, half_width;
@@ -14346,7 +15031,6 @@ jui.define("chart.brush.line", [], function() {
 
     /**
      * @class chart.brush.line
-     * implements line brush
      * @extends chart.brush.core
      */
 	var LineBrush = function() {
@@ -14541,9 +15225,6 @@ jui.define("chart.brush.path", [], function() {
 
     /**
      * @class chart.brush.path 
-     * 
-     * implements path brush  
-     *  
      * @extends chart.brush.core
      */
 	var PathBrush = function(chart, axis, brush) {
@@ -14589,9 +15270,6 @@ jui.define("chart.brush.pie", [ "util.base", "util.math", "util.color" ], functi
 
 	/**
 	 * @class chart.brush.pie
-	 *
-	 * implements pie brush
-	 *
      * @extends chart.brush.core
 	 */
 	var PieBrush = function() {
@@ -14859,9 +15537,6 @@ jui.define("chart.brush.donut", [ "util.base", "util.math", "util.color" ], func
 
     /**
      * @class chart.brush.donut 
-     * 
-     * implements donut brush 
-     *  
      * @extends chart.brush.pie
      * 
      */
@@ -14869,21 +15544,6 @@ jui.define("chart.brush.donut", [ "util.base", "util.math", "util.color" ], func
         var self = this,
             cache_active = {};
 
-        /**
-         * @method drawDonut 
-         * 
-         * donut 을 그린다.
-         *   
-         * @param {Number} centerX 중앙 위치 x
-         * @param {Number} centerY 중앙 위치 y
-         * @param {Number} innerRadius 안쪽 반지름
-         * @param {Number} outerRadius 바깥쪽 반지름
-         * @param {Number} startAngle 시작 지점 각도
-         * @param {Number} endAngle 시작지점에서 끝지점까지의 각도
-         * @param {Object} attr donut 설정될 svg 속성 리스트
-         * @param {Boolean} hasCircle
-         * @return {util.svg.element}
-         */
 		this.drawDonut = function(centerX, centerY, innerRadius, outerRadius, startAngle, endAngle, attr, hasCircle) {
 		    hasCircle = hasCircle || false;
 
@@ -14945,21 +15605,6 @@ jui.define("chart.brush.donut", [ "util.base", "util.math", "util.color" ], func
 			return g;
 		}
 
-        /**
-         * @method drawDonut3d
-         *
-         * donut 을 그린다.
-         *
-         * @param {Number} centerX 중앙 위치 x
-         * @param {Number} centerY 중앙 위치 y
-         * @param {Number} innerRadius 안쪽 반지름
-         * @param {Number} outerRadius 바깥쪽 반지름
-         * @param {Number} startAngle 시작 지점 각도
-         * @param {Number} endAngle 시작지점에서 끝지점까지의 각도
-         * @param {Object} attr donut 설정될 svg 속성 리스트
-         * @param {Boolean} hasCircle
-         * @return {util.svg.element}
-         */
 		this.drawDonut3d = function(centerX, centerY, innerRadius, outerRadius, startAngle, endAngle, attr, hasCircle, isLast) {
 			var g = this.chart.svg.group(),
 				path = this.chart.svg.path(attr),
@@ -15185,9 +15830,6 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
 
     /**
      * @class chart.brush.scatter
-     *
-     * 점으로 이루어진 데이타를 표현하는 브러쉬
-     *
      * @extends chart.brush.core
      */
     var ScatterBrush = function() {
@@ -15218,15 +15860,6 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
             };
         }
 
-        /**
-         * @method createScatter
-         *
-         * 좌표별 scatter 생성
-         *
-         * @param {Object} pos
-         * @param {Number} index
-         * @return {util.svg.element}
-         */
         this.createScatter = function(pos, dataIndex, targetIndex, symbol) {
             var self = this,
                 elem = null,
@@ -15325,14 +15958,6 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
             return elem;
         }
 
-        /**
-         * @method drawScatter
-         *
-         * scatter 그리기
-         *
-         * @param {Array} points
-         * @return {util.svg.element} g element 리턴
-         */
         this.drawScatter = function(points) {
             // hoverSync 옵션 처리를 위한 캐싱 처리
             this.cachedSymbol = {};
@@ -15434,11 +16059,6 @@ jui.define("chart.brush.scatter", [ "util.base" ], function(_) {
             }, text).translate(x, y);
         }
 
-        /**
-         * @method draw
-         *
-         * @return {util.svg.element}
-         */
         this.draw = function() {
             return this.drawScatter(this.getXY());
         }
@@ -15485,11 +16105,6 @@ jui.define("chart.brush.scatterpath", ["util.base"], function(_) {
 
     /**
      * @class chart.brush.scatterpath
-     *
-     * scatter path 는 path 를 이용해서 최적화된 symbol 을 그리는 브러쉬
-     *
-     * scatter 로 표현하지 못하는 많은 양의 데이타를 표시 하는데 사용할 수 있다.
-     *
      * @extends chart.brush.core
      *
      */
@@ -15563,18 +16178,11 @@ jui.define("chart.brush.scatterpath", ["util.base"], function(_) {
 jui.define("chart.brush.bargauge", [], function() {
 
     /**
-     * @class chart.brush.bargauge 
-     *
+     * @class chart.brush.bargauge
      * @extends chart.brush.core
      */
 	var BarGaugeBrush = function(chart, axis, brush) {
 
-        /**
-         * @method draw
-         * 
-         * @protected
-         * @return {TransformElement}
-         */
 		this.draw = function() {
             var group = chart.svg.group();
 
@@ -15653,10 +16261,7 @@ jui.define("chart.brush.circlegauge", [], function() {
 
     /**
      * @class chart.brush.circlegauge 
-     * 
-     * implements circle gauge  
-     *
-     * @extends chart.brush.core 
+     * @extends chart.brush.core
      */
 	var CircleGaugeBrush = function(chart, axis, brush) {
         var group;
@@ -15891,22 +16496,10 @@ jui.define("chart.brush.area", [], function() {
     /**
      * @class chart.brush.area
      *
-     * implements area brush
-     *
-     *
      * @extends chart.brush.line
      */
     var AreaBrush = function() {
 
-        /**
-         * @method drawArea 
-         * 
-         * draw area util method
-         *
-         * @param {Array} path  caculated xy points
-         * @return {TransformElement}
-         * @protected
-         */
         this.drawArea = function(path) {
             var g = this.chart.svg.group(),
                 y = this.axis.y(this.brush.startZero ? 0 : this.axis.y.min());
@@ -15939,21 +16532,10 @@ jui.define("chart.brush.area", [], function() {
             return g;
         }
 
-        /**
-         * @method draw 
-         * 
-         * @protected  
-         * @return {TransformElement}
-         */
         this.draw = function() {
             return this.drawArea(this.getXY());
         }
 
-        /**
-         * @method drawAnimate
-         *
-         * @protected
-         */
         this.drawAnimate = function(root) {
             root.append(
                 this.chart.svg.animate({
@@ -15993,9 +16575,6 @@ jui.define("chart.brush.stackline", [], function() {
 
 	/**
 	 * @class chart.brush.stackline
-	 *
-	 * stack 형태의 line 브러쉬
-	 *
 	 * @extends chart.brush.line
 	 */
 	var StackLineBrush = function() {
@@ -16010,9 +16589,6 @@ jui.define("chart.brush.stackarea", [], function() {
 
 	/**
 	 * @class chart.brush.stackarea
-	 *
-	 * stack 형태의 area brush
-	 *
 	 * @extends chart.brush.area
 	 */
 	var StackAreaBrush = function() {
@@ -16028,9 +16604,6 @@ jui.define("chart.brush.stackscatter", [], function() {
 
 	/**
 	 * @class chart.brush.stackscatter
-	 *
-	 * stack 형태의 scatter 브러쉬
-	 *
 	 * @extends chart.brush.scatter
 	 */
 	var StackScatterBrush = function() {
@@ -16045,9 +16618,6 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 
     /**
      * @class chart.brush.gauge 
-     * 
-     * implements gauge brush 
-     *  
      * @extends chart.brush.donut
      */
 	var GaugeBrush = function() {
@@ -16114,16 +16684,6 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 
         }
 
-        /**
-         * @method drawUnit 
-         * 
-         * data 별 gague 를 그린다.
-         *  
-         * @param {Number} index
-         * @param {Object} data
-         * @param {util.svg.element} group
-         * @return {util.svg.element}
-         */
 		this.drawUnit = function(index, data, group) {
 			var obj = this.axis.c(index),
 				value = this.getValue(data, "value", 0),
@@ -16176,7 +16736,6 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 		}
 
 		this.draw = function() {
-
 			var group = this.chart.svg.group();
 
 			this.eachData(function(i, data) {
@@ -16184,7 +16743,6 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 			});
 
 			return group;
-
 		}
 	}
 
@@ -16202,11 +16760,10 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 	return GaugeBrush;
 }, "chart.brush.donut");
 
-jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
+jui.define("chart.brush.fullgauge", [ "util.math" ], function(math) {
 
 	/**
 	 * @class chart.brush.fullgauge
-	 * implements full gauge brush
 	 * @extends chart.brush.donut
 	 */
 	var FullGaugeBrush = function() {
@@ -16274,7 +16831,7 @@ jui.define("chart.brush.fullgauge", ["util.math"], function(math) {
 			centerY = height / 2 + y;
 			outerRadius = w - this.brush.size;
 			innerRadius = outerRadius - this.brush.size;
-            textScale = this.getScaleValue(w, 40, 400, 1, 1.5);
+            textScale = math.scaleValue(w, 40, 400, 1, 1.5);
 
 			group.append(this.drawDonut(centerX, centerY, innerRadius, outerRadius, startAngle + currentAngle, endAngle - currentAngle, {
 				stroke : this.chart.theme("gaugeBackgroundColor"),
@@ -16334,9 +16891,6 @@ jui.define("chart.brush.stackgauge", [ "util.math" ], function(math) {
 
 	/**
 	 * @class chart.brush.stackgauge
-	 *
-	 * stack 형태의 gauge 브러쉬
-	 *
 	 * @extends chart.brush.donut
 	 */
 	var StackGaugeBrush = function(chart, axis, brush) {
@@ -16439,9 +16993,6 @@ jui.define("chart.brush.waterfall", [], function() {
 
 	/**
 	 * @class chart.brush.waterfall
-	 *
-	 * waterfall 형태의 브러쉬
-	 *
 	 * @extends chart.brush.core
 	 */
 	var WaterFallBrush = function(chart, axis, brush) {
@@ -16557,9 +17108,6 @@ jui.define("chart.brush.splitline", [ "util.base" ], function(_) {
 
     /**
      * @class chart.brush.splitline
-     *
-     * 분리된 영역의 선을 그리는 브러쉬
-     *
      * @extends chart.brush.core
      */
 	var SplitLineBrush = function() {
@@ -16653,9 +17201,6 @@ jui.define("chart.brush.splitarea", [ "util.base" ], function(_) {
 
     /**
      * @class chart.brush.splitarea
-     *
-     * 분리된 영역의 브러쉬
-     *
      * @extends chart.brush.splitline
      */
     var SplitAreaBrush = function() {
@@ -16739,9 +17284,6 @@ jui.define("chart.brush.rangecolumn", [], function() {
 
     /**
      * @class chart.brush.rangecolumn 
-     * 
-     * implements range column brush 
-     * 
      * @extends chart.brush.core
      */
 	var RangeColumnBrush = function(chart, axis, brush) {
@@ -16811,10 +17353,7 @@ jui.define("chart.brush.rangebar", [], function() {
 
     /**
      * @class chart.brush.rangebar 
-     * 
-     * implements range bar brush 
-     * 
-     * @extends chart.brush.core 
+     * @extends chart.brush.core
      */
 	var RangeBarBrush = function(chart, axis, brush) {
 		var g, height, half_height, barHeight;
@@ -16886,9 +17425,7 @@ jui.define("chart.brush.topologynode.edge", [], function() {
 
     /**
      * @class chart.brush.topologynode.edge
-     * 
-     * 토폴로지 Edge 표현 객체  
-     * 
+     *
      */
     var TopologyEdge = function(start, end, in_xy, out_xy) {
         var connect = false, element = null;
@@ -16931,7 +17468,7 @@ jui.define("chart.brush.topologynode.edge", [], function() {
 jui.define("chart.brush.topologynode.edgemanager", [ "util.base" ], function(_) {
     /**
      * @class chart.brush.topologynode.edgemananger
-     * 토폴로지 Edge 관리자
+     *
      */
     var TopologyEdgeManager = function() {
         var list = [],
@@ -16972,8 +17509,7 @@ jui.define("chart.brush.topologynode",
 
     /**
      * @class chart.brush.topologynode
-     * TopologyNode Class
-     * @extends chart.brush.core 
+     * @extends chart.brush.core
      */
     var TopologyNode = function(chart, axis, brush) {
         var self = this,
@@ -17458,14 +17994,25 @@ jui.define("chart.brush.topologynode",
         }
     }
 
+    /**
+     * @event topoloygy_nodeclick
+     * Event that occurs when click on the topology node. (real name ``` topoloygy.nodeclick ```)
+     * @param {Object} data The node data.
+     * @param {jQueryEvent} e The event object.
+     */
+
+    /**
+     * @event topoloygy_edgeclick
+     * Event that occurs when click on the topology edge. (real name ``` topoloygy.edgeclick ```)
+     * @param {Object} data The edge data.
+     * @param {jQueryEvent} e The event object.
+     */
+
     return TopologyNode;
 }, "chart.brush.core");
 jui.define("chart.brush.focus", [], function() {
 	/**
 	 * @class chart.brush.focus
-	 *
-	 * implements focus brush
-	 *
 	 * @extends chart.brush.core
 	 */
 	var FocusBrush = function(chart, axis, brush) {
@@ -17562,10 +18109,7 @@ jui.define("chart.brush.focus", [], function() {
 jui.define("chart.brush.pin", [], function() {
     /**
      * @class chart.brush.pin  
-     * 
-     * implements pin brush  
-     *  
-     * @extends chart.brush.core   
+     * @extends chart.brush.core
      */
     var PinBrush = function(chart, axis, brush) {
         var self = this;
@@ -17626,9 +18170,6 @@ jui.define("chart.brush.pin", [], function() {
 jui.define("chart.brush.map.core", [ "jquery", "util.base" ], function($, _) {
     /**
      * @class chart.brush.map.core
-     *
-     * implements core method for brush
-     *
      * @abstract
      * @extends chart.brush.core
      * @requires jquery
@@ -17643,7 +18184,6 @@ jui.define("chart.brush.map.selector", [ "jquery" ], function($) {
 
     /**
      * @class chart.brush.over 
-     * implements over brush 
      * @extends chart.brush.core
      */
 	var MapSelectorBrush = function(chart, axis, brush) {
@@ -17725,7 +18265,6 @@ jui.define("chart.brush.map.note", [ "jquery", "util.base" ], function($, _) {
 
     /**
      * @class chart.brush.over 
-     * implements over brush 
      * @extends chart.brush.core
      */
 	var MapNoteBrush = function(chart, axis, brush) {
@@ -17813,11 +18352,10 @@ jui.define("chart.brush.map.note", [ "jquery", "util.base" ], function($, _) {
 	return MapNoteBrush;
 }, "chart.brush.map.core");
 
-jui.define("chart.brush.map.bubble", [ "util.base" ], function(_) {
+jui.define("chart.brush.map.bubble", [ "util.base", "util.math" ], function(_, math) {
 
     /**
      * @class chart.brush.map.bubble
-     * implements over brush 
      * @extends chart.brush.core
      */
 	var MapBubbleBrush = function(chart, axis, brush) {
@@ -17865,7 +18403,7 @@ jui.define("chart.brush.map.bubble", [ "util.base" ], function(_) {
 
             this.eachData(function(i, d) {
                 var value = axis.getValue(d, "value", 0),
-                    size = this.getScaleValue(value, minmax.min, minmax.max, brush.min, brush.max),
+                    size = math.scaleValue(value, minmax.min, minmax.max, brush.min, brush.max),
                     xy = axis.map(axis.getValue(d, "id", null)),
                     color = this.color(i, 0);
 
@@ -17914,7 +18452,6 @@ jui.define("chart.brush.map.comparebubble", [ "util.base", "util.math" ], functi
 
     /**
      * @class chart.brush.map.bubble
-     * implements over brush 
      * @extends chart.brush.core
      */
 	var MapCompareBubbleBrush = function(chart, axis, brush) {
@@ -18069,7 +18606,6 @@ jui.define("chart.brush.map.flightroute", [ "util.base" ], function(_) {
 
     /**
      * @class chart.brush.map.flightroute
-     * implements over brush 
      * @extends chart.brush.core
      */
 	var MapFlightRouteBrush = function(chart, axis, brush) {
@@ -18219,7 +18755,6 @@ jui.define("chart.brush.map.marker", [ "util.base" ], function(_) {
 
     /**
      * @class chart.brush.map.flightroute
-     * implements over brush 
      * @extends chart.brush.core
      */
 	var MapMarkerBrush = function(chart, axis, brush) {
@@ -18276,7 +18811,6 @@ jui.define("chart.brush.map.weather", [ "util.base" ], function(_) {
 
     /**
      * @class chart.brush.map.bubble
-     * implements over brush 
      * @extends chart.brush.core
      */
 	var MapWeatherBrush = function(chart, axis, brush) {
@@ -18372,6 +18906,253 @@ jui.define("chart.brush.map.weather", [ "util.base" ], function(_) {
 
 	return MapWeatherBrush;
 }, "chart.brush.map.core");
+
+jui.define("chart.brush.polygon.core", [], function() {
+    var PolygonCoreBrush = function() {
+        this.load = function(id) {
+            var Polygon = jui.include("chart.polygon." + id),
+                obj = new Polygon();
+
+            // 차트 전체 연산
+            this.calculate3d(obj);
+
+            return obj;
+        }
+
+        this.draw = function() {
+            var polygon = this.load(this.brush.id),
+                g = this.chart.svg.group(),
+                path = this.chart.svg.path({
+                    stroke: this.color(0),
+                    "stroke-width": 0.5,
+                    fill: this.color(0),
+                    "fill-opacity": 0.5
+                }),
+                cache = [];
+
+            for(var i = 0, len = polygon.vertices.length; i < len; i++) {
+                var vertex = polygon.vertices[i];
+                cache.push(new Float32Array([ this.axis.x(vertex[0]), this.axis.y(vertex[1]) ]));
+            }
+
+            for(var i = 0, len = polygon.faces.length; i < len; i++) {
+                var face = polygon.faces[i]
+
+                for (var j = 0, len2 = face.length; j < len2; j++) {
+                    var targetPoint = cache[face[j]];
+
+                    if (targetPoint) {
+                        var x = targetPoint[0],
+                            y = targetPoint[1];
+
+                        if (j == 0) {
+                            path.MoveTo(x, y);
+                        } else {
+                            if(j == face.length - 1) {
+                                var firstPoint = cache[face[0]],
+                                    x = firstPoint[0],
+                                    y = firstPoint[1];
+
+                                path.LineTo(x, y);
+                            } else {
+                                path.LineTo(x, y);
+                            }
+                        }
+                    }
+                }
+            }
+
+            g.append(path);
+
+            return g;
+        }
+    }
+
+    PolygonCoreBrush.setup = function() {
+        return {
+            id: null,
+            degree: null
+        }
+    }
+
+    return PolygonCoreBrush;
+}, "chart.brush.core");
+jui.define("chart.brush.polygon.scatter",
+	[ "util.base", "util.math", "util.color", "chart.polygon.point" ],
+	function(_, MathUtil, ColorUtil, PointPolygon) {
+
+	/**
+	 * @class chart.brush.polygon.scatter
+	 * @extends chart.brush.polygon.core
+	 */
+	var PolygonScatterBrush = function() {
+		this.createScatter = function(data, target, dataIndex, targetIndex) {
+			var color = this.color(dataIndex, targetIndex),
+				zkey = this.brush.zkey,
+				r = this.brush.size / 2,
+				x = this.axis.x(dataIndex),
+				y = this.axis.y(data[target]),
+				z = null;
+
+			if(_.typeCheck("function", zkey)) {
+				var zk = zkey.call(this.chart, data);
+				z = this.axis.z(zk);
+			} else {
+				z = this.axis.z(data[zkey]);
+			}
+
+			if(color.indexOf("radial") == -1) {
+				color = this.chart.color(
+					"radial(40%,40%,100%,0%,0%) 0% " +
+					ColorUtil.lighten(color, this.chart.theme("polygonScatterRadialOpacity")) +
+					",70% " +
+					color
+				);
+			}
+
+			var p = new PointPolygon(x, y, z);
+			this.calculate3d(p);
+
+			var elem = this.chart.svg.circle({
+				r: r * MathUtil.scaleValue(z, 0, this.axis.depth, 1, p.perspective),
+				fill: color,
+				"fill-opacity": this.chart.theme("polygonScatterBackgroundOpacity"),
+				cx: p.vertices[0][0],
+				cy: p.vertices[0][1]
+			});
+
+			return elem;
+		}
+
+		this.draw = function() {
+			var g = this.chart.svg.group(),
+				datas = this.listData(),
+				targets = this.brush.target;
+
+			for(var i = 0; i < datas.length; i++) {
+				for(var j = 0; j < targets.length; j++) {
+					var p = this.createScatter(datas[i], targets[j], i, j);
+
+					this.addEvent(p, i, j);
+					g.append(p);
+				}
+			}
+
+			return g;
+		}
+	}
+
+		PolygonScatterBrush.setup = function() {
+		return {
+			zkey: null,
+
+			/** @cfg {Number} [size=7]  Determines the size of a starter. */
+			size: 7,
+			/** @cfg {Boolean} [clip=false] If the brush is drawn outside of the chart, cut the area. */
+			clip: false
+		};
+	}
+
+	return PolygonScatterBrush;
+}, "chart.brush.polygon.core");
+
+jui.define("chart.brush.polygon.column",
+	[ "util.base", "util.math", "util.color", "chart.polygon.cube" ],
+	function(_, MathUtil, ColorUtil, CubePolygon) {
+
+	/**
+	 * @class chart.brush.polygon.column
+	 * @extends chart.brush.polygon.core
+	 */
+	var PolygonColumnBrush = function() {
+		var col_width, col_height;
+
+		this.createColumn = function(data, target, dataIndex, targetIndex) {
+			var g = this.chart.svg.group(),
+				w = col_width,
+				h = col_height,
+				x = this.axis.x(dataIndex) - w/2,
+				y = this.axis.y(data[target]),
+				yy = this.axis.y(0),
+				z = this.axis.z(targetIndex) - h/2,
+				p = new CubePolygon(x, yy, z, w, y - yy, h),
+				color = this.color(targetIndex);
+
+			// 3D 좌표 계산
+			this.calculate3d(p);
+
+			for(var i = 0; i < p.faces.length; i++) {
+				var key = p.faces[i];
+
+				var face = this.chart.svg.polygon({
+					fill: color,
+					"fill-opacity": this.chart.theme("polygonColumnBackgroundOpacity"),
+					stroke: ColorUtil.darken(color, this.chart.theme("polygonColumnBorderOpacity")),
+					"stroke-opacity": this.chart.theme("polygonColumnBorderOpacity")
+				});
+
+				for(var j = 0; j < key.length; j++) {
+					var value = p.vertices[key[j]];
+					face.point(value[0], value[1]);
+				}
+
+				g.append(face);
+			}
+
+			return g;
+		}
+
+		this.drawBefore = function() {
+			var padding = this.brush.padding,
+				width = this.axis.x.rangeBand(),
+				height = this.axis.z.rangeBand();
+
+			col_width = (this.brush.width > 0) ? this.brush.width : width - padding * 2;
+			col_height = (this.brush.height > 0) ? this.brush.height : height - padding * 2;
+		}
+
+		this.draw = function() {
+			var g = this.chart.svg.group(),
+				datas = this.listData(),
+				targets = this.brush.target,
+				groups = [];
+
+			for(var i = 0; i < datas.length; i++) {
+				for(var j = 0; j < targets.length; j++) {
+					var p = this.createColumn(datas[i], targets[j], i, j);
+
+					this.addEvent(p, i, j);
+
+					if(!groups[j]) groups[j] = [];
+					groups[j].push(p);
+				}
+			}
+
+			for(var i = groups.length - 1; i >= 0; i--) {
+				for(var j = 0; j < groups[i].length; j++) {
+					g.append(groups[i][j]);
+				}
+			}
+
+			return g;
+		}
+	}
+
+	PolygonColumnBrush.setup = function() {
+		return {
+			/** @cfg {Number} [width=50]  Determines the size of a starter. */
+			width: 0,
+			/** @cfg {Number} [height=50]  Determines the size of a starter. */
+			height: 0,
+			/** @cfg {Number} [padding=20] Determines the outer margin of a bar.  */
+			padding: 20,
+			/** @cfg {Boolean} [clip=false] If the brush is drawn outside of the chart, cut the area. */
+			clip: false
+		};
+	}
+
+	return PolygonColumnBrush;
+}, "chart.brush.polygon.core");
 
 jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
 
@@ -18475,7 +19256,6 @@ jui.define("chart.widget.tooltip", [ "jquery", "util.base", "util.color" ], func
 
     /**
      * @class chart.widget.tooltip
-     * implements tooltip widget
      * @extends chart.widget.core
      * @alias TooltipWidget
      * @requires jquery
@@ -18763,7 +19543,6 @@ jui.define("chart.widget.title", [], function() {
 
     /**
      * @class chart.widget.title
-     * implements title widget
      * @extends chart.widget.core
      * @alias TitleWidget
      *
@@ -18851,7 +19630,6 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
      * @requires util.base
      *
      */
-
     var LegendWidget = function(chart, axis, widget) {
         var columns = [];
         var colorIndex = {};
@@ -18915,12 +19693,6 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
             chart.emit("legend.filter", [ target ]);
         }
 
-        /**
-         * brush 에서 생성되는 legend 아이콘 리턴 
-         * 
-         * @param {object} chart
-         * @param {object} brush
-         */
 		this.getLegendIcon = function(brush) {
             var arr = [],
                 data = brush.target,
@@ -19149,17 +19921,21 @@ jui.define("chart.widget.legend", [ "util.base" ], function(_) {
         };
     }
 
+    /**
+     * @event legend_filter
+     * Event that occurs when the filter function of the legend widget is activated. (real name ``` legend.filter ```)
+     * @param {String} target The selected data field.
+     */
+
     return LegendWidget;
 }, "chart.widget.core");
 jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
 
     /**
      * @class chart.widget.zoom
-     * implements zoom widget
      * @extends chart.widget.core
      * @alias ZoomWidget
      * @requires util.base
-     *
      */
     var ZoomWidget = function() {
         var self = this,
@@ -19298,6 +20074,9 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
         this.drawSection = function(axisIndex) {
             var axis = this.chart.axis(axisIndex),
                 xtype = axis.get("x").type,
+                domain = axis.get("x").domain,
+                interval = axis.get("x").interval,
+                format = axis.get("x").format,
                 cw = axis.area("width"),
                 ch = axis.area("height"),
                 r = 12;
@@ -19340,9 +20119,9 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
                             axis.screen(1);
                         } else if(xtype == "date") {
                             axis.updateGrid("x", {
-                                domain: axis.get("x").domain,
-                                interval: axis.get("x").interval,
-                                format: axis.get("x").format
+                                domain: domain,
+                                interval: interval,
+                                format: format
                             });
                         }
 
@@ -19836,7 +20615,6 @@ jui.define("chart.widget.cross", [ "util.base" ], function(_) {
 
     /**
      * @class chart.widget.cross
-     * implements cross widget
      * @extends chart.widget.core
      * @alias CoreWidget
      * @requires util.base
@@ -19998,10 +20776,7 @@ jui.define("chart.widget.topologyctrl", [ "util.base" ], function(_) {
 
     /**
      * @class chart.widget.topologyctrl
-     * 
-     * 토폴로지 이벤트 핸들러
-     * 
-     * @extends chart.widget.core 
+     * @extends chart.widget.core
      */
     var TopologyControlWidget = function(chart, axis, widget) {
         var self = this;
@@ -20737,6 +21512,90 @@ jui.define("chart.widget.map.tooltip", [ "util.base" ], function(_) {
 
     return MapTooltipWidget;
 }, "chart.widget.tooltip");
+jui.define("chart.widget.polygon.core", [], function() {
+
+    /**
+     * @class chart.widget.polygon.core
+     * @extends chart.widget.core
+     */
+    var PolygonCoreWidget = function(chart, axis, widget) {
+    }
+
+    return PolygonCoreWidget;
+}, "chart.widget.core");
+jui.define("chart.widget.polygon.rotate", [ "util.base" ], function (_) {
+    var DEGREE_LIMIT = 180;
+
+    /**
+     * @class chart.widget.polygon.rotate
+     * @extends chart.widget.polygon.core
+     * @alias ScrollWidget
+     * @requires util.base
+     */
+    var PolygonRotateWdiget = function(chart, axis, widget) {
+        var self = this;
+
+        function setScrollEvent(w, h) {
+            var isMove = false,
+                mouseStartX = 0;
+                mouseStartY = 0,
+                sdx = 0,
+                sdy = 0;
+
+            self.on("bg.mousedown", mousedown);
+            self.on("chart.mousedown", mousedown);
+            self.on("bg.mousemove", mousemove);
+            self.on("bg.mouseup", mouseup);
+            self.on("chart.mousemove", mousemove);
+            self.on("chart.mouseup", mouseup);
+
+            function mousedown(e) {
+                if(isMove) return;
+
+                isMove = true;
+                mouseStartX = e.chartX;
+                mouseStartY = e.chartY;
+                sdx = self.axis.degree.x;
+                sdy = self.axis.degree.y;
+            }
+
+            function mousemove(e) {
+                if(!isMove) return;
+
+                var gapX = e.chartX - mouseStartX,
+                    gapY = e.chartY - mouseStartY,
+                    dx = Math.floor((gapY / h) * DEGREE_LIMIT),
+                    dy = Math.floor((gapX / w) * DEGREE_LIMIT);
+
+                self.axis.degree.x = sdx + dx;
+                self.axis.degree.y = sdy - dy;
+                chart.render();
+            }
+
+            function mouseup(e) {
+                if(!isMove) return;
+
+                isMove = false;
+                mouseStartX = 0;
+                mouseStartY = 0;
+            }
+        }
+
+        this.draw = function() {
+            var d = this.axis.degree;
+
+            if(_.typeCheck("integer", d)) { // 기본 각도 설정
+                this.axis.degree = { x: d, y: d, z: d };
+            }
+
+            setScrollEvent(this.axis.area("width"), this.axis.area("height"));
+
+            return chart.svg.group();
+        }
+    }
+
+    return PolygonRotateWdiget;
+}, "chart.widget.polygon.core");
 jui.defineUI("chartx.realtime", [ "jquery", "util.base", "util.time", "chart.builder" ], function($, _, time, builder) {
 
     /**

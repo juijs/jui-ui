@@ -2,9 +2,6 @@ jui.define("chart.brush.rangecolumn", [], function() {
 
     /**
      * @class chart.brush.rangecolumn 
-     * 
-     * implements range column brush 
-     * 
      * @extends chart.brush.core
      */
 	var RangeColumnBrush = function(chart, axis, brush) {

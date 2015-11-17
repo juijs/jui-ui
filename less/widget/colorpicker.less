@@ -1,0 +1,153 @@
+.colorpicker {
+    position: relative;
+    width: 226px;
+
+    > .color {
+        position: relative;
+        height: 145px;
+        overflow:hidden;
+        cursor:pointer;
+
+        > .saturation {
+            position: relative;
+            width:100%;
+            height:100%;
+
+            > .value {
+                position: relative;
+                width:100%;
+                height:100%;
+
+                > .drag-pointer {
+                    position: absolute;
+                    width:10px;
+                    height:10px;
+                    .border-radius(50%);
+                    left:-5px;
+                    top:-5px;
+                }
+            }
+        }
+    }
+
+    > .control {
+        position: relative;
+        padding: 18px 0px 20px 0px;
+        .user-select(none);
+
+        > .color, > .empty {
+            position: absolute;
+            left: 11px;
+            top: 24px;
+            width: 30px;
+            height: 30px;
+            .border-radius(50%);
+            .box-sizing(border-box);
+        }
+
+        > .hue {
+            position: relative;
+            padding: 8px 12px;
+            margin: 0px 0px 0px 45px;
+            .box-sizing(border-box);
+            cursor:pointer;
+
+            > .container {
+                position: relative;
+                width: 157px;
+                height:6px;
+                .border-radius(5px);
+            }
+        }
+
+        > .opacity {
+            position: relative;
+            width: 143px;
+            padding: 8px 12px;
+            margin: 0px 0px 0px 45px;
+            .box-sizing(border-box);
+            cursor:pointer;
+
+            > .container {
+                position: relative;
+                width: 100%;
+                height: 3px;
+                z-index: 2;
+                .border-radius(3px);
+            }
+        }
+
+        > .input {
+            position: absolute;
+            font-size: 10px;
+            right: 10px;
+            bottom: 20px;
+            width: 30px;
+            height: 20px;
+            padding: 0 0 0 2px;
+        }
+
+        .drag-bar, .drag-bar2 {
+            position: absolute;
+            cursor: pointer;
+            top: 50% !important;
+            margin-top: -7px !important;
+            left: -3px;
+            width: 12px;
+            height: 12px;
+            .border-radius(50px);
+        }
+    }
+
+    > .information {
+        position: relative;
+        height: 73px;
+        .box-sizing(padding-box);
+
+        > .input {
+            position: absolute;
+            font-size: 10px;
+            height: 20px;
+            bottom: 20px;
+            padding: 0 0 0 2px;
+            .box-sizing(border-box);
+            .user-select(text);
+
+            &:nth-child(1) {
+                width: 93px;
+                left: 10px;
+            }
+            &:nth-child(2) {
+                width: 30px;
+                right: 74px;
+            }
+            &:nth-child(3) {
+                width: 30px;
+                right: 42px;
+            }
+            &:nth-child(4) {
+                width: 30px;
+                right: 10px;
+            }
+        }
+
+        > .title {
+            position: absolute;
+            font-size: 11px;
+            top: 15px;
+
+            &:nth-child(5) {
+                left: 10px;
+            }
+            &:nth-child(6) {
+                left: 123px;
+            }
+            &:nth-child(7) {
+                left: 155px;
+            }
+            &:nth-child(8) {
+                left: 187px;
+            }
+        }
+    }
+}

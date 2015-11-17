@@ -613,8 +613,9 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 				return f(y);
 			}
 
-			func.ticks = function(count, isNice, intNumber, reverse) {
-				intNumber = intNumber || 10000;
+			func.ticks = function(count, isNice, /** @deprecated */intNumber, reverse) {
+
+				//intNumber = intNumber || 10000;
 				reverse = reverse || false;
 				var max = func.max();
 
@@ -626,18 +627,18 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 
 				var arr = [];
 
-				var start = (reverse ? obj.max : obj.min) * intNumber;
-				var end = (reverse ? obj.min : obj.max) * intNumber;
+				var start = (reverse ? obj.max : obj.min);
+				var end = (reverse ? obj.min : obj.max);
+				var unit = obj.spacing;
+				var fixed = math.fixed(unit);
+
 				while ((reverse ? end <= start : start <= end)) {
-
-					arr.push(start / intNumber);
-
-					var unit = obj.spacing * intNumber;
+					arr.push(start/* / intNumber*/);
 
 					if (reverse) {
-						start -= unit;
+						start = fixed.minus(start, unit);
 					} else {
-						start += unit;
+						start = fixed.plus(start, unit);
 					}
 
 				}
@@ -653,8 +654,8 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 					//arr.reverse();
 
 				} else {
-					if (arr[arr.length - 1] * intNumber != end && start > end) {
-						arr.push(end / intNumber);
+					if (arr[arr.length - 1] != end && start > end) {
+						arr.push(end);
 					}
 
 					if (_domain[0] > _domain[1]) {

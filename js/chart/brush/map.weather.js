@@ -2,7 +2,6 @@ jui.define("chart.brush.map.weather", [ "util.base" ], function(_) {
 
     /**
      * @class chart.brush.map.bubble
-     * implements over brush 
      * @extends chart.brush.core
      */
 	var MapWeatherBrush = function(chart, axis, brush) {

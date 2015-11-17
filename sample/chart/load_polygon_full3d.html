@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="charset=utf-8;"/>
+    <link rel="stylesheet" href="../../dist/jui.css" />
+    <script src="../../lib/jquery-1.8.0.min.js"></script>
+    <script src="../../dist/jui.js"></script>
+    <script src="polygon/airplane.js"></script>
+</head>
+<body class="jui">
+
+<div id="chart"></div>
+<script id="tpl_tooltip" type="text/template">
+    <div class="tooltip tooltip-top tooltip-black">
+        <div class="anchor"></div>
+        <div class="message"><!= obj.dataKey !>: <!= obj.data[obj.dataKey] !></div>
+    </div>
+</script>
+
+<script>
+    /*
+     this.min = new Float32Array([
+     139.061, 32.0943, -17.7412
+     ]);
+
+     this.max = new Float32Array([
+     1654.93, 1319.95, 282.13
+     ]);
+     */
+    jui.ready([ "chart.builder" ], function(chart) {
+
+         chart("#chart", {
+            width: 600,
+            height : 600,
+            theme : "jennifer",
+             axis : {
+                 x : {
+                     type : "range",
+                     domain : [ 100, 1700 ],
+                     step : 4
+                 },
+                 y : {
+                     type : "range",
+                     domain : [ 0, 1400 ],
+                     step : 4
+                 },
+                 z : {
+                    type : "range",
+                    domain : [ -50, 300 ],
+                     step : 4
+                 },
+                 depth: 300,
+                 degree: {
+                     x: 0,
+                     y: 0,
+                     z: 0
+                 }
+             },
+             brush : {
+                 type: "polygon.core",
+                 id: "airplane",
+                 degree: {
+                     x: 60,
+                     y: 0,
+                     z: 0
+                 }
+             },
+             widget : [{
+                 type : "polygon.rotate"
+             }],
+             style : {
+                 gridXAxisBorderWidth: 1,
+                 gridYAxisBorderWidth: 1
+             }
+        });
+	})
+</script>
+
+
+</body>
+</html>

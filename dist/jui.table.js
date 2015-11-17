@@ -1887,7 +1887,8 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
                 if (e.type.toLowerCase().indexOf("animation") != -1)
                     settingEventAnimation(e);
                 else {
-                    if (e.target != "body" && e.target != window) { // body와 window일 경우에만 이벤트 중첩이 가능
+					// body, window, document 경우에만 이벤트 중첩이 가능
+                    if (e.target != "body" && e.target != window && e.target != document) {
                         $(e.target).off(e.type);
                     }
 
@@ -2340,7 +2341,7 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 	
 	return UICore;
 });
-jui.define("util.math", [], function() {
+jui.define("util.math", [ "util.base" ], function(_) {
 
 	/**
 	 * @class util.math
@@ -2441,6 +2442,82 @@ jui.define("util.math", [], function() {
             }
 		},
 
+		getFixed : function (a, b) {
+			var aArr = (a+"").split(".");
+			var aLen = (aArr.length < 2) ? 0 : aArr[1].length;
+
+			var bArr = (b+"").split(".");
+			var bLen = (bArr.length < 2) ? 0 : bArr[1].length;
+
+			return (aLen > bLen) ? aLen : bLen;
+
+		},
+
+		fixed : function (fixed) {
+
+
+			var fixedNumber = this.getFixed(fixed, 0);
+			var pow = Math.pow(10, fixedNumber);
+
+			var func = function (value) {
+				return Math.round(value * pow) / pow;
+			};
+
+			func.plus = function (a, b) {
+				return Math.round((a * pow) + (b * pow)) / pow;
+			};
+
+			func.minus = function (a, b) {
+				return Math.round((a * pow) - (b * pow)) / pow;
+			};
+
+			func.multi = function (a, b) {
+				return Math.round((a * pow) * (b * pow)) / pow;
+			};
+
+			func.div = function (a, b) {
+				return Math.round((a * pow) / (b * pow)) / pow;
+			};
+
+			func.remain = function (a, b) {
+				return Math.round((a * pow) % (b * pow)) / pow;
+			};
+
+			return func;
+		},
+
+		round: function (num, fixed) {
+			var fixedNumber = Math.pow(10, fixed);
+
+			return Math.round(num * fixedNumber) / fixedNumber;
+		},
+
+		plus : function (a, b) {
+			var pow = Math.pow(10, this.getFixed(a, b));
+
+			return Math.round((a * pow) + (b * pow)) / pow;
+		},
+
+		minus : function (a, b) {
+			var pow = Math.pow(10, this.getFixed(a, b));
+			return Math.round((a * pow) - (b * pow)) / pow;
+		},
+
+		multi : function (a, b) {
+			var pow = Math.pow(10, this.getFixed(a, b));
+			return Math.round((a * pow) * (b * pow)) / pow;
+		},
+
+		div : function (a, b) {
+			var pow = Math.pow(10, this.getFixed(a, b));
+			return Math.round((a * pow) / (b * pow));
+		},
+
+		remain : function (a, b) {
+			var pow = Math.pow(10, this.getFixed(a, b));
+			return Math.round((a * pow) % (b * pow)) / pow;
+		},
+
 		/**
 		 * 특정 구간의 값을 자동으로 계산 
 		 * 
@@ -2470,8 +2547,6 @@ jui.define("util.math", [], function() {
 				var exponent = Math.floor(Math.log(range) / Math.LN10);
 				var fraction = range / Math.pow(10, exponent);
 				var nickFraction;
-
-				//console.log(range, exponent, fraction, _ticks);
 
 				if (round) {
 					if (fraction < 1.5)
@@ -2504,6 +2579,7 @@ jui.define("util.math", [], function() {
 				_tickSpacing = (isNice) ? niceNum(_range / _ticks, true) : _range / _ticks;
 				_niceMin = (isNice) ? Math.floor(_min / _tickSpacing) * _tickSpacing : _min;
 				_niceMax = (isNice) ? Math.floor(_max / _tickSpacing) * _tickSpacing : _max;
+
 			}
 
 			caculate();
@@ -2514,12 +2590,225 @@ jui.define("util.math", [], function() {
 				range : _range,
 				spacing : _tickSpacing
 			}
-		}		
+		},
+
+		matrix: function(a, b) {
+			// 2x1 or 3x1 or ?x1 형태의 매트릭스 연산
+			function matrix(a, b) {
+				var m = [];
+
+				for(var i = 0, len = a.length; i < len; i++) {
+					var sum = 0;
+
+					for(var j = 0, len2 = a[i].length; j < len2; j++) {
+						sum += a[i][j] * b[j];
+					}
+
+					m.push(sum);
+				}
+
+				return m;
+			}
+
+
+			// 2x2 or 3x3 형태의 매트릭스 연산
+			function deepMatrix(a, b) {
+				var m = [], nm = [];
+
+				for(var i = 0, len = b.length; i < len; i++) {
+					m[i] = [];
+					nm[i] = [];
+				}
+
+				for(var i = 0, len = b.length; i < len; i++) {
+					for(var j = 0, len2 = b[i].length; j < len2; j++) {
+						m[j].push(b[i][j]);
+					}
+				}
+
+				for(var i = 0, len = m.length; i < len; i++) {
+					var mm = matrix(a, m[i]);
+
+					for(var j = 0, len2 = mm.length; j < len2; j++) {
+						nm[j].push(mm[j]);
+					}
+				}
+
+				return nm;
+			}
+
+			if(_.typeCheck("array", b[0])) {
+				return deepMatrix(a, b);
+			}
+
+			return matrix(a, b);
+		},
+
+		scaleValue: function(value, minValue, maxValue, minScale, maxScale) {
+			// 최소/최대 값이 같을 경우 처리
+			minValue = (minValue == maxValue) ? 0 : minValue;
+
+			var range = maxScale - minScale,
+				tg = range * getPer();
+
+			function getPer() {
+				var range = maxValue - minValue,
+					tg = value - minValue,
+					per = tg / range;
+
+				return per;
+			}
+
+			return tg + minScale;
+		}
 	}
 
 	return self;
 });
 
+jui.define("util.transform", [ "util.math" ], function(math) {
+    var Transform = function(points) {
+        function calculate(m) {
+            for(var i = 0, count = points.length; i < count; i++) {
+                points[i] = math.matrix(m, points[i]);
+            }
+
+            return points;
+        }
+
+        // 매트릭스 맵
+        this.matrix = function() {
+            var a = arguments,
+                type = a[0];
+
+            var map = {
+                // 2D 행렬, 3x3
+                move: [
+                    [ 1, 0, a[1] ],
+                    [ 0, 1, a[2] ],
+                    [ 0, 0, 1 ]
+                ],
+                scale: [
+                    [ a[1], 0, 0 ],
+                    [ 0, a[2], 0 ],
+                    [ 0, 0, 1 ]
+                ],
+                rotate: [
+                    [ Math.cos(math.radian(a[1])), -Math.sin(math.radian(a[1])), 0 ],
+                    [ Math.sin(math.radian(a[1])), Math.cos(math.radian(a[1])), 0 ],
+                    [ 0, 0, 1 ]
+                ],
+
+                // 3D 행렬, 4x4
+                move3d: [
+                    [ 1, 0, 0, a[1] ],
+                    [ 0, 1, 0, a[2] ],
+                    [ 0, 0, 1, a[3] ],
+                    [ 0, 0, 0, 1 ]
+                ],
+                scale3d: [
+                    [ a[1], 0, 0, 0 ],
+                    [ 0, a[2], 0, 0 ],
+                    [ 0, 0, a[3], 0 ],
+                    [ 0, 0, 0, 1 ]
+                ],
+                rotate3dz: [
+                    [ Math.cos(math.radian(a[1])), -Math.sin(math.radian(a[1])), 0, 0 ],
+                    [ Math.sin(math.radian(a[1])), Math.cos(math.radian(a[1])), 0, 0 ],
+                    [ 0, 0, 1, 0 ],
+                    [ 0, 0, 0, 1 ]
+                ],
+                rotate3dx: [
+                    [ 1, 0, 0, 0 ],
+                    [ 0, Math.cos(math.radian(a[1])), -Math.sin(math.radian(a[1])), 0 ],
+                    [ 0, Math.sin(math.radian(a[1])), Math.cos(math.radian(a[1])), 0 ],
+                    [ 0, 0, 0, 1 ]
+                ],
+                rotate3dy: [
+                    [ Math.cos(math.radian(a[1])), 0, Math.sin(math.radian(a[1])), 0 ],
+                    [ 0, 1, 0, 0 ],
+                    [ -Math.sin(math.radian(a[1])), 0, Math.cos(math.radian(a[1])), 0 ],
+                    [ 0, 0, 0, 1 ]
+                ]
+            }
+
+            return map[type];
+        }
+
+        // 2차원 이동
+        this.move = function(dx, dy) {
+            return calculate(this.matrix("move", dx, dy));
+        }
+
+        // 3차원 이동
+        this.move3d = function(dx, dy, dz) {
+            return calculate(this.matrix("move3d", dx, dy, dz));
+        }
+
+        // 2차원 스케일
+        this.scale = function(sx, sy) {
+            return calculate(this.matrix("scale", sx, sy));
+        }
+
+        // 3차원 스케일
+        this.scale3d = function(sx, sy, sz) {
+            return calculate(this.matrix("scale3d", sx, sy, sz));
+        }
+
+        // 2차원 회전
+        this.rotate = function(angle) {
+            return calculate(this.matrix("rotate", angle));
+        }
+
+        // Z축 중심 3차원 회전 - 롤(ROLL)
+        this.rotate3dz = function(angle) {
+            return calculate(this.matrix("rotate3dz", angle));
+        }
+
+        // X축 중심 3차원 회전 - 롤(PITCH)
+        this.rotate3dx = function(angle) {
+            return calculate(this.matrix("rotate3dx", angle));
+        }
+
+        // Y축 중심 3차원 회전 - 요(YAW)
+        this.rotate3dy = function(angle) {
+            return calculate(this.matrix("rotate3dy", angle));
+        }
+
+        // 임의의 행렬 처리
+        this.custom = function(m) {
+            return calculate(m);
+        }
+
+        // 행렬의 병합
+        this.merge = function() {
+            var a = arguments,
+                m = this.matrix.apply(this, a[0]);
+
+            for(var i = 1; i < a.length; i++) {
+                m = math.matrix(m, this.matrix.apply(this, a[i]));
+            }
+
+            return calculate(m);
+        }
+
+        // 행렬의 병합 (콜백 형태)
+        this.merge2 = function(callback) {
+            for(var i = 0, count = points.length; i < count; i++) {
+                var a = callback.apply(null, points[i]),
+                    m = this.matrix.apply(this, a[0]);
+
+                for(var j = 1; j < a.length; j++) {
+                    m = math.matrix(m, this.matrix.apply(this, a[j]));
+                }
+
+                points[i] = math.matrix(m, points[i]);
+            }
+        }
+    }
+
+    return Transform;
+});
 jui.define("util.time", [ "util.base" ], function(_) {
 
 	/**
@@ -2527,6 +2816,12 @@ jui.define("util.time", [ "util.base" ], function(_) {
 	 * 
 	 */
 	var self = {
+
+		//constant
+		MILLISECOND : 1000,
+		MINUTE : 1000 * 60,
+		HOUR : 1000 * 60 * 60,
+		DAY : 1000 * 60 * 60 * 24,
 
 		// unit
 		years : "years",
@@ -2537,6 +2832,22 @@ jui.define("util.time", [ "util.base" ], function(_) {
 		seconds : "seconds",
 		milliseconds : "milliseconds",
 		weeks : "weeks",
+
+		diff : function (type, a, b) {
+			var milliseconds =  (+a) - (+b);
+
+			if (type == 'seconds') {
+				return Math.abs(Math.floor(milliseconds / self.MILLISECOND));
+			} else if (type == 'minutes') {
+				return Math.abs(Math.floor(milliseconds / self.MINUTE));
+			} else if (type == 'hours') {
+				return Math.abs(Math.floor(milliseconds / self.HOUR));
+			} else if (type == 'days') {
+				return Math.abs(Math.floor(milliseconds / self.DAY));
+			}
+
+			return milliseconds;
+		},
 
 		/**
 		 * 시간 더하기 
@@ -3214,8 +3525,9 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 				return f(y);
 			}
 
-			func.ticks = function(count, isNice, intNumber, reverse) {
-				intNumber = intNumber || 10000;
+			func.ticks = function(count, isNice, /** @deprecated */intNumber, reverse) {
+
+				//intNumber = intNumber || 10000;
 				reverse = reverse || false;
 				var max = func.max();
 
@@ -3227,18 +3539,18 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 
 				var arr = [];
 
-				var start = (reverse ? obj.max : obj.min) * intNumber;
-				var end = (reverse ? obj.min : obj.max) * intNumber;
+				var start = (reverse ? obj.max : obj.min);
+				var end = (reverse ? obj.min : obj.max);
+				var unit = obj.spacing;
+				var fixed = math.fixed(unit);
+
 				while ((reverse ? end <= start : start <= end)) {
-
-					arr.push(start / intNumber);
-
-					var unit = obj.spacing * intNumber;
+					arr.push(start/* / intNumber*/);
 
 					if (reverse) {
-						start -= unit;
+						start = fixed.minus(start, unit);
 					} else {
-						start += unit;
+						start = fixed.plus(start, unit);
 					}
 
 				}
@@ -3254,8 +3566,8 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 					//arr.reverse();
 
 				} else {
-					if (arr[arr.length - 1] * intNumber != end && start > end) {
-						arr.push(end / intNumber);
+					if (arr[arr.length - 1] != end && start > end) {
+						arr.push(end);
 					}
 
 					if (_domain[0] > _domain[1]) {
@@ -3278,30 +3590,181 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 	return self;
 });
 
-jui.define("util.color", [], function() {
+jui.define("util.color", ["jquery"], function($) {
 
 	/**
 	 *  @class util.color
-     * color parser for chart
+	 * color parser for chart
 	 * @singleton
 	 */
 	var self = {
-		
+
 		regex  : /(linear|radial)\((.*)\)(.*)/i,
-		
-		trim : function (str) {
-			return (str || "").replace(/^\s+|\s+$/g, '');	
+
+		format : function(obj, type) {
+			if (type == 'hex') {
+				var r = obj.r.toString(16);
+				if (r < 10) r = "0" + r;
+
+				var g = obj.g.toString(16);
+				if (g < 10) g = "0" + g;
+
+				var b = obj.b.toString(16);
+				if (b < 10) b = "0" + b;
+
+				return "#" + [r,g,b].join("").toUpperCase();
+			} else if (type == 'rgb') {
+				if (typeof obj.a == 'undefined') {
+					return "rgb(" + [obj.r, obj.g, obj.b].join(",") + ")";
+				} else {
+					return "rgba(" + [obj.r, obj.g, obj.b, obj.a].join(",") + ")";
+				}
+			}
+
+			return obj;
 		},
 
-        /**
-         * @method lighten 
-         * 
-         * rgb 컬러 밝은 농도로 변환  
-         *  
-         * @param {String} color   RGB color code 
-         * @param {Number} rate 밝은 농도 
-         * @return {String}
-         */
+		scale : function() {
+			var startColor, endColor;
+
+			function func(t, type) {
+
+				var obj = {
+					r : parseInt(startColor.r + (endColor.r - startColor.r) * t, 10) ,
+					g : parseInt(startColor.g + (endColor.g - startColor.g) * t, 10),
+					b : parseInt(startColor.b + (endColor.b - startColor.b) * t, 10)
+				};
+
+				return self.format(obj, type);
+			}
+
+			func.domain = function(start, end) {
+				startColor = self.rgb(start);
+				endColor = self.rgb(end);
+
+				return func;
+			}
+
+			return func;
+		},
+
+		rgb : function (str) {
+			if (str.indexOf("rgb(") > -1) {
+				var arr = str.replace("rgb(", "").replace(")","").split(",");
+
+				for(var i = 0, len = arr.length; i < len; i++) {
+					arr[i] = parseInt($.trim(arr[i]), 10);
+				}
+
+				return { r : arr[0], g : arr[1], b : arr[2], a : 1	};
+			} else if (str.indexOf("rgba(") > -1) {
+				var arr = str.replace("rgba(", "").replace(")","").split(",");
+
+				for(var i = 0, len = arr.length; i < len; i++) {
+
+					if (len - 1 == i) {
+						arr[i] = parseFloat($.trim(arr[i]));
+					} else {
+						arr[i] = parseInt($.trim(arr[i]), 10);
+					}
+				}
+
+				return { r : arr[0], g : arr[1], b : arr[2], a : arr[3]};
+			} else if (str.indexOf("#") == 0) {
+
+				str = str.replace("#", "");
+
+				var arr = [];
+				if (str.length == 3) {
+					for(var i = 0, len = str.length; i < len; i++) {
+						var char = str.substr(i, 1);
+						arr.push(parseInt(char+char, 16));
+					}
+				} else {
+					for(var i = 0, len = str.length; i < len; i+=2) {
+						arr.push(parseInt(str.substr(i, 2), 16));
+					}
+				}
+
+				return { r : arr[0], g : arr[1], b : arr[2], a : 1	};
+			}
+		},
+
+		HSVtoRGB : function (H, S, V) {
+
+			if (H == 360) {
+				H = 0;
+			}
+
+			var C = S * V;
+			var X = C * (1 -  Math.abs((H/60) % 2 -1)  );
+			var m = V - C;
+
+			var temp = [];
+
+			if (0 <= H && H < 60) { temp = [C, X, 0]; }
+			else if (60 <= H && H < 120) { temp = [X, C, 0]; }
+			else if (120 <= H && H < 180) { temp = [0, C, X]; }
+			else if (180 <= H && H < 240) { temp = [0, X, C]; }
+			else if (240 <= H && H < 300) { temp = [X, 0, C]; }
+			else if (300 <= H && H < 360) { temp = [C, 0, X]; }
+
+			return {
+				r : Math.ceil((temp[0] + m) * 255),
+				g : Math.ceil((temp[1] + m) * 255),
+				b : Math.ceil((temp[2] + m) * 255)
+			};
+		},
+
+		RGBtoHSV : function (R, G, B) {
+
+			var R1 = R / 255;
+			var G1 = G / 255;
+			var B1 = B / 255;
+
+			var MaxC = Math.max(R1, G1, B1);
+			var MinC = Math.min(R1, G1, B1);
+
+			var DeltaC = MaxC - MinC;
+
+			var H = 0;
+
+			if (DeltaC == 0) { H = 0; }
+			else if (MaxC == R1) {
+				H = 60 * (( (G1 - B1) / DeltaC) % 6);
+			} else if (MaxC == G1) {
+				H  = 60 * (( (B1 - R1) / DeltaC) + 2);
+			} else if (MaxC == B1) {
+				H  = 60 * (( (R1 - G1) / DeltaC) + 4);
+			}
+
+			if (H < 0) {
+				H = 360 + H;
+			}
+
+			var S = 0;
+
+			if (MaxC == 0) S = 0;
+			else S = DeltaC / MaxC;
+
+			var V = MaxC;
+
+			return { h : H, s : S, v :  V };
+		},
+
+		trim : function (str) {
+			return (str || "").replace(/^\s+|\s+$/g, '');
+		},
+
+		/**
+		 * @method lighten
+		 *
+		 * rgb 컬러 밝은 농도로 변환
+		 *
+		 * @param {String} color   RGB color code
+		 * @param {Number} rate 밝은 농도
+		 * @return {String}
+		 */
 		lighten : function(color, rate) {
 			color = color.replace(/[^0-9a-f]/gi, '');
 			rate = rate || 0;
@@ -3316,15 +3779,15 @@ jui.define("util.color", [], function() {
 			return "#" + rgb.join("");
 		},
 
-        /**
-         * @method darken
-         *
-         * rgb 컬러 어두운 농도로 변환
-         *
-         * @param {String} color   RGB color code
-         * @param {Number} rate 어두운 농도
-         * @return {String}
-         */
+		/**
+		 * @method darken
+		 *
+		 * rgb 컬러 어두운 농도로 변환
+		 *
+		 * @param {String} color   RGB color code
+		 * @param {Number} rate 어두운 농도
+		 * @return {String}
+		 */
 		darken : function(color, rate) {
 			return this.lighten(color, -rate)
 		},
@@ -3340,46 +3803,46 @@ jui.define("util.color", [], function() {
 		parse : function(color) {
 			return this.parseGradient(color);
 		},
-		
+
 		/**
-		 * @method parseGrident 
-         *
-         * gradient parser
-		 * 
+		 * @method parseGrident
+		 *
+		 * gradient parser
+		 *
 		 *      @example
 		 *      linear(left) #fff,#000
 		 *      linear(right) #fff,50 yellow,black
 		 *      radial(50%,50%,50%,50,50)
-		 *  
- 		 * @param {String} color
+		 *
+		 * @param {String} color
 		 */
 		parseGradient : function(color) {
 			var matches = color.match(this.regex);
-			
-			if (!matches) return color; 
-			
+
+			if (!matches) return color;
+
 			var type = this.trim(matches[1]);
 			var attr = this.parseAttr(type, this.trim(matches[2]));
 			var stops = this.parseStop(this.trim(matches[3]));
-			
+
 			var obj = { type : type + "Gradient", attr : attr, children : stops };
 
-			return obj; 
-			
+			return obj;
+
 		},
-		
+
 		parseStop : function(stop) {
 			var stop_list = stop.split(",");
-			
+
 			var stops = [];
-			
+
 			for(var i = 0, len = stop_list.length; i < len; i++) {
 				var stop = stop_list[i];
-				
+
 				var arr = stop.split(" ");
-				
+
 				if (arr.length == 0) continue;
-				
+
 				if (arr.length == 1) {
 					stops.push({ type : "stop", attr : {"stop-color" : arr[0] } })
 				} else if (arr.length == 2) {
@@ -3388,87 +3851,86 @@ jui.define("util.color", [], function() {
 					stops.push({ type : "stop", attr : {"offset" : arr[0], "stop-color" : arr[1], "stop-opacity" : arr[2] } })
 				}
 			}
-			
+
 			var start = -1;
-			var end = -1; 
+			var end = -1;
 			for(var i = 0, len = stops.length; i < len; i++) {
 				var stop = stops[i];
-				
+
 				if (i == 0) {
-					if (!stop.offset) stop.offset = 0; 
+					if (!stop.offset) stop.offset = 0;
 				} else if (i == len - 1) {
 					if (!stop.offset) stop.offset = 1;
 				}
-				
+
 				if (start == -1 && typeof stop.offset == 'undefined') {
 					start = i;
 				} else if (end == -1 && typeof stop.offset == 'undefined') {
-					end = i; 
-					
+					end = i;
+
 					var count = end - start;
-					
-					var endOffset = stops[end].offset.indexOf("%") > -1 ? parseFloat(stops[end].offset)/100 : stops[end].offset;  
-					var startOffset = stops[start].offset.indexOf("%") > -1 ? parseFloat(stops[start].offset)/100 : stops[start].offset;  
-					 
+
+					var endOffset = stops[end].offset.indexOf("%") > -1 ? parseFloat(stops[end].offset)/100 : stops[end].offset;
+					var startOffset = stops[start].offset.indexOf("%") > -1 ? parseFloat(stops[start].offset)/100 : stops[start].offset;
+
 					var dist = endOffset - startOffset
-					var value = dist/ count; 
-					
-					var offset = startOffset + value; 
+					var value = dist/ count;
+
+					var offset = startOffset + value;
 					for(var index = start + 1; index < end; index++) {
-						stops[index].offset = offset; 
-						
-						offset += value; 
-					} 
-					
+						stops[index].offset = offset;
+
+						offset += value;
+					}
+
 					start = end;
-					end = -1; 
+					end = -1;
 				}
 			}
-			
+
 			return stops;
 		},
-		
+
 		parseAttr : function(type, str) {
-			
-			
+
+
 			if (type == 'linear') {
 				switch(str) {
-				case "":
-				case "left": return { x1 : 0, y1 : 0, x2 : 1, y2 : 0, direction : str || "left" }; 
-				case "right": return { x1 : 1, y1 : 0, x2 : 0, y2 : 0, direction : str }; 
-				case "top": return { x1 : 0, y1 : 0, x2 : 0, y2 : 1, direction : str }; 
-				case "bottom": return { x1 : 0, y1 : 1, x2 : 0, y2 : 0, direction : str }; 
-				case "top left": return { x1 : 0, y1 : 0, x2 : 1, y2 : 1, direction : str }; 
-				case "top right": return { x1 : 1, y1 : 0, x2 : 0, y2 : 1, direction : str }; 
-				case "bottom left": return { x1 : 0, y1 : 1, x2 : 1, y2 : 0, direction : str }; 
-				case "bottom right": return { x1 : 1, y1 : 1, x2 : 0, y2 : 0, direction : str };
-				default : 
-					var arr = str.split(",");
-					for(var i = 0, len = arr.length; i < len; i++) {
-						if (arr[i].indexOf("%") == -1)
-							arr[i] = parseFloat(arr[i]);
-					}
-					
-					return { x1 : arr[0], y1 : arr[1],x2 : arr[2], y2 : arr[3] };  
-				}				
+					case "":
+					case "left": return { x1 : 0, y1 : 0, x2 : 1, y2 : 0, direction : str || "left" };
+					case "right": return { x1 : 1, y1 : 0, x2 : 0, y2 : 0, direction : str };
+					case "top": return { x1 : 0, y1 : 0, x2 : 0, y2 : 1, direction : str };
+					case "bottom": return { x1 : 0, y1 : 1, x2 : 0, y2 : 0, direction : str };
+					case "top left": return { x1 : 0, y1 : 0, x2 : 1, y2 : 1, direction : str };
+					case "top right": return { x1 : 1, y1 : 0, x2 : 0, y2 : 1, direction : str };
+					case "bottom left": return { x1 : 0, y1 : 1, x2 : 1, y2 : 0, direction : str };
+					case "bottom right": return { x1 : 1, y1 : 1, x2 : 0, y2 : 0, direction : str };
+					default :
+						var arr = str.split(",");
+						for(var i = 0, len = arr.length; i < len; i++) {
+							if (arr[i].indexOf("%") == -1)
+								arr[i] = parseFloat(arr[i]);
+						}
+
+						return { x1 : arr[0], y1 : arr[1],x2 : arr[2], y2 : arr[3] };
+				}
 			} else {
 				var arr = str.split(",");
 				for(var i = 0, len = arr.length; i < len; i++) {
-					
+
 					if (arr[i].indexOf("%") == -1)
 						arr[i] = parseFloat(arr[i]);
 				}
-				
+
 				return { cx : arr[0], cy : arr[1],r : arr[2], fx : arr[3], fy : arr[4] };
 			}
 
 		}
-	
+
 	}
 
 	return self;
 });
-
 jui.define("util.svg.element", [], function() {
     /**
      * @class util.svg.element
@@ -5393,10 +5855,8 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 			$(self.options.target).append($modal);
 			
 			// 루트 모달 옆으로 이동
-			if(self.options.target != "body") {
-				$(self.root).insertAfter($modal);
-			}
-			
+			$(self.root).insertAfter($modal);
+
 			// 모달 닫기 이벤트 걸기
 			self.addEvent($modal, "click", function(e) {
 				if(self.options.autoHide) {

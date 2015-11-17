@@ -2,7 +2,6 @@ jui.define("chart.widget.title", [], function() {
 
     /**
      * @class chart.widget.title
-     * implements title widget
      * @extends chart.widget.core
      * @alias TitleWidget
      *

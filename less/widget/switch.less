@@ -1,0 +1,46 @@
+.switch {
+    display: inline-block;
+    position: relative;
+    cursor: pointer;
+
+    .area {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+
+        .bar {
+            position: absolute;
+            left: -100%;
+            top: 0px;
+            width: 200%;
+            height: 100%;
+
+            .left {
+                position: absolute;
+                left: 0px;
+                top: 0px;
+                bottom: 0px;
+                width: 50%;
+            }
+            .right {
+                position: absolute;
+                right: 0px;
+                top: 0px;
+                bottom: 0px;
+                width: 50%;
+            }
+        }
+    }
+
+    .handle {
+        position: absolute;
+        top: 50%;
+    }
+
+    &.on {
+        .switch-bar {
+            left: 0px;
+        }
+    }
+}

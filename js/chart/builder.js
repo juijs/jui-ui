@@ -44,6 +44,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         var _padding, _area,  _theme, _hash = {};
         var _initialize = false, _options = null, _handler = { render: [], renderAll: [] }; // 리셋 대상 커스텀 이벤트 핸들러
         var _scale = 1, _xbox = 0, _ybox = 0; // 줌인/아웃, 뷰박스X/Y 관련 변수
+        var _isDelay = false; // 렌더링 딜레이
 
         function calculate(self) {
             var max = self.svg.size();
@@ -834,6 +835,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
          * @param {Boolean} isAll
          */
         this.render = function(isAll) {
+            if(_isDelay) return;
+
             // SVG 메인 리셋
             this.svg.reset(isAll);
 
@@ -861,8 +864,17 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             // 커스텀 이벤트 발생
             this.emit("render", [ _initialize ]);
 
-            // 초기화 설정
+            // 초기화 및 렌더링 체크 설정
             _initialize = true;
+
+            // 렌더링 딜레이 설정
+            if(_options.delay > 0) {
+                _isDelay = true;
+
+                setTimeout(function () {
+                    _isDelay = false;
+                }, _options.delay);
+            }
         }
 
         /**
@@ -1039,6 +1051,8 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             format: null,
             /** @cfg {Boolean} [render=true] Does not render a chart when a rendering-related method is called with false (although the render method is not included). */
             render: true,
+            /** @cfg {Integer} [delay=0] The minimum delay of the chart rendering. */
+            delay: 0,
 
             /**
              * @cfg {Object} icon Icon-related settings available in the chart.
@@ -1051,47 +1065,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             }
         }
     }
-
-    /**
-     * @event click
-     * Event that occurs when clicking on the brush.
-     * @param {BrushData} obj Related brush data.
-     */
-    /**
-     * @event dblclick
-     * Event that occurs when double clicking on the brush.
-     * @param {BrushData} obj Related brush data.
-     */
-    /**
-     * @event rclick
-     * Event that occurs when right clicking on the brush.
-     * @param {BrushData} obj Related brush data.
-     */
-    /**
-     * @event mouseover
-     * Event that occurs when placing the mouse over the brush.
-     * @param {BrushData} obj Related brush data.
-     */
-    /**
-     * @event mouseout
-     * Event that occurs when moving the mouse out of the brush.
-     * @param {BrushData} obj Related brush data.
-     */
-    /**
-     * @event mousemove
-     * Event that occurs when moving the mouse over the brush.
-     * @param {BrushData} obj Related brush data.
-     */
-    /**
-     * @event mousedown
-     * Event that occurs when left clicking on the brush.
-     * @param {BrushData} obj Related brush data.
-     */
-    /**
-     * @event mouseup
-     * Event that occurs after left clicking on the brush.
-     * @param {BrushData} obj Related brush data.
-     */
 
     /**
      * @event chart_click
@@ -1173,55 +1146,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
      * @event bg_mouseup
      * Event that occurs after left clicking on the chart margin. (real name ``` bg.mouseup ```)
      * @param {jQueryEvent} e The event object.
-     */
-
-    /**
-     * @event axis_click
-     * Event that occurs when clicking on the axis area. (real name ``` axis.click ```)
-     * @param {jQueryEvent} e The event object.
-     * @param {Number} index Axis index.
-     */
-    /**
-     * @event axis_dblclick
-     * Event that occurs when double clicking on the axis area. (real name ``` axis.dblclick ```)
-     * @param {jQueryEvent} e The event object.
-     * @param {Number} index Axis index.
-     */
-    /**
-     * @event axis_rclick
-     * Event that occurs when right clicking on the axis area. (real name ``` axis.rclick ```)
-     * @param {jQueryEvent} e The event object.
-     * @param {Number} index Axis index.
-     */
-    /**
-     * @event axis_mouseover
-     * Event that occurs when placing the mouse over the axis area. (real name ``` axis.mouseover ```)
-     * @param {jQueryEvent} e The event object.
-     * @param {Number} index Axis index.
-     */
-    /**
-     * @event axis_mouseout
-     * Event that occurs when moving the mouse out of the axis area. (real name ``` axis.mouseout ```)
-     * @param {jQueryEvent} e The event object.
-     * @param {Number} index Axis index.
-     */
-    /**
-     * @event axis_mousemove
-     * Event that occurs when moving the mouse over the axis area. (real name ``` axis.mousemove ```)
-     * @param {jQueryEvent} e The event object.
-     * @param {Number} index Axis index.
-     */
-    /**
-     * @event axis_mousedown
-     * Event that occurs when left clicking on the axis area. (real name ``` axis.mousedown ```)
-     * @param {jQueryEvent} e The event object.
-     * @param {Number} index Axis index.
-     */
-    /**
-     * @event axis_mouseup
-     * Event that occurs after left clicking on the axis area. (real name ``` axis.mouseup ```)
-     * @param {jQueryEvent} e The event object.
-     * @param {Number} index Axis index.
      */
 
     return UI;

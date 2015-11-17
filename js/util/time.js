@@ -6,6 +6,12 @@ jui.define("util.time", [ "util.base" ], function(_) {
 	 */
 	var self = {
 
+		//constant
+		MILLISECOND : 1000,
+		MINUTE : 1000 * 60,
+		HOUR : 1000 * 60 * 60,
+		DAY : 1000 * 60 * 60 * 24,
+
 		// unit
 		years : "years",
 		months : "months",
@@ -15,6 +21,22 @@ jui.define("util.time", [ "util.base" ], function(_) {
 		seconds : "seconds",
 		milliseconds : "milliseconds",
 		weeks : "weeks",
+
+		diff : function (type, a, b) {
+			var milliseconds =  (+a) - (+b);
+
+			if (type == 'seconds') {
+				return Math.abs(Math.floor(milliseconds / self.MILLISECOND));
+			} else if (type == 'minutes') {
+				return Math.abs(Math.floor(milliseconds / self.MINUTE));
+			} else if (type == 'hours') {
+				return Math.abs(Math.floor(milliseconds / self.HOUR));
+			} else if (type == 'days') {
+				return Math.abs(Math.floor(milliseconds / self.DAY));
+			}
+
+			return milliseconds;
+		},
 
 		/**
 		 * 시간 더하기 

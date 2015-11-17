@@ -1,0 +1,91 @@
+.progress {
+    position:relative;
+    width: 100%;
+
+    .area {
+        position: absolute;
+        width:100%;
+        top:50%;
+        .box-sizing(border-box);
+        overflow:hidden;
+
+        .bar {
+            float:left;
+            width:0%;
+            height:100%;
+            transition: all 0.7s linear;
+
+            &:not(:first-child) {
+                border-top-left-radius:0px;
+                border-bottom-left-radius:0px;
+            }
+
+            &:not(:last-child) {
+                border-top-right-radius:0px;
+                border-bottom-right-radius:0px;
+            }
+        }
+    }
+
+    &.flat {
+        .area {
+            border-radius: 0px;
+
+            .bar {
+                border-radius: 0px;
+            }
+        }
+    }
+
+    &.simple {
+        .area {
+            border: 0px;
+            padding:0px;
+        }
+    }
+
+    &.vertical {
+        height: 100%;
+
+        &.simple {
+            .area {
+                height:100%;
+
+                .bar {
+                    bottom:0px;
+                    left:0px;
+                    right:0px;
+                    width:100%;
+                    border:0px;
+                }
+            }
+        }
+
+        .area {
+            top:0px;
+            bottom:0px;
+            margin-top:0px;
+            height:100%;
+            left:50%;
+
+            .bar {
+                .box-sizing(border-box);
+                left:0;
+                right: 0;
+                position:absolute;
+                bottom:0px;
+                height:10%;
+
+                &:not(:first-child) {
+                    border-top-left-radius:0px;
+                    border-top-right-radius:0px;
+                }
+
+                &:not(:last-child) {
+                    border-bottom-left-radius:0px;
+                    border-bottom-right-radius:0px;
+                }
+            }
+        }
+    }
+}

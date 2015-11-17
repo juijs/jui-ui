@@ -2,9 +2,6 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 
     /**
      * @class chart.brush.gauge 
-     * 
-     * implements gauge brush 
-     *  
      * @extends chart.brush.donut
      */
 	var GaugeBrush = function() {
@@ -71,16 +68,6 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 
         }
 
-        /**
-         * @method drawUnit 
-         * 
-         * data 별 gague 를 그린다.
-         *  
-         * @param {Number} index
-         * @param {Object} data
-         * @param {util.svg.element} group
-         * @return {util.svg.element}
-         */
 		this.drawUnit = function(index, data, group) {
 			var obj = this.axis.c(index),
 				value = this.getValue(data, "value", 0),
@@ -133,7 +120,6 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 		}
 
 		this.draw = function() {
-
 			var group = this.chart.svg.group();
 
 			this.eachData(function(i, data) {
@@ -141,7 +127,6 @@ jui.define("chart.brush.gauge", [ "util.math" ], function(math) {
 			});
 
 			return group;
-
 		}
 	}
 

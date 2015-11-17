@@ -1,7 +1,6 @@
 jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], function($, _, math, SVG) {
     /**
      * @class chart.grid.core
-     * Grid Core 객체
      * @extends chart.draw
      * @abstract
      */
@@ -195,13 +194,6 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
             }
         }
 
-        /**
-         * @method addEvent
-         * 맵 패스 엘리먼트에 대한 공통 이벤트 정의
-         *
-         * @param {Element} element
-         * @param {Object} obj
-         */
         function addEvent(elem, obj) {
             var chart = self.chart;
 
@@ -335,15 +327,6 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
             }
         }
 
-        /**
-         * @method drawGrid
-         * draw base grid structure
-         * @protected
-         * @param {chart.builder} chart
-         * @param {String} orient
-         * @param {String} cls
-         * @param {Map} map
-         */
         this.draw = function() {
             var root = this.chart.svg.group();
 
@@ -373,14 +356,6 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
             };
         }
 
-        /**
-         * @method drawAfter
-         *
-         *
-         *
-         * @param {Object} obj
-         * @protected
-         */
         this.drawAfter = function(obj) {
             obj.root.attr({ "clip-path": "url(#" + this.axis.get("clipRectId") + ")" });
         }
@@ -406,6 +381,55 @@ jui.define("chart.map", [ "jquery", "util.base", "util.math", "util.svg" ], func
             height: -1
         };
     }
+
+    /**
+     * @event map_click
+     * Event that occurs when clicking on the map area. (real name ``` map.click ```)
+     * @param {jQueryEvent} e The event object.
+     * @param {Number} index Axis index.
+     */
+    /**
+     * @event map_dblclick
+     * Event that occurs when double clicking on the map area. (real name ``` map.dblclick ```)
+     * @param {jQueryEvent} e The event object.
+     * @param {Number} index Axis index.
+     */
+    /**
+     * @event map_rclick
+     * Event that occurs when right clicking on the map area. (real name ``` map.rclick ```)
+     * @param {jQueryEvent} e The event object.
+     * @param {Number} index Axis index.
+     */
+    /**
+     * @event map_mouseover
+     * Event that occurs when placing the mouse over the map area. (real name ``` map.mouseover ```)
+     * @param {jQueryEvent} e The event object.
+     * @param {Number} index Axis index.
+     */
+    /**
+     * @event map_mouseout
+     * Event that occurs when moving the mouse out of the map area. (real name ``` map.mouseout ```)
+     * @param {jQueryEvent} e The event object.
+     * @param {Number} index Axis index.
+     */
+    /**
+     * @event map_mousemove
+     * Event that occurs when moving the mouse over the map area. (real name ``` map.mousemove ```)
+     * @param {jQueryEvent} e The event object.
+     * @param {Number} index Axis index.
+     */
+    /**
+     * @event map_mousedown
+     * Event that occurs when left clicking on the map area. (real name ``` map.mousedown ```)
+     * @param {jQueryEvent} e The event object.
+     * @param {Number} index Axis index.
+     */
+    /**
+     * @event map_mouseup
+     * Event that occurs after left clicking on the map area. (real name ``` map.mouseup ```)
+     * @param {jQueryEvent} e The event object.
+     * @param {Number} index Axis index.
+     */
 
     return Map;
 }, "chart.draw"); 

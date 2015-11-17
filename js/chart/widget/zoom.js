@@ -2,11 +2,9 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
 
     /**
      * @class chart.widget.zoom
-     * implements zoom widget
      * @extends chart.widget.core
      * @alias ZoomWidget
      * @requires util.base
-     *
      */
     var ZoomWidget = function() {
         var self = this,
@@ -145,6 +143,9 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
         this.drawSection = function(axisIndex) {
             var axis = this.chart.axis(axisIndex),
                 xtype = axis.get("x").type,
+                domain = axis.get("x").domain,
+                interval = axis.get("x").interval,
+                format = axis.get("x").format,
                 cw = axis.area("width"),
                 ch = axis.area("height"),
                 r = 12;
@@ -187,9 +188,9 @@ jui.define("chart.widget.zoom", [ "util.base" ], function(_) {
                             axis.screen(1);
                         } else if(xtype == "date") {
                             axis.updateGrid("x", {
-                                domain: axis.get("x").domain,
-                                interval: axis.get("x").interval,
-                                format: axis.get("x").format
+                                domain: domain,
+                                interval: interval,
+                                format: format
                             });
                         }
 

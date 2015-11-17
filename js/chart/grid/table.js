@@ -2,9 +2,6 @@ jui.define("chart.grid.table", [  ], function() {
 
     /**
      * @class chart.grid.table
-     *
-     * implements table grid 
-     *
      * @extends chart.grid.core
      */
     var TableGrid = function(chart, axis, grid) {
@@ -63,15 +60,6 @@ jui.define("chart.grid.table", [  ], function() {
             })(this.axis, row, column, rowUnit, columnUnit);
         }
 
-        /**
-         * @method draw
-         *
-         *
-         * @return {Object}
-         * @return {util.scale} return.scale  return scale be used in grid
-         * @return {SVGElement} return.root grid root element
-         * @protected
-         */
         this.draw = function() {
             this.grid.hide = true;
             return this.drawGrid("table");

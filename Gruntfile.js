@@ -11,6 +11,7 @@ module.exports = function(grunt) {
 
         // util
         "js/util/math.js",
+        "js/util/transform.js",
         "js/util/time.js",
         "js/util/scale.js",
         "js/util/color.js",
@@ -23,6 +24,7 @@ module.exports = function(grunt) {
         "js/ui/button.js",
         "js/ui/combo.js",
         "js/ui/datepicker.js",
+        "js/ui/colorpicker.js",
         "js/ui/dropdown.js",
         "js/ui/modal.js",
         "js/ui/notify.js",
@@ -30,6 +32,10 @@ module.exports = function(grunt) {
         "js/ui/tooltip.js",
         "js/ui/layout.js",
         "js/ui/accordion.js",
+        "js/ui/switch.js",
+        "js/ui/slider.js",
+        "js/ui/progress.js",
+        "js/ui/colorpicker.js",
 
         "js/uix/autocomplete.js",
         "js/uix/tab.js",
@@ -66,8 +72,17 @@ module.exports = function(grunt) {
 
         // chart.icon
         "js/chart/icon/jennifer.js",
-        
+
+        // chart.polygon
+        "js/chart/polygon/core.js",
+        "js/chart/polygon/face.js",
+        "js/chart/polygon/line.js",
+        "js/chart/polygon/point.js",
+        "js/chart/polygon/cube.js",
+
         // chart.grid
+        "js/chart/grid/draw2d.js",
+        "js/chart/grid/draw3d.js",
         "js/chart/grid/core.js",
         "js/chart/grid/block.js",
         "js/chart/grid/date.js",
@@ -147,6 +162,11 @@ module.exports = function(grunt) {
         "js/chart/brush/map.marker.js",
         "js/chart/brush/map.weather.js",
 
+        // polygon brush (full 3d)
+        "js/chart/brush/polygon.core.js",
+        "js/chart/brush/polygon.scatter.js",
+        "js/chart/brush/polygon.column.js",
+
         // chart.widget
         "js/chart/widget/core.js",
         "js/chart/widget/tooltip.js",
@@ -164,6 +184,10 @@ module.exports = function(grunt) {
         "js/chart/widget/map.core.js",
         "js/chart/widget/map.control.js",
         "js/chart/widget/map.tooltip.js",
+
+        // polygon widget (full 3d)
+        "js/chart/widget/polygon.core.js",
+        "js/chart/widget/polygon.rotate.js",
 
         // chart wrapper
         "js/chartx/realtime.js",

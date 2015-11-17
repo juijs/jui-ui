@@ -1,4 +1,4 @@
-jui.define("util.math", [], function() {
+jui.define("util.math", [ "util.base" ], function(_) {
 
 	/**
 	 * @class util.math
@@ -99,6 +99,82 @@ jui.define("util.math", [], function() {
             }
 		},
 
+		getFixed : function (a, b) {
+			var aArr = (a+"").split(".");
+			var aLen = (aArr.length < 2) ? 0 : aArr[1].length;
+
+			var bArr = (b+"").split(".");
+			var bLen = (bArr.length < 2) ? 0 : bArr[1].length;
+
+			return (aLen > bLen) ? aLen : bLen;
+
+		},
+
+		fixed : function (fixed) {
+
+
+			var fixedNumber = this.getFixed(fixed, 0);
+			var pow = Math.pow(10, fixedNumber);
+
+			var func = function (value) {
+				return Math.round(value * pow) / pow;
+			};
+
+			func.plus = function (a, b) {
+				return Math.round((a * pow) + (b * pow)) / pow;
+			};
+
+			func.minus = function (a, b) {
+				return Math.round((a * pow) - (b * pow)) / pow;
+			};
+
+			func.multi = function (a, b) {
+				return Math.round((a * pow) * (b * pow)) / pow;
+			};
+
+			func.div = function (a, b) {
+				return Math.round((a * pow) / (b * pow)) / pow;
+			};
+
+			func.remain = function (a, b) {
+				return Math.round((a * pow) % (b * pow)) / pow;
+			};
+
+			return func;
+		},
+
+		round: function (num, fixed) {
+			var fixedNumber = Math.pow(10, fixed);
+
+			return Math.round(num * fixedNumber) / fixedNumber;
+		},
+
+		plus : function (a, b) {
+			var pow = Math.pow(10, this.getFixed(a, b));
+
+			return Math.round((a * pow) + (b * pow)) / pow;
+		},
+
+		minus : function (a, b) {
+			var pow = Math.pow(10, this.getFixed(a, b));
+			return Math.round((a * pow) - (b * pow)) / pow;
+		},
+
+		multi : function (a, b) {
+			var pow = Math.pow(10, this.getFixed(a, b));
+			return Math.round((a * pow) * (b * pow)) / pow;
+		},
+
+		div : function (a, b) {
+			var pow = Math.pow(10, this.getFixed(a, b));
+			return Math.round((a * pow) / (b * pow));
+		},
+
+		remain : function (a, b) {
+			var pow = Math.pow(10, this.getFixed(a, b));
+			return Math.round((a * pow) % (b * pow)) / pow;
+		},
+
 		/**
 		 * 특정 구간의 값을 자동으로 계산 
 		 * 
@@ -128,8 +204,6 @@ jui.define("util.math", [], function() {
 				var exponent = Math.floor(Math.log(range) / Math.LN10);
 				var fraction = range / Math.pow(10, exponent);
 				var nickFraction;
-
-				//console.log(range, exponent, fraction, _ticks);
 
 				if (round) {
 					if (fraction < 1.5)
@@ -162,6 +236,7 @@ jui.define("util.math", [], function() {
 				_tickSpacing = (isNice) ? niceNum(_range / _ticks, true) : _range / _ticks;
 				_niceMin = (isNice) ? Math.floor(_min / _tickSpacing) * _tickSpacing : _min;
 				_niceMax = (isNice) ? Math.floor(_max / _tickSpacing) * _tickSpacing : _max;
+
 			}
 
 			caculate();
@@ -172,7 +247,77 @@ jui.define("util.math", [], function() {
 				range : _range,
 				spacing : _tickSpacing
 			}
-		}		
+		},
+
+		matrix: function(a, b) {
+			// 2x1 or 3x1 or ?x1 형태의 매트릭스 연산
+			function matrix(a, b) {
+				var m = [];
+
+				for(var i = 0, len = a.length; i < len; i++) {
+					var sum = 0;
+
+					for(var j = 0, len2 = a[i].length; j < len2; j++) {
+						sum += a[i][j] * b[j];
+					}
+
+					m.push(sum);
+				}
+
+				return m;
+			}
+
+
+			// 2x2 or 3x3 형태의 매트릭스 연산
+			function deepMatrix(a, b) {
+				var m = [], nm = [];
+
+				for(var i = 0, len = b.length; i < len; i++) {
+					m[i] = [];
+					nm[i] = [];
+				}
+
+				for(var i = 0, len = b.length; i < len; i++) {
+					for(var j = 0, len2 = b[i].length; j < len2; j++) {
+						m[j].push(b[i][j]);
+					}
+				}
+
+				for(var i = 0, len = m.length; i < len; i++) {
+					var mm = matrix(a, m[i]);
+
+					for(var j = 0, len2 = mm.length; j < len2; j++) {
+						nm[j].push(mm[j]);
+					}
+				}
+
+				return nm;
+			}
+
+			if(_.typeCheck("array", b[0])) {
+				return deepMatrix(a, b);
+			}
+
+			return matrix(a, b);
+		},
+
+		scaleValue: function(value, minValue, maxValue, minScale, maxScale) {
+			// 최소/최대 값이 같을 경우 처리
+			minValue = (minValue == maxValue) ? 0 : minValue;
+
+			var range = maxScale - minScale,
+				tg = range * getPer();
+
+			function getPer() {
+				var range = maxValue - minValue,
+					tg = value - minValue,
+					per = tg / range;
+
+				return per;
+			}
+
+			return tg + minScale;
+		}
 	}
 
 	return self;

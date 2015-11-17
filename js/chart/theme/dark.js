@@ -26,24 +26,33 @@ jui.define("chart.theme.dark", [], function() {
         // Grid styles
         gridXFontSize : 11,
         gridYFontSize : 11,
+        gridZFontSize : 10,
         gridCFontSize : 11,
         gridXFontColor : "#868686",
         gridYFontColor : "#868686",
+        gridZFontColor : "#868686",
         gridCFontColor : "#868686",
         gridXFontWeight : "normal",
         gridYFontWeight : "normal",
+        gridZFontWeight : "normal",
         gridCFontWeight : "normal",
         gridXAxisBorderColor : "#464646",
         gridYAxisBorderColor : "#464646",
+        gridZAxisBorderColor : "#464646",
         gridXAxisBorderWidth : 2,
         gridYAxisBorderWidth : 2,
+        gridZAxisBorderWidth : 2,
+
+        // Full 3D 전용 테마
+        gridFaceBackgroundColor: "#dcdcdc",
+        gridFaceBackgroundOpacity: 0.3,
 
     	gridActiveFontColor : "#ff762d",
         gridActiveBorderColor : "#ff7800",
         gridActiveBorderWidth : 1,
         gridPatternColor : "#ababab",
         gridPatternOpacity : 0.1,
-        gridBorderColor : "#464646",
+        gridBorderColor : "#868686",
         gridBorderWidth : 1,
         gridBorderDashArray : "none",
         gridBorderOpacity : 1,
@@ -56,6 +65,7 @@ jui.define("chart.theme.dark", [], function() {
         tooltipPointBorderWidth : 1, // common
         tooltipPointFontWeight : "bold", // common
         tooltipPointFontSize : 11,
+        tooltipPointFontColor : "#868686",
         barFontSize : 11,
         barFontColor : "#868686",
         barBorderColor : "none",
@@ -208,6 +218,12 @@ jui.define("chart.theme.dark", [], function() {
         // Map Widgets
         mapControlButtonColor : "#3994e2",
         mapControlScrollColor : "#000",
-        mapControlScrollLineColor : "#fff"
+        mapControlScrollLineColor : "#fff",
+
+        // Polygon Brushes
+        polygonColumnBackgroundOpacity: 0.6,
+        polygonColumnBorderOpacity: 0.5,
+        polygonScatterRadialOpacity: 0.7,
+        polygonScatterBackgroundOpacity: 0.8
     }
 });

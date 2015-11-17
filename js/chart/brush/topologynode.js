@@ -2,9 +2,7 @@ jui.define("chart.brush.topologynode.edge", [], function() {
 
     /**
      * @class chart.brush.topologynode.edge
-     * 
-     * 토폴로지 Edge 표현 객체  
-     * 
+     *
      */
     var TopologyEdge = function(start, end, in_xy, out_xy) {
         var connect = false, element = null;
@@ -47,7 +45,7 @@ jui.define("chart.brush.topologynode.edge", [], function() {
 jui.define("chart.brush.topologynode.edgemanager", [ "util.base" ], function(_) {
     /**
      * @class chart.brush.topologynode.edgemananger
-     * 토폴로지 Edge 관리자
+     *
      */
     var TopologyEdgeManager = function() {
         var list = [],
@@ -88,8 +86,7 @@ jui.define("chart.brush.topologynode",
 
     /**
      * @class chart.brush.topologynode
-     * TopologyNode Class
-     * @extends chart.brush.core 
+     * @extends chart.brush.core
      */
     var TopologyNode = function(chart, axis, brush) {
         var self = this,
@@ -573,6 +570,20 @@ jui.define("chart.brush.topologynode",
             activeEdge: null
         }
     }
+
+    /**
+     * @event topoloygy_nodeclick
+     * Event that occurs when click on the topology node. (real name ``` topoloygy.nodeclick ```)
+     * @param {Object} data The node data.
+     * @param {jQueryEvent} e The event object.
+     */
+
+    /**
+     * @event topoloygy_edgeclick
+     * Event that occurs when click on the topology edge. (real name ``` topoloygy.edgeclick ```)
+     * @param {Object} data The edge data.
+     * @param {jQueryEvent} e The event object.
+     */
 
     return TopologyNode;
 }, "chart.brush.core");

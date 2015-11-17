@@ -1,9 +1,6 @@
 jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
     /**
      * @class chart.draw
-     *
-     * Base Draw Class
-     *
      * @alias Draw
      * @requires util.base
      * @requires jquery
@@ -176,6 +173,22 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
                     callback.apply(self, arguments);
                 }
             }, "render");
+        }
+
+        this.calculate3d = function() {
+            var w = this.axis.area("width"),
+                h = this.axis.area("height"),
+                d = this.axis.depth,
+                r = this.axis.degree,
+                list = arguments;
+
+            if(_.typeCheck("integer", r)) {
+                r = { x: r, y: r, z: r };
+            }
+
+            for (var i = 0; i < list.length; i++) {
+                list[i].rotate(w, h, d, r);
+            }
         }
 	}
 

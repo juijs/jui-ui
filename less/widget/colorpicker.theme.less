@@ -1,0 +1,86 @@
+.value_gradient(@startColor, @endColor) {
+    background-image: -webkit-gradient(linear, 0 100%, 0 0, from(@startColor), to(@endColor));
+    background-image: -webkit-linear-gradient(bottom, @startColor, @endColor);
+    background-image: -moz-linear-gradient(bottom, @startColor, @endColor);
+    background-image: -o-linear-gradient(bottom, @startColor, @endColor);
+    background-image: -ms-linear-gradient(bottom, @startColor, @endColor);
+    background-image: linear-gradient(to top, @startColor, @endColor);
+}
+
+.opacity_gradient(@startColor, @endColor) {
+    background-image: -webkit-gradient(linear, 0 0, 100% 0, from(@startColor), to(@endColor));
+    background-image: -webkit-linear-gradient(left, @startColor, @endColor);
+    background-image: -moz-linear-gradient(left, @startColor, @endColor);
+    background-image: -o-linear-gradient(left, @startColor, @endColor);
+    background-image: -ms-linear-gradient(left, @startColor, @endColor);
+    background-image: linear-gradient(to right, @startColor, @endColor);
+}
+
+.colorpicker {
+    border: 1px solid @colorpickerBorderColor;
+    background-color: @colorpickerBackgroundColor;
+    .border-radius(@colorpickerBorderRadius);
+    .box-shadow(@colorpickerBoxShadow);
+
+    > .color {
+        .border-top-radius(@colorpickerBorderRadius);
+
+        > .saturation {
+            #gradient > .horizontal(@colorpickerSaturationFromColor, @colorpickerSaturationToColor);
+
+            > .value {
+                .value_gradient(@colorpickerValueFromColor, @colorpickerValueToColor);
+
+                > .drag-pointer {
+                    border: 1px solid @colorpickerValueDragPointerBorderColor;
+                    .box-shadow(@colorpickerDragPointerBoxShadow);
+                }
+            }
+        }
+    }
+
+    > .control {
+        > .hue {
+            > .container {
+                background: -moz-linear-gradient(left, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%);
+                background: -ms-linear-gradient(left, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%);
+                background: -o-linear-gradient(left, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%);
+                background: -webkit-gradient(linear, left top, right top, from(#ff0000), color-stop(0.17, #ffff00), color-stop(0.33, #00ff00), color-stop(0.5, #00ffff), color-stop(0.67, #0000ff), color-stop(0.83, #ff00ff), to(#ff0000));
+                background: -webkit-linear-gradient(left, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%);
+                background: linear-gradient(to right, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%);
+            }
+        }
+
+        > .opacity {
+            > .container {
+                background: @colorpickerOpacityBackgroundColor;
+            }
+        }
+
+        > .input {
+            color: @colorpickerInputFontColor;
+        }
+
+        > .empty {
+            background: url(@colorpickerPatternImageUrl) repeat;
+        }
+
+        .drag-bar, .drag-bar2 {
+            border: 1px solid @colorpickerDragPointerBorderColor;
+            .box-shadow(@colorpickerDragPointerBoxShadow);
+            background-color:@colorpickerDragPointerBackgroundColor;
+        }
+    }
+
+    > .information {
+        border-top: 1px solid @colorpickerInformationBorderColor;
+
+        > .title {
+            color: @colorpickerFontColor;
+        }
+
+        > .input {
+            color: @colorpickerInputFontColor;
+        }
+    }
+}

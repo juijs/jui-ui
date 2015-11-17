@@ -2,11 +2,6 @@ jui.define("chart.brush.scatterpath", ["util.base"], function(_) {
 
     /**
      * @class chart.brush.scatterpath
-     *
-     * scatter path 는 path 를 이용해서 최적화된 symbol 을 그리는 브러쉬
-     *
-     * scatter 로 표현하지 못하는 많은 양의 데이타를 표시 하는데 사용할 수 있다.
-     *
      * @extends chart.brush.core
      *
      */

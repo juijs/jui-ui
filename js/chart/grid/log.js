@@ -2,9 +2,6 @@ jui.define("chart.grid.log", [ "util.scale", "util.base" ], function(UtilScale, 
 
 	/**
 	 * @class chart.grid.log
-	 *
-	 * implements log grid
-	 *
 	 * @extends chart.grid.range
 	 */
 	var LogGrid = function() {
@@ -55,9 +52,7 @@ jui.define("chart.grid.log", [ "util.scale", "util.base" ], function(UtilScale, 
 		return {
 			/** @cfg {Number} [base=10] log's base */
 			base : 10,
-
 			step : 4,
-
 			nice : false
 		};
 	}

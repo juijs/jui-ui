@@ -53,7 +53,8 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
         }
 
         function drawGridType(axis, k) {
-            if((k == "x" || k == "y") && !_.typeCheck("object", axis[k])) return null;
+            if((k == "x" || k == "y" || k == "z") && !_.typeCheck("object", axis[k]))
+                return null;
 
             // 축 위치 설정
             axis[k] = axis[k]  || {};
@@ -62,6 +63,8 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
                 axis[k].orient = axis[k].orient == "top" ? "top" : "bottom";
             } else if (k == "y") {
                 axis[k].orient = axis[k].orient == "right" ? "right" : "left";
+            } else if (k == "z") {
+                axis[k].orient = "center";
             } else if (k == "c") {
                 axis[k].type = axis[k].type || "panel";
                 axis[k].orient = "custom";
@@ -81,18 +84,19 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
 
             var elem = obj.render();
 
-            // 그리드 별 위치 선정하기
-            if(axis[k].orient == "left") {
-                 elem.root.translate(chart.area("x") + self.area("x") - axis[k].dist, chart.area("y"));
-            } else if(axis[k].orient == "right") {
-                elem.root.translate(chart.area("x") + self.area("x2") + axis[k].dist, chart.area("y"));
-            } else if(axis[k].orient == "bottom") {
-                elem.root.translate(chart.area("x") , chart.area("y") + self.area("y2") + axis[k].dist);
-            } else if(axis[k].orient == "top") {
-                elem.root.translate(chart.area("x") , chart.area("y") + self.area("y") - axis[k].dist);
-            } else {
-                // custom
-                if(elem.root) elem.root.translate(chart.area("x") + self.area("x"), chart.area("y") + self.area("y"));
+            // 그리드 별 위치 선정하기 (z축이 없을 때)
+            if(!self.isFull3D()) {
+                if (axis[k].orient == "left") {
+                    elem.root.translate(chart.area("x") + self.area("x") - axis[k].dist, chart.area("y"));
+                } else if (axis[k].orient == "right") {
+                    elem.root.translate(chart.area("x") + self.area("x2") + axis[k].dist, chart.area("y"));
+                } else if (axis[k].orient == "bottom") {
+                    elem.root.translate(chart.area("x"), chart.area("y") + self.area("y2") + axis[k].dist);
+                } else if (axis[k].orient == "top") {
+                    elem.root.translate(chart.area("x"), chart.area("y") + self.area("y") - axis[k].dist);
+                } else {
+                    if (elem.root) elem.root.translate(chart.area("x") + self.area("x"), chart.area("y") + self.area("y"));
+                }
             }
 
             elem.scale.type = axis[k].type;
@@ -288,7 +292,10 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
                 index : cloneAxis.index,
                 page : cloneAxis.page,
                 start : cloneAxis.start,
-                end : cloneAxis.end
+                end : cloneAxis.end,
+
+                degree : cloneAxis.degree,
+                depth : cloneAxis.depth
             });
 
             // 원본 데이터 설정
@@ -345,6 +352,7 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             _.extend(this, {
                 x : options.x,
                 y : options.y,
+                z : options.z,
                 c : options.c,
                 map : options.map
             });
@@ -365,6 +373,7 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
 
             this.x = drawGridType(this, "x");
             this.y = drawGridType(this, "y");
+            this.z = drawGridType(this, "z");
             this.c = drawGridType(this, "c");
             this.map = drawMapType(this, "map");
         }
@@ -419,8 +428,8 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
          */
         this.updateGrid = function(type, grid, isReset) {
             if(isReset === true) {
-                originAxis[type] = _.deppClone(grid);
-                cloneAxis[type] = _.deppClone(grid);
+                originAxis[type] = _.deepClone(grid);
+                cloneAxis[type] = _.deepClone(grid);
             } else {
                 _.extend(originAxis[type], grid);
                 _.extend(cloneAxis[type], grid);
@@ -515,6 +524,10 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             if(chart.isRender()) chart.render();
         }
 
+        this.isFull3D = function() {
+            return !_.typeCheck([ "undefined", "null" ], this.z);
+        }
+
         init();
     }
 
@@ -540,6 +553,8 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             x: null,
             /** @cfg {chart.grid.core} [y=null]  Sets a grid on the Y axis (see the grid tab). */
             y: null,
+            /** @cfg {chart.grid.core} [z=null] Sets a grid on the Z axis (see the grid tab). */
+            z: null,
             /** @cfg {chart.grid.core} [c=null] Sets a grid on the C axis (see the grid tab). */
             c: null,
             /** @cfg {chart.map.core} [map=null] Sets a map on the Map axis */

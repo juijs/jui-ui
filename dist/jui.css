@@ -1547,314 +1547,323 @@
     transform: scale(1);
   }
 }
+.jui .icon-pin:before {
+  content: "\e945";
+}
 .jui .icon-add-dir:before {
-  content: "\e600";
+  content: "\e900";
 }
 .jui .icon-add-dir2:before {
-  content: "\e601";
+  content: "\e901";
 }
 .jui .icon-align-center:before {
-  content: "\e602";
+  content: "\e902";
 }
 .jui .icon-align-left:before {
-  content: "\e603";
+  content: "\e903";
 }
 .jui .icon-align-right:before {
-  content: "\e604";
+  content: "\e904";
 }
 .jui .icon-analysis:before {
-  content: "\e605";
+  content: "\e905";
 }
 .jui .icon-analysis2:before {
-  content: "\e606";
+  content: "\e906";
 }
 .jui .icon-arrow1:before {
-  content: "\e607";
+  content: "\e907";
 }
 .jui .icon-arrow2:before {
-  content: "\e608";
+  content: "\e908";
 }
 .jui .icon-arrow3:before {
-  content: "\e609";
+  content: "\e909";
 }
 .jui .icon-bell:before {
-  content: "\e60a";
+  content: "\e90a";
 }
 .jui .icon-blogger:before {
-  content: "\e60b";
+  content: "\e90b";
 }
 .jui .icon-bold:before {
-  content: "\e60c";
+  content: "\e90c";
 }
 .jui .icon-calendar:before {
-  content: "\e60d";
+  content: "\e90d";
 }
 .jui .icon-caution:before {
-  content: "\e60e";
+  content: "\e90e";
 }
 .jui .icon-caution2:before {
-  content: "\e60f";
+  content: "\e90f";
 }
 .jui .icon-chart-area:before {
-  content: "\e610";
+  content: "\e910";
 }
 .jui .icon-chart-bar:before {
-  content: "\e611";
+  content: "\e911";
 }
 .jui .icon-chart-candle:before {
-  content: "\e612";
+  content: "\e912";
 }
 .jui .icon-chart-column:before {
-  content: "\e613";
+  content: "\e913";
 }
 .jui .icon-chart-gauge:before {
-  content: "\e614";
+  content: "\e914";
 }
 .jui .icon-chart-line:before {
-  content: "\e615";
+  content: "\e915";
 }
 .jui .icon-chart-radar:before {
-  content: "\e616";
+  content: "\e916";
 }
 .jui .icon-chart-scatter:before {
-  content: "\e617";
+  content: "\e917";
 }
 .jui .icon-chart:before {
-  content: "\e618";
+  content: "\e918";
 }
 .jui .icon-check:before {
-  content: "\e619";
+  content: "\e919";
 }
 .jui .icon-checkmark:before {
-  content: "\e61a";
+  content: "\e91a";
 }
 .jui .icon-chevron-left:before {
-  content: "\e61b";
+  content: "\e91b";
 }
 .jui .icon-chevron-right:before {
-  content: "\e61c";
+  content: "\e91c";
 }
 .jui .icon-close:before {
-  content: "\e61d";
+  content: "\e91d";
 }
 .jui .icon-connection:before {
-  content: "\e61e";
+  content: "\e91e";
 }
 .jui .icon-dashboard:before {
-  content: "\e61f";
+  content: "\e91f";
 }
 .jui .icon-dashboardlist:before {
-  content: "\e620";
+  content: "\e920";
 }
 .jui .icon-db:before {
-  content: "\e621";
+  content: "\e921";
 }
 .jui .icon-device:before {
-  content: "\e622";
+  content: "\e922";
 }
 .jui .icon-document:before {
-  content: "\e623";
+  content: "\e923";
 }
 .jui .icon-download:before {
-  content: "\e624";
+  content: "\e924";
 }
 .jui .icon-edit:before {
-  content: "\e625";
+  content: "\e925";
 }
 .jui .icon-etc:before {
-  content: "\e626";
+  content: "\e926";
 }
 .jui .icon-exit:before {
-  content: "\e627";
+  content: "\e927";
 }
 .jui .icon-facebook:before {
-  content: "\e628";
+  content: "\e928";
 }
 .jui .icon-gear:before {
-  content: "\e629";
+  content: "\e929";
 }
 .jui .icon-github:before {
-  content: "\e62a";
+  content: "\e92a";
 }
 .jui .icon-googleplus:before {
-  content: "\e62b";
+  content: "\e92b";
 }
 .jui .icon-help:before {
-  content: "\e62c";
+  content: "\e92c";
 }
 .jui .icon-hide:before {
-  content: "\e62d";
+  content: "\e92d";
 }
 .jui .icon-home:before {
-  content: "\e62e";
+  content: "\e92e";
 }
 .jui .icon-html:before {
-  content: "\e62f";
+  content: "\e92f";
 }
 .jui .icon-image:before {
-  content: "\e630";
+  content: "\e930";
 }
 .jui .icon-indent:before {
-  content: "\e631";
+  content: "\e931";
 }
 .jui .icon-info-message:before {
-  content: "\e632";
+  content: "\e932";
 }
 .jui .icon-info:before {
-  content: "\e633";
+  content: "\e933";
 }
 .jui .icon-italic:before {
-  content: "\e634";
+  content: "\e934";
 }
 .jui .icon-jennifer-server:before {
-  content: "\e635";
+  content: "\e935";
 }
 .jui .icon-label:before {
-  content: "\e636";
+  content: "\e936";
 }
 .jui .icon-left:before {
-  content: "\e637";
+  content: "\e937";
 }
 .jui .icon-like:before {
-  content: "\e638";
+  content: "\e938";
 }
 .jui .icon-line-height:before {
-  content: "\e639";
+  content: "\e939";
 }
 .jui .icon-link:before {
-  content: "\e63a";
+  content: "\e93a";
 }
 .jui .icon-loading:before {
-  content: "\e63b";
+  content: "\e93b";
 }
 .jui .icon-menu:before {
-  content: "\e63c";
+  content: "\e93c";
 }
 .jui .icon-message:before {
-  content: "\e63d";
+  content: "\e93d";
 }
 .jui .icon-minus:before {
-  content: "\e63e";
+  content: "\e93e";
 }
 .jui .icon-monitoring:before {
-  content: "\e63f";
+  content: "\e93f";
 }
 .jui .icon-more:before {
-  content: "\e640";
+  content: "\e940";
 }
 .jui .icon-new-window:before {
-  content: "\e641";
+  content: "\e941";
 }
 .jui .icon-orderedlist:before {
-  content: "\e642";
+  content: "\e942";
 }
 .jui .icon-outdent:before {
-  content: "\e643";
+  content: "\e943";
 }
 .jui .icon-pause:before {
-  content: "\e644";
+  content: "\e944";
 }
 .jui .icon-play:before {
-  content: "\e645";
+  content: "\e946";
 }
 .jui .icon-plus:before {
-  content: "\e646";
+  content: "\e947";
 }
 .jui .icon-preview:before {
-  content: "\e647";
+  content: "\e948";
 }
 .jui .icon-printer:before {
-  content: "\e648";
+  content: "\e949";
 }
 .jui .icon-profile:before {
-  content: "\e649";
+  content: "\e94a";
 }
 .jui .icon-realtime:before {
-  content: "\e64a";
+  content: "\e94b";
 }
 .jui .icon-refresh:before {
-  content: "\e64b";
+  content: "\e94c";
 }
 .jui .icon-refresh2:before {
-  content: "\e64c";
+  content: "\e94d";
 }
 .jui .icon-report-build:before {
-  content: "\e64d";
+  content: "\e94e";
 }
 .jui .icon-report-link:before {
-  content: "\e64e";
+  content: "\e94f";
 }
 .jui .icon-report:before {
-  content: "\e64f";
+  content: "\e950";
+}
+.jui .icon-report2:before {
+  content: "\e951";
 }
 .jui .icon-resize:before {
-  content: "\e650";
+  content: "\e952";
 }
 .jui .icon-return:before {
-  content: "\e651";
+  content: "\e953";
 }
 .jui .icon-right:before {
-  content: "\e652";
+  content: "\e954";
 }
 .jui .icon-rule:before {
-  content: "\e653";
+  content: "\e955";
 }
 .jui .icon-save:before {
-  content: "\e654";
+  content: "\e956";
 }
 .jui .icon-search:before {
-  content: "\e655";
+  content: "\e957";
 }
 .jui .icon-server:before {
-  content: "\e656";
+  content: "\e958";
 }
 .jui .icon-share:before {
-  content: "\e657";
+  content: "\e959";
 }
 .jui .icon-statistics:before {
-  content: "\e658";
+  content: "\e95a";
 }
 .jui .icon-stop:before {
-  content: "\e659";
+  content: "\e95b";
 }
 .jui .icon-stoppage:before {
-  content: "\e65a";
+  content: "\e95c";
 }
 .jui .icon-table:before {
-  content: "\e65b";
+  content: "\e95d";
+}
+.jui .icon-template:before {
+  content: "\e95e";
 }
 .jui .icon-text:before {
-  content: "\e65c";
+  content: "\e95f";
 }
 .jui .icon-textcolor:before {
-  content: "\e65d";
+  content: "\e960";
 }
 .jui .icon-tool:before {
-  content: "\e65e";
+  content: "\e961";
 }
 .jui .icon-trashcan:before {
-  content: "\e65f";
+  content: "\e962";
 }
 .jui .icon-twitter:before {
-  content: "\e660";
+  content: "\e963";
 }
 .jui .icon-underline:before {
-  content: "\e661";
+  content: "\e964";
 }
 .jui .icon-unorderedlist:before {
-  content: "\e662";
+  content: "\e965";
 }
 .jui .icon-upload:before {
-  content: "\e663";
+  content: "\e966";
 }
 .jui .icon-user:before {
-  content: "\e664";
+  content: "\e967";
 }
 .jui .icon-was:before {
-  content: "\e665";
+  content: "\e968";
 }
 .jui .icon-ws:before {
-  content: "\e666";
+  content: "\e969";
 }
 .jui .navbar {
   padding: 5px 15px 5px 15px;
@@ -3163,13 +3172,13 @@
   left: 5px;
 }
 .jui .datepicker > .head > .prev:before {
-  content: "\e61b";
+  content: "\e91b";
 }
 .jui .datepicker > .head > .next {
   right: 5px;
 }
 .jui .datepicker > .head > .next:before {
-  content: "\e61c";
+  content: "\e91c";
 }
 .jui .datepicker > table.body {
   width: 100%;
@@ -3281,11 +3290,11 @@
   -moz-osx-font-smoothing: grayscale;
 }
 .jui .calendar > .head > .prev:before {
-  content: "\e61b";
+  content: "\e91b";
   margin-right: 12px;
 }
 .jui .calendar > .head > .next:before {
-  content: "\e61c";
+  content: "\e91c";
   margin-left: 12px;
 }
 .jui .calendar > table.body {
@@ -3643,4 +3652,388 @@
 }
 .jui .combo + .combo {
   margin-left: 5px;
+}
+.jui .switch {
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+}
+.jui .switch .area {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+.jui .switch .area .bar {
+  position: absolute;
+  left: -100%;
+  top: 0px;
+  width: 200%;
+  height: 100%;
+}
+.jui .switch .area .bar .left {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  bottom: 0px;
+  width: 50%;
+}
+.jui .switch .area .bar .right {
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  bottom: 0px;
+  width: 50%;
+}
+.jui .switch .handle {
+  position: absolute;
+  top: 50%;
+}
+.jui .switch.on .switch-bar {
+  left: 0px;
+}
+.jui.slider-cursor {
+  cursor: move;
+}
+.jui .slider {
+  position: relative;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+.jui .slider .track {
+  position: absolute;
+}
+.jui .slider .track .progress {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+.jui .slider .track .handle {
+  width: 13px;
+  height: 13px;
+  border-radius: 20px;
+  position: absolute;
+}
+.jui .slider.horizontal {
+  overflow: hidden;
+  width: 100%;
+  height: 30px;
+}
+.jui .slider.horizontal .track {
+  left: 15px;
+  right: 15px;
+  top: 50%;
+  margin-top: -3px;
+  height: 6px;
+}
+.jui .slider.horizontal .track .handle {
+  top: 50%;
+  margin-top: -7px;
+  left: 50%;
+  margin-left: -7px;
+}
+.jui .slider.vertical {
+  width: 30px;
+  height: 100%;
+}
+.jui .slider.vertical .track {
+  top: 15px;
+  bottom: 15px;
+  left: 50%;
+  margin-left: -3px;
+  width: 6px;
+}
+.jui .slider.vertical .track .handle {
+  bottom: 50%;
+  margin-bottom: -7px;
+  left: 50%;
+  margin-left: -7px;
+}
+.jui .slider.vertical .track .progress {
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  height: 50%;
+  bottom: 0px;
+}
+.jui .slider .tooltip-track {
+  position: absolute;
+  display: none;
+}
+.jui .slider.horizontal.has-tooltip {
+  height: 60px;
+}
+.jui .slider.horizontal.has-tooltip .track {
+  top: 40px;
+}
+.jui .slider.horizontal.has-tooltip .tooltip-track {
+  display: block;
+  left: 15px;
+  right: 15px;
+  top: 6px;
+}
+.jui .slider.horizontal.has-tooltip .tooltip-track .tooltip {
+  min-width: 50px;
+}
+.jui .slider.horizontal.has-tooltip .tooltip-track .tooltip .message {
+  text-align: center;
+}
+.jui .slider.vertical {
+  width: 60px;
+}
+.jui .slider.vertical .tooltip-track {
+  display: block;
+  top: 15px;
+  bottom: 15px;
+  left: 35px;
+}
+.jui .slider.vertical .tooltip-track .tooltip {
+  min-width: 50px;
+}
+.jui .slider.vertical .tooltip-track .tooltip .message {
+  text-align: center;
+}
+.jui .colorpicker {
+  position: relative;
+  width: 226px;
+}
+.jui .colorpicker > .color {
+  position: relative;
+  height: 145px;
+  overflow: hidden;
+  cursor: pointer;
+}
+.jui .colorpicker > .color > .saturation {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.jui .colorpicker > .color > .saturation > .value {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.jui .colorpicker > .color > .saturation > .value > .drag-pointer {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+  left: -5px;
+  top: -5px;
+}
+.jui .colorpicker > .control {
+  position: relative;
+  padding: 18px 0px 20px 0px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+.jui .colorpicker > .control > .color,
+.jui .colorpicker > .control > .empty {
+  position: absolute;
+  left: 11px;
+  top: 24px;
+  width: 30px;
+  height: 30px;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.jui .colorpicker > .control > .hue {
+  position: relative;
+  padding: 8px 12px;
+  margin: 0px 0px 0px 45px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+.jui .colorpicker > .control > .hue > .container {
+  position: relative;
+  width: 157px;
+  height: 6px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+.jui .colorpicker > .control > .opacity {
+  position: relative;
+  width: 143px;
+  padding: 8px 12px;
+  margin: 0px 0px 0px 45px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+.jui .colorpicker > .control > .opacity > .container {
+  position: relative;
+  width: 100%;
+  height: 3px;
+  z-index: 2;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+}
+.jui .colorpicker > .control > .input {
+  position: absolute;
+  font-size: 10px;
+  right: 10px;
+  bottom: 20px;
+  width: 30px;
+  height: 20px;
+  padding: 0 0 0 2px;
+}
+.jui .colorpicker > .control .drag-bar,
+.jui .colorpicker > .control .drag-bar2 {
+  position: absolute;
+  cursor: pointer;
+  top: 50% !important;
+  margin-top: -7px !important;
+  left: -3px;
+  width: 12px;
+  height: 12px;
+  -webkit-border-radius: 50px;
+  -moz-border-radius: 50px;
+  border-radius: 50px;
+}
+.jui .colorpicker > .information {
+  position: relative;
+  height: 73px;
+  -webkit-box-sizing: padding-box;
+  -moz-box-sizing: padding-box;
+  box-sizing: padding-box;
+}
+.jui .colorpicker > .information > .input {
+  position: absolute;
+  font-size: 10px;
+  height: 20px;
+  bottom: 20px;
+  padding: 0 0 0 2px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  -o-user-select: text;
+  user-select: text;
+}
+.jui .colorpicker > .information > .input:nth-child(1) {
+  width: 93px;
+  left: 10px;
+}
+.jui .colorpicker > .information > .input:nth-child(2) {
+  width: 30px;
+  right: 74px;
+}
+.jui .colorpicker > .information > .input:nth-child(3) {
+  width: 30px;
+  right: 42px;
+}
+.jui .colorpicker > .information > .input:nth-child(4) {
+  width: 30px;
+  right: 10px;
+}
+.jui .colorpicker > .information > .title {
+  position: absolute;
+  font-size: 11px;
+  top: 15px;
+}
+.jui .colorpicker > .information > .title:nth-child(5) {
+  left: 10px;
+}
+.jui .colorpicker > .information > .title:nth-child(6) {
+  left: 123px;
+}
+.jui .colorpicker > .information > .title:nth-child(7) {
+  left: 155px;
+}
+.jui .colorpicker > .information > .title:nth-child(8) {
+  left: 187px;
+}
+.jui .progress {
+  position: relative;
+  width: 100%;
+}
+.jui .progress .area {
+  position: absolute;
+  width: 100%;
+  top: 50%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+.jui .progress .area .bar {
+  float: left;
+  width: 0%;
+  height: 100%;
+  transition: all 0.7s linear;
+}
+.jui .progress .area .bar:not(:first-child) {
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+.jui .progress .area .bar:not(:last-child) {
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+.jui .progress.flat .area {
+  border-radius: 0px;
+}
+.jui .progress.flat .area .bar {
+  border-radius: 0px;
+}
+.jui .progress.simple .area {
+  border: 0px;
+  padding: 0px;
+}
+.jui .progress.vertical {
+  height: 100%;
+}
+.jui .progress.vertical.simple .area {
+  height: 100%;
+}
+.jui .progress.vertical.simple .area .bar {
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  width: 100%;
+  border: 0px;
+}
+.jui .progress.vertical .area {
+  top: 0px;
+  bottom: 0px;
+  margin-top: 0px;
+  height: 100%;
+  left: 50%;
+}
+.jui .progress.vertical .area .bar {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  left: 0;
+  right: 0;
+  position: absolute;
+  bottom: 0px;
+  height: 10%;
+}
+.jui .progress.vertical .area .bar:not(:first-child) {
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+}
+.jui .progress.vertical .area .bar:not(:last-child) {
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
 }

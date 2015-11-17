@@ -5,7 +5,6 @@ jui.define("chart.brush.map.note", [ "jquery", "util.base" ], function($, _) {
 
     /**
      * @class chart.brush.over 
-     * implements over brush 
      * @extends chart.brush.core
      */
 	var MapNoteBrush = function(chart, axis, brush) {

@@ -56,6 +56,7 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
             function draw() {
                 return self.chart.svg.group({ "visibility" : "hidden" }, function() {
                     self.chart.text({
+                        fill : self.chart.theme("tooltipPointFontColor"),
                         "font-size" : self.chart.theme("tooltipPointFontSize"),
                         "font-weight" : self.chart.theme("tooltipPointFontWeight"),
                         "text-anchor" : "middle",
@@ -177,42 +178,6 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
 				p2 : p2
 			};
 		}
-
-        /**
-         * 
-         * @method getScaleValue
-         *
-         * 값에 비례하여 반지름을 구하는 함수
-         *
-         * @param value
-         * @param minValue
-         * @param maxValue
-         * @param minRadius
-         * @param maxRadius
-         * @return {*}
-         */
-        this.getScaleValue = function(value, minValue, maxValue, minRadius, maxRadius) {
-            // 최소/최대 값이 같을 경우 처리
-            minValue = (minValue == maxValue) ? 0 : minValue;
-
-            var range = maxRadius - minRadius,
-                tg = range * getPer();
-
-            function getPer() {
-                var range = maxValue - minValue,
-                    tg = value - minValue,
-                    per = tg / range;
-
-                return per;
-            }
-
-            return tg + minRadius;
-        }
-
-        /*
-         * 차트 데이터 핸들링 함수
-         *
-         */
 
         /**
          * 
@@ -526,6 +491,47 @@ jui.define("chart.brush.core", [ "jquery", "util.base" ], function($, _) {
             clip: true
         }
     }
+
+    /**
+     * @event click
+     * Event that occurs when clicking on the brush.
+     * @param {BrushData} obj Related brush data.
+     */
+    /**
+     * @event dblclick
+     * Event that occurs when double clicking on the brush.
+     * @param {BrushData} obj Related brush data.
+     */
+    /**
+     * @event rclick
+     * Event that occurs when right clicking on the brush.
+     * @param {BrushData} obj Related brush data.
+     */
+    /**
+     * @event mouseover
+     * Event that occurs when placing the mouse over the brush.
+     * @param {BrushData} obj Related brush data.
+     */
+    /**
+     * @event mouseout
+     * Event that occurs when moving the mouse out of the brush.
+     * @param {BrushData} obj Related brush data.
+     */
+    /**
+     * @event mousemove
+     * Event that occurs when moving the mouse over the brush.
+     * @param {BrushData} obj Related brush data.
+     */
+    /**
+     * @event mousedown
+     * Event that occurs when left clicking on the brush.
+     * @param {BrushData} obj Related brush data.
+     */
+    /**
+     * @event mouseup
+     * Event that occurs after left clicking on the brush.
+     * @param {BrushData} obj Related brush data.
+     */
 
 	return CoreBrush;
 }, "chart.draw"); 

@@ -2,9 +2,6 @@ jui.define("chart.brush.ohlc", [], function() {
 
     /**
      * @class chart.brush.ohlc 
-     * 
-     * implments ohlc brush 
-     *  
      * @extends chart.brush.candlestick
      */
     var OHLCBrush = function(chart, axis, brush) {
