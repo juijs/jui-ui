@@ -77,21 +77,7 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 					"margin": 0
 				});
 
-				if(opts.width > 0) {
-					var width = (opts.scrollWidth >= opts.width) ? opts.scrollWidth - _.scrollWidth() : opts.width;
-					$(self.root).outerWidth(width);
-				}
-				
-				if(opts.scrollWidth > 0) {
-					var originWidth = $(self.root).outerWidth(),
-						scrollWidth = self.options.scrollWidth;
-
-					$(self.root).outerWidth(scrollWidth);
-					$(head.root).outerWidth(originWidth + _.scrollWidth());
-					$(body.root).outerWidth(originWidth);
-					$(head.root).parent().css("max-width", scrollWidth);
-					$(body.root).parent().css("max-width", scrollWidth);
-				}
+				self.scrollWidth(opts.scrollWidth, true);
 			}
 
 			function setTableHeadStyle(self, head) {
@@ -119,12 +105,16 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 					});
 
 					$(body.root).parent().css({
-						"overflow-y": "scroll",
-						"overflow-x": "auto"
+						"overflow-y": "scroll"
 					});
 				} else {
 					$(body.root).wrap("<div class='body'></div>");
 				}
+
+				// X-Table 바디 영역 스크롤 X축 설정
+				$(body.root).parent().css({
+					"overflow-x": "auto"
+				});
 
                 // X-Table 바디 영역의 헤더라인은 마지막 노드를 제외하고 제거
                 $(body.root).find("thead > tr").outerHeight(0).not(":last-child").remove();
@@ -233,18 +223,18 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 				$body = $(self.root).children(".body");
 
 			$body.off("scroll").scroll(function(e) {
-				if(opts.scrollWidth > 0) { // scroll or s-page일 때
-					$head.scrollLeft(this.scrollLeft);
-					self.hideColumnMenu();
+				// 컬럼 메뉴는 스크롤시 무조건 숨기기
+				self.hideColumnMenu();
 
+				if(opts.scrollWidth > 0) {
+					$head.scrollLeft(this.scrollLeft);
 					return false;
 				}
 
-				if(opts.buffer == "scroll") { // scroll일 때
+				if(opts.buffer == "scroll") { // 무조건 scroll 타입일 때
 					if ((this.scrollTop + opts.scrollHeight) >= $body.get(0).scrollHeight) {
 						self.next();
 						self.emit("scroll", e);
-
 						return false;
 					}
 				}
@@ -366,12 +356,8 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 			// 기본 설정
 			createTableList(this);
 			setCustomEvent(this);
-			
-			// 스크롤 버퍼 이벤트
-			if(opts.buffer != "page") {
-				setScrollEvent(this);
-			}
-			
+			setScrollEvent(this);
+
 			// 데이터가 있을 경우
 			if(opts.data) {
 				this.update(opts.data);
@@ -610,18 +596,59 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 		}
 
 		/**
+		 * @method scrollWidth
+		 * Sets the scroll based on the width of a table.
+		 *
+		 * @param {Integer} width
+		 */
+		this.scrollWidth = function(scrollWidth, isInit) {
+			var width = this.options.width;
+
+			if(width > 0) {
+				var w = (scrollWidth >= width) ? scrollWidth - _.scrollWidth() : width;
+				$(this.root).outerWidth(w);
+			} else {
+				$(this.root).outerWidth(scrollWidth - _.scrollWidth());
+			}
+
+			if(scrollWidth > 0) {
+				var originWidth = $(this.root).outerWidth();
+				$(this.root).outerWidth(scrollWidth);
+
+				if(isInit) {
+					$(head.root).outerWidth(originWidth + _.scrollWidth());
+					$(body.root).outerWidth(originWidth);
+				}
+
+				$(head.root).parent().css("max-width", scrollWidth);
+				$(body.root).parent().css("max-width", scrollWidth);
+			}
+		}
+
+		/**
+		 * @method scrollHeight
+		 * Sets the scroll based on the height of a table.
+		 *
+		 * @param {Integer} height
+		 */
+		this.scrollHeight = function(h) {
+			if(this.options.buffer != "scroll") return;
+
+			this.options.scrollHeight = h;
+			$(this.root).find(".body").css("max-height", h + "px");
+
+			setScrollEvent(this);
+		}
+
+		/**
+		 * @deprecated
 		 * @method height
 		 * Sets the scroll based on the height of a table.
 		 *
 		 * @param {Integer} height
 		 */
 		this.height = function(h) {
-			if(this.options.buffer != "scroll") return;
-			
-			this.options.scrollHeight = h;
-			$(this.root).find(".body").css("max-height", h + "px");
-			
-			setScrollEvent(this);
+			this.scrollHeight(h);
 		}
 
 		/**

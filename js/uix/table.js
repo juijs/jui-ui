@@ -1841,12 +1841,8 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
         this.showColumnMenu = function(x) {
             if(!this.options.fields || !ddUi) return;
 
-            var columns = this.listColumn();
-            var offset = $obj.thead.offset(),
-                maxX = offset.left + $obj.table.outerWidth() - $(ddUi.root).outerWidth();
-
-            x = (isNaN(x) || (x > maxX + offset.left)) ? maxX : x;
-            x = (x < 0) ? 0 : x;
+            var columns = this.listColumn(),
+                offset = $obj.thead.offset();
 
             // 현재 체크박스 상태 설정
             $(ddUi.root).find("input[type=checkbox]").each(function(i) {
