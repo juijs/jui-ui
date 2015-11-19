@@ -1353,7 +1353,7 @@
   border: 1px solid #737373;
 }
 .jui .table.classic {
-  border-bottom: 1px solid #dfdce3 !important;
+  border-bottom: 1px solid #dfdce3;
 }
 .jui .table.classic > thead th {
   color: #ffffff;
@@ -1449,7 +1449,7 @@
   background: #efebf5;
 }
 .jui .table.expand {
-  border-bottom: 1px solid #dfdce3 !important;
+  border-bottom: 1px solid #dfdce3;
 }
 .jui .table.expand > thead th {
   color: #ffffff;

@@ -9601,6 +9601,10 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 				$(head.root).wrap("<div class='head'></div>");
 				$(head.root).children("tbody").remove();
 
+				$(head.root).css({
+					"border-bottom-width": 0
+				});
+
 				$(head.root).parent().css({
 					"overflow": "hidden"
 				});
@@ -9614,7 +9618,7 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 					$(body.root).wrap("<div class='body' style='max-height: " + self.options.scrollHeight + "px'></div>");
 
 					$(body.root).css({
-						"border-bottom-width": "0"
+						"border-bottom-width": 0
 					});
 
 					$(body.root).parent().css({
