@@ -149,7 +149,12 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 					var hw = $(cols[j].element).outerWidth();
 					
 					if(self.options.buffer != "page" && cols[j].type == "show" && !isLast) {
-						$(bodyCols[j].element).outerWidth(hw - getScrollBarWidth(self));
+						if(_.browser.msie) {
+							$(bodyCols[j].element).outerWidth(hw - getScrollBarWidth(self));
+						} else {
+							$(bodyCols[j].element).css({ "width": "auto" });
+						}
+
 						isLast = true;
 					} else {
 						$(cols[j].element).outerWidth(hw);
@@ -288,7 +293,8 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
                         width = {
                             column: $(column.head.element).outerWidth(),
 							head: $(head.root).outerWidth(),
-                            body: $(body.root).outerWidth()
+                            body: $(body.root).outerWidth(),
+							"max-width": parseInt($(head.root).parent().css("max-width"))
                         };
 
                         is_resize = true;
@@ -324,17 +330,20 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
             function colResizeWidth(disWidth) {
                 var colMinWidth = 30;
 
-                // 최소 크기 체크
+				// 전체 최소 크기 체크
+				if (width.head + disWidth < width["max-width"]) {
+					return;
+				}
+
+				// 컬럼 최소 크기 체크
                 if (width.column + disWidth < colMinWidth)
                     return;
 
                 $(column.head.element).outerWidth(width.column + disWidth);
-                //$(column.body.element).outerWidth(width.column + disWidth);
+                $(column.body.element).outerWidth(width.column + disWidth);
 
-                if (disWidth > 0) {
-                    $(head.root).outerWidth(width.head + disWidth);
-                    $(body.root).outerWidth(width.body + disWidth);
-                }
+				$(head.root).outerWidth(width.head + disWidth);
+				$(body.root).outerWidth(width.body + disWidth);
             }
         }
 
