@@ -942,6 +942,11 @@
   width: 10px;
   height: 10px;
 }
+.jui .msgbox > .body::-webkit-scrollbar-corner {
+  background: transparent;
+  border-right: 1px solid #404040;
+  border-bottom: 1px solid #404040;
+}
 .jui .msgbox > .body::-webkit-scrollbar-track {
   background-color: #000000;
   background-image: -moz-linear-gradient(left, #000000 0%, #272727 100%);
@@ -1041,6 +1046,11 @@
 .jui .window > .body::-webkit-scrollbar {
   width: 10px;
   height: 10px;
+}
+.jui .window > .body::-webkit-scrollbar-corner {
+  background: transparent;
+  border-right: 1px solid #404040;
+  border-bottom: 1px solid #404040;
 }
 .jui .window > .body::-webkit-scrollbar-track {
   background-color: #000000;
@@ -1316,6 +1326,11 @@
 .jui table.table > tbody::-webkit-scrollbar {
   width: 10px;
   height: 10px;
+}
+.jui table.table > tbody::-webkit-scrollbar-corner {
+  background: transparent;
+  border-right: 1px solid #404040;
+  border-bottom: 1px solid #404040;
 }
 .jui table.table > tbody::-webkit-scrollbar-track {
   background-color: #000000;
@@ -1673,6 +1688,11 @@
 .jui .xtable > .body::-webkit-scrollbar {
   width: 10px;
   height: 10px;
+}
+.jui .xtable > .body::-webkit-scrollbar-corner {
+  background: transparent;
+  border-right: 1px solid #404040;
+  border-bottom: 1px solid #404040;
 }
 .jui .xtable > .body::-webkit-scrollbar-track {
   background-color: #000000;

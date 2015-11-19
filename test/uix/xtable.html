@@ -42,7 +42,6 @@ jui.ready([ "uix.xtable" ], function(xtable) {
 <script>
     QUnit.test("테이블 갱신 테스트", function(assert) {
         assert.ok(t1.count() == 3, "로우 개수 확인");
-        assert.equal(t1.get(1).element, $("#t1").find("tbody > tr").get(1), "로우 엘리먼트 확인");
     });
 
     QUnit.test("테이블 정렬 테스트", function(assert) {
@@ -84,12 +83,12 @@ jui.ready([ "uix.xtable" ], function(xtable) {
 <!-- Test Markup -->
 <table id="t1">
     <thead>
-    <tr>
-        <th>Name</th>
-        <th>Age</th>
-        <th>Location</th>
-        <th>Etc</th>
-    </tr>
+        <tr>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Location</th>
+            <th>Etc</th>
+        </tr>
     </thead>
     <tbody></tbody>
 </table>

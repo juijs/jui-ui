@@ -13895,97 +13895,114 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
         var is_loading = false, is_resize = false;
 		
 
-		function createTableList(self) { // 2
+		function createTableList(self) {
 			var exceptOpts = [ 
                "buffer", "bufferCount", "csvCount", "sortLoading", "sortCache", "sortIndex", "sortOrder",
                "event", "rows", "scrollWidth", "width"
-            ];
-			
-			body = table($(self.root).children("table"), getExceptOptions(self, exceptOpts.concat("resize"))); // 바디 테이블 생성
+			];
+			var $root = $(self.root);
+
+			// 기본 테이블 마크업 복사해서 추가하기
+			$root.append($root.children("table").clone());
+
+			head = table($root.children("table:first-child"), getExceptOptions(self, exceptOpts)); // 헤더 테이블 생성
+			setTableHeadStyle(self, head);
+
+			body = table($root.children("table:last-child"), getExceptOptions(self, exceptOpts.concat("resize"))); // 바디 테이블 생성
 			setTableBodyStyle(self, body); // X-Table 생성 및 마크업 설정
-			
-			head = table($(self.root).children("table.head"), getExceptOptions(self, exceptOpts)); // 헤더 테이블 생성
+
+			// 공통 테이블 스타일 정의
 			setTableAllStyle(self, head, body);
 			
 			// 테이블 옵션 필터링 함수
 			function getExceptOptions(self, exceptOpts) {
 				var options = {};
-				
+
 				for(var key in self.options) {
 					if($.inArray(key, exceptOpts) == -1) {
 						options[key] = self.options[key];
 					}
 				}
-				
+
+				// 가로 스크롤 모드일 때, resize 옵션 막기
+				if(self.options.scrollWidth > 0) {
+					options.resize = false;
+				}
+
 				return options;
 			}
 			
 			function setTableAllStyle(self, head, body) {
 				var opts = self.options;
 
-				$(self.root).css({ "position": "relative" });
-
-				$(head.root).css({
-					"position": "absolute",
-					"top": "0",
-					"border-bottom-width": "0",
-					"margin": "0"
+				$(self.root).css({
+					"position": "relative"
 				});
 
-				$(body.root).css({
-					"margin": "0"
+				$(self.root).find("table").css({
+					"margin": 0
 				});
-				
+
 				if(opts.width > 0) {
-					$(self.root).outerWidth(opts.width);
+					var width = (opts.scrollWidth >= opts.width) ? opts.scrollWidth - _.scrollWidth() : opts.width;
+					$(self.root).outerWidth(width);
 				}
 				
 				if(opts.scrollWidth > 0) {
-					var rootWidth = $(self.root).outerWidth();
-					
-					$(self.root).css({
-						"max-width": self.options.scrollWidth,
-						"overflow-x": "auto",
-                        "overflow-y": "hidden"
-					});
-					
-					$(head.root).outerWidth(rootWidth);
-					$(body.root).parent().outerWidth(rootWidth);
+					var originWidth = $(self.root).outerWidth(),
+						scrollWidth = self.options.scrollWidth;
+
+					$(self.root).outerWidth(scrollWidth);
+					$(head.root).outerWidth(originWidth + _.scrollWidth());
+					$(body.root).outerWidth(originWidth);
+					$(head.root).parent().css("max-width", scrollWidth);
+					$(body.root).parent().css("max-width", scrollWidth);
 				}
 			}
-			
+
+			function setTableHeadStyle(self, head) {
+				$(head.root).wrap("<div class='head'></div>");
+				$(head.root).children("tbody").remove();
+
+				$(head.root).parent().css({
+					"overflow": "hidden"
+				});
+			}
+
 			function setTableBodyStyle(self, body) {
-				var $table =  $(body.root).clone(),
-					cols = body.listColumn();
-				
+				var cols = body.listColumn();
+
 				// X-Table 바디 영역 스크롤 높이 설정
-				if(self.options.buffer != "page") 
+				if (self.options.buffer != "page") {
 					$(body.root).wrap("<div class='body' style='max-height: " + self.options.scrollHeight + "px'></div>");
-				else
+
+					$(body.root).css({
+						"border-bottom-width": "0"
+					});
+
+					$(body.root).parent().css({
+						"overflow-y": "scroll",
+						"overflow-x": "auto"
+					});
+				} else {
 					$(body.root).wrap("<div class='body'></div>");
+				}
 
                 // X-Table 바디 영역의 헤더라인은 마지막 노드를 제외하고 제거
                 $(body.root).find("thead > tr").outerHeight(0).not(":last-child").remove();
 
-				// X-Table 헤더 영역 설정
+				// X-Table 바디 영역의 헤더 설정
 				for(var i = 0; i < cols.length; i++) {
 					var $elem = $(cols[i].element);
 
 					$elem.html("").outerHeight(0).attr("style",
-							$elem.attr("style") +
-							"border-top-width: 0px !important;" +
-							"border-bottom-width: 0px !important;" +
-							"padding-top: 0px !important;" +
-							"padding-bottom: 0px !important"
+						$elem.attr("style") +
+						"border-top-width: 0px !important;" +
+						"border-bottom-width: 0px !important;" +
+						"padding-top: 0px !important;" +
+						"padding-bottom: 0px !important"
 					);
 				}
-				
-				// 바디 테이블의 tbody 영역 제거
-				$table.children("tbody").remove();
-				
-				// 헤더와 바디 테이블 중간의 간격 정의 (스크롤 관련)
-				$(self.root).append($table.addClass("head"));
-				$(self.root).css("padding-top", $table.height());
 			}
 		}
 		
@@ -14072,18 +14089,30 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 		}
 		
 		function setScrollEvent(self) {
-			var $body = $(self.root).children(".body");
-			
+			var opts = self.options;
+
+			var $head = $(self.root).children(".head"),
+				$body = $(self.root).children(".body");
+
 			$body.off("scroll").scroll(function(e) {
-			    if((this.scrollTop + self.options.scrollHeight) >= $body.get(0).scrollHeight) {
-		    		self.next();
-			    	self.emit("scroll", e);
-			    	
-			    	return false;
-			    }
+				if(opts.scrollWidth > 0) { // scroll or s-page일 때
+					$head.scrollLeft(this.scrollLeft);
+					self.hideColumnMenu();
+
+					return false;
+				}
+
+				if(opts.buffer == "scroll") { // scroll일 때
+					if ((this.scrollTop + opts.scrollHeight) >= $body.get(0).scrollHeight) {
+						self.next();
+						self.emit("scroll", e);
+
+						return false;
+					}
+				}
 			});
 		}
-		
+
         function setColumnResizeScroll(self) {
             var column = {},
                 width = {},
@@ -14124,6 +14153,7 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 
                         width = {
                             column: $(column.head.element).outerWidth(),
+							head: $(head.root).outerWidth(),
                             body: $(body.root).outerWidth()
                         };
 
@@ -14169,8 +14199,8 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
                 $(column.body.element).outerWidth(width.column + disWidth);
 
                 if (disWidth > 0) {
-                    $(body.root).parent().outerWidth(width.body + disWidth);
-                    $(head.root).outerWidth(width.body + disWidth);
+                    $(head.root).outerWidth(width.head + disWidth + _.scrollWidth());
+                    $(body.root).outerWidth(width.body + disWidth);
                 }
             }
 
@@ -14182,7 +14212,6 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
                 }
             }
         }
-		
 
 		this.init = function() {
 			var opts = this.options;
@@ -14200,22 +14229,8 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 			createTableList(this);
 			setCustomEvent(this);
 			
-			// 스크롤/페이지-스크롤 옵션
-			if(opts.buffer != "page") {
-				var $body = $(this.root).children(".body");
-
-				$body.css({
-					"overflow-y": "scroll",
-					"overflow-x": "hidden"
-				});
-				
-				$body.children("table").css({
-					"border-bottom-width": "0"
-				});
-			}
-			
 			// 스크롤 버퍼 이벤트
-			if(opts.buffer == "scroll") {
+			if(opts.buffer != "page") {
 				setScrollEvent(this);
 			}
 			
@@ -14241,14 +14256,13 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 			
 			// 컬럼 리사이징 (기본)
 			if(opts.resize) {
-				head.resizeColumns();
-				head.resize();
-            }
-
-            // 컬럼 리사이징 (가로스크롤)
-            if(!opts.resize && opts.scrollWidth > 0) {
-                setColumnResizeScroll(this);
-            }
+				if(opts.scrollWidth > 0) {
+					setColumnResizeScroll(this);
+				} else {
+					head.resizeColumns();
+					head.resize();
+				}
+			}
 		}
 
 		/**
@@ -14606,7 +14620,7 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 		 * @param {Integer} x
 		 */
         this.toggleColumnMenu = function(x) {
-            head.toggleColumnMenu(x);
+			head.toggleColumnMenu(x);
         }
 
 		/**
