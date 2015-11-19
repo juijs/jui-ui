@@ -13939,7 +13939,9 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 					"margin": 0
 				});
 
-				self.scrollWidth(opts.scrollWidth, true);
+				if(opts.scrollWidth > 0) {
+					self.scrollWidth(opts.scrollWidth, true);
+				}
 			}
 
 			function setTableHeadStyle(self, head) {
@@ -14103,7 +14105,7 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 			});
 		}
 
-        function setColumnResizeScroll(self) {
+        function setScrollWidthResize(self) {
             var column = {},
                 width = {},
                 resizeX = 0;
@@ -14166,7 +14168,7 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
                     is_resize = false;
 
                     // 리사이징 바, 위치 이동
-                    colResizeBarLeft();
+					reloadScrollWidthResizeBar();
 
                     head.emit("colresize", [ column.head, e ]);
 
@@ -14175,8 +14177,8 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
             });
 
             // 리사이징 바 위치 설정
-            head.on("colshow", colResizeBarLeft);
-            head.on("colhide", colResizeBarLeft);
+            head.on("colshow", reloadScrollWidthResizeBar);
+            head.on("colhide", reloadScrollWidthResizeBar);
 
             function colResizeWidth(disWidth) {
                 var colMinWidth = 30;
@@ -14193,15 +14195,15 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
                     $(body.root).outerWidth(width.body + disWidth);
                 }
             }
-
-            function colResizeBarLeft() {
-                for(var i = 0; i < head.uit.getColumnCount() - 1; i++) {
-                    var $colElem = $(head.getColumn(i).element);
-
-                    $colElem.find(".resize").css("left", ($colElem.outerWidth() + $colElem.position().left) + "px");
-                }
-            }
         }
+
+		function reloadScrollWidthResizeBar() {
+			for(var i = 0; i < head.uit.getColumnCount() - 1; i++) {
+				var $colElem = $(head.getColumn(i).element);
+
+				$colElem.find(".resize").css("left", ($colElem.outerWidth() + $colElem.position().left) + "px");
+			}
+		}
 
 		this.init = function() {
 			var opts = this.options;
@@ -14243,7 +14245,7 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 			// 컬럼 리사이징 (기본)
 			if(opts.resize) {
 				if(opts.scrollWidth > 0) {
-					setColumnResizeScroll(this);
+					setScrollWidthResize(this);
 				} else {
 					head.resizeColumns();
 					head.resize();
@@ -14480,6 +14482,8 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 				if(isInit) {
 					$(head.root).outerWidth(originWidth + _.scrollWidth());
 					$(body.root).outerWidth(originWidth);
+
+					setTimeout(reloadScrollWidthResizeBar, 1000);
 				}
 
 				$(head.root).parent().css("max-width", scrollWidth);
