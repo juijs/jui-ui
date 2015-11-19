@@ -1171,8 +1171,8 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
                         // 컬럼 객체 가져오기
                         col = self.getColumn(index);
                         colNext = getNextColumn(index);
-                        colWidth = $(col.element).outerWidth(),
-                            colNextWidth = $(colNext.element).outerWidth();
+                        colWidth = $(col.element).outerWidth();
+                        colNextWidth = $(colNext.element).outerWidth();
                         colResize = this;
                         is_resize = true;
 

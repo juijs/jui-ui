@@ -16,9 +16,7 @@
 <script src="../../js/ui/modal.js"></script>
 <script src="../../js/uix/table.js"></script>
 <script src="../../js/uix/xtable.js"></script>
-<style>
-    .resize { background: red; }
-</style>
+
 <script>
 var table_data = [
     {"min":21.55,"max":21.55,"count":1,"sumCpu":0,"hash":1495461794,"sd":0,"tpmc":0,"avgCpu":0,"failure":1,"rate":77.66,"sumTime":21.55,"name":"/db2sql.jsp","avgTime":21.55,"success":0},
@@ -82,8 +80,9 @@ jui.ready(function(ui, uix, _) {
         csvNumber: [ 0, 1, 2, 3, 4, 5, "avgTime" ],
         sort: true,
         sortLoading: true,
-        //width: $("#xtable").outerWidth(),
-        scrollWidth: $("body").width(),
+        //width: 800,
+        //scrollWidth: 500,
+        buffer: "scroll",
         bufferCount: 10,
         resize: true,
         colshow: [ 0, 2, 4, 6, 7 ],

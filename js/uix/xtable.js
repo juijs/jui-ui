@@ -27,7 +27,6 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 		var rows = [], o_rows = null;
 		var ui_modal = null, page = 1;
         var is_loading = false, is_resize = false;
-		
 
 		function createTableList(self) {
 			var exceptOpts = [ 
@@ -79,6 +78,10 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 
 				if(opts.scrollWidth > 0) {
 					self.scrollWidth(opts.scrollWidth, true);
+				} else {
+					if(opts.width > 0) {
+						$(self.root).outerWidth(opts.width);
+					}
 				}
 			}
 
@@ -145,10 +148,8 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 				for(var j = cols.length - 1; j >= 0; j--) {
 					var hw = $(cols[j].element).outerWidth();
 					
-					// 조건 (스크롤, 컬럼보이기, 마지막컬럼)
-					// 조건이 명확하지 않으니 차후에 변경
 					if(self.options.buffer != "page" && cols[j].type == "show" && !isLast) {
-						$(bodyCols[j].element).outerWidth("auto");
+						$(bodyCols[j].element).outerWidth(hw - getScrollBarWidth(self));
 						isLast = true;
 					} else {
 						$(cols[j].element).outerWidth(hw);
@@ -189,7 +190,10 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 				
 				// 소팅 후, 현재 소팅 상태 캐싱 처리 
 				if(self.options.sortCache) { 
-					self.setOption({ sortIndex: column.index, sortOrder: column.order });
+					self.setOption({
+						sortIndex: column.index,
+						sortOrder: column.order
+					});
 				}
 			});
 			
@@ -218,7 +222,7 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 			});
 		}
 		
-		function setScrollEvent(self) {
+		function setScrollEvent(self, width, height) {
 			var opts = self.options;
 
 			var $head = $(self.root).children(".head"),
@@ -228,18 +232,18 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 				// 컬럼 메뉴는 스크롤시 무조건 숨기기
 				self.hideColumnMenu();
 
-				if(opts.scrollWidth > 0) {
+				if(width > 0) {
 					$head.scrollLeft(this.scrollLeft);
-					return false;
 				}
 
 				if(opts.buffer == "scroll") { // 무조건 scroll 타입일 때
-					if ((this.scrollTop + opts.scrollHeight) >= $body.get(0).scrollHeight) {
+					if ((this.scrollTop + height) >= $body.get(0).scrollHeight) {
 						self.next();
 						self.emit("scroll", e);
-						return false;
 					}
 				}
+
+				return false;
 			});
 		}
 
@@ -306,8 +310,7 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
                     is_resize = false;
 
                     // 리사이징 바, 위치 이동
-					reloadScrollWidthResizeBar();
-
+					reloadScrollWidthResizeBar(500);
                     head.emit("colresize", [ column.head, e ]);
 
                     return false;
@@ -326,21 +329,27 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
                     return;
 
                 $(column.head.element).outerWidth(width.column + disWidth);
-                $(column.body.element).outerWidth(width.column + disWidth);
+                //$(column.body.element).outerWidth(width.column + disWidth);
 
                 if (disWidth > 0) {
-                    $(head.root).outerWidth(width.head + disWidth + _.scrollWidth());
+                    $(head.root).outerWidth(width.head + disWidth);
                     $(body.root).outerWidth(width.body + disWidth);
                 }
             }
         }
 
-		function reloadScrollWidthResizeBar() {
-			for(var i = 0; i < head.uit.getColumnCount() - 1; i++) {
-				var $colElem = $(head.getColumn(i).element);
+		function reloadScrollWidthResizeBar(delay) {
+			setTimeout(function() {
+				for(var i = 0; i < head.uit.getColumnCount() - 1; i++) {
+					var $colElem = $(head.getColumn(i).element);
 
-				$colElem.find(".resize").css("left", ($colElem.outerWidth() + $colElem.position().left) + "px");
-			}
+					$colElem.find(".resize").css("left", ($colElem.outerWidth() + $colElem.position().left) + "px");
+				}
+			}, delay);
+		}
+
+		function getScrollBarWidth(self) {
+			return self.options.buffer == "page" ? 0 : _.scrollWidth() + 1;
 		}
 
 		this.init = function() {
@@ -358,7 +367,9 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 			// 기본 설정
 			createTableList(this);
 			setCustomEvent(this);
-			setScrollEvent(this);
+
+			// 가로/세로 스크롤 설정
+			setScrollEvent(this, opts.scrollWidth, opts.scrollHeight);
 
 			// 데이터가 있을 경우
 			if(opts.data) {
@@ -604,13 +615,16 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 		 * @param {Integer} width
 		 */
 		this.scrollWidth = function(scrollWidth, isInit) {
+			// 최초에 스크롤 넓이가 설정되있어야만 메소드 사용 가능
+			if(this.options.scrollWidth == 0) return;
+
 			var width = this.options.width;
 
 			if(width > 0) {
-				var w = (scrollWidth >= width) ? scrollWidth - _.scrollWidth() : width;
+				var w = (scrollWidth >= width) ? scrollWidth - getScrollBarWidth(this) : width;
 				$(this.root).outerWidth(w);
 			} else {
-				$(this.root).outerWidth(scrollWidth - _.scrollWidth());
+				$(this.root).outerWidth(scrollWidth - getScrollBarWidth(this));
 			}
 
 			if(scrollWidth > 0) {
@@ -618,10 +632,10 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 				$(this.root).outerWidth(scrollWidth);
 
 				if(isInit) {
-					$(head.root).outerWidth(originWidth + _.scrollWidth());
+					$(head.root).outerWidth(originWidth + getScrollBarWidth(this));
 					$(body.root).outerWidth(originWidth);
 
-					setTimeout(reloadScrollWidthResizeBar, 1000);
+					reloadScrollWidthResizeBar(1000);
 				}
 
 				$(head.root).parent().css("max-width", scrollWidth);
@@ -636,12 +650,10 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 		 * @param {Integer} height
 		 */
 		this.scrollHeight = function(h) {
-			if(this.options.buffer != "scroll") return;
-
-			this.options.scrollHeight = h;
+			if(this.options.buffer == "page") return;
 			$(this.root).find(".body").css("max-height", h + "px");
 
-			setScrollEvent(this);
+			setScrollEvent(this, this.options.scrollWidth, h);
 		}
 
 		/**
