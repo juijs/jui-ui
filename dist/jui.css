@@ -2097,7 +2097,7 @@
   -webkit-border-bottom-left-radius: 5px;
   -moz-border-radius-bottomleft: 5px;
   border-bottom-left-radius: 5px;
-  font-size: 12px !important;
+  font-size: 12px;
 }
 .jui .table.expand > thead th:first-child {
   -webkit-border-top-left-radius: 5px;
@@ -2123,10 +2123,10 @@
   border-left-width: 0;
 }
 .jui .table.expand > thead > tr > th {
-  padding: 6px !important;
+  padding: 6px;
 }
 .jui .table.expand > tbody > tr > td {
-  padding: 8px 9px !important;
+  padding: 8px 9px;
 }
 .jui .table.normal {
   font-size: 12px;
@@ -2139,22 +2139,22 @@
   height: 16px;
 }
 .jui .table.small {
-  font-size: 11px !important;
+  font-size: 11px;
 }
 .jui .table.small > thead > tr > th {
-  padding: 4px !important;
+  padding: 4px;
 }
 .jui .table.small > tbody > tr > td {
-  padding: 2px 3px !important;
+  padding: 2px 3px;
 }
 .jui .table.large {
-  font-size: 12px !important;
+  font-size: 12px;
 }
 .jui .table.large > thead > tr > th {
-  padding: 6px !important;
+  padding: 6px;
 }
 .jui .table.large > tbody > tr > td {
-  padding: 8px 9px !important;
+  padding: 8px 9px;
 }
 .jui .table.border > tbody > tr > td {
   border-left-width: 1px;
