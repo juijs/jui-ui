@@ -1,10 +1,21 @@
 .xtable {
-  > .body {
-    border-bottom: 1px solid @xtableBodyBorderColor !important;
-    .webkit-scrollbar();
-  }
-
   > .loading {
     background-image: url(@xtableLoadingImageUrl);
+  }
+}
+
+
+// X-Table Scroll
+// --------------------------------------------------
+.xtable.scroll {
+  > .head {
+    border-left: 1px solid @xtableScrollBorderColor;
+    border-right: 1px solid @xtableScrollBorderColor;
+  }
+
+  > .body {
+    .webkit-scrollbar();
+    border-left: 1px solid @xtableScrollBorderColor;
+    border-bottom: 1px solid @xtableScrollBorderColor;
   }
 }

@@ -2170,48 +2170,80 @@
 .jui .xtable {
   position: relative;
 }
-.jui .xtable table {
-  margin: 0px !important;
-  border-bottom-width: 0px !important;
-}
 .jui .xtable > .head {
   overflow: hidden !important;
+}
+.jui .xtable > .head > table {
+  margin: 0px !important;
+  border-bottom-width: 0px !important;
 }
 .jui .xtable > .body {
   overflow-x: auto !important;
 }
-.jui .xtable > .body th {
+.jui .xtable > .body > table {
+  margin: 0px !important;
+}
+.jui .xtable > .body > table th {
   border-top-width: 0px !important;
   border-bottom-width: 0px !important;
   padding-top: 0px !important;
   padding-bottom: 0px !important;
-}
-.jui .xtable > .body > .table.classic,
-.jui .xtable > .body .table.expand {
-  -webkit-border-bottom-right-radius: 0px;
-  -moz-border-radius-bottomright: 0px;
-  border-bottom-right-radius: 0px;
-  -webkit-border-bottom-left-radius: 0px;
-  -moz-border-radius-bottomleft: 0px;
-  border-bottom-left-radius: 0px;
-}
-.jui .xtable > .body > .table.classic > tbody > tr:last-child > td:first-child,
-.jui .xtable > .body .table.expand > tbody > tr:last-child > td:first-child {
-  -webkit-border-bottom-left-radius: 0px;
-  -moz-border-radius-bottomleft: 0px;
-  border-bottom-left-radius: 0px;
-}
-.jui .xtable > .body > .table.classic > tbody > tr:last-child > td:last-child,
-.jui .xtable > .body .table.expand > tbody > tr:last-child > td:last-child {
-  -webkit-border-bottom-right-radius: 0px;
-  -moz-border-radius-bottomright: 0px;
-  border-bottom-right-radius: 0px;
 }
 .jui .xtable > .loading {
   display: none;
   width: 32px;
   height: 25px;
   background-repeat: no-repeat;
+}
+.jui .xtable.scroll > .head > .table.classic,
+.jui .xtable.scroll > .head .table.expand {
+  -webkit-border-top-right-radius: 0px;
+  -moz-border-radius-topright: 0px;
+  border-top-right-radius: 0px;
+  -webkit-border-top-left-radius: 0px;
+  -moz-border-radius-topleft: 0px;
+  border-top-left-radius: 0px;
+}
+.jui .xtable.scroll > .head > .table.classic > thead > tr:first-child > th:first-child,
+.jui .xtable.scroll > .head .table.expand > thead > tr:first-child > th:first-child {
+  -webkit-border-top-left-radius: 0px;
+  -moz-border-radius-topleft: 0px;
+  border-top-left-radius: 0px;
+}
+.jui .xtable.scroll > .head > .table.classic > thead > tr:first-child > th:last-child,
+.jui .xtable.scroll > .head .table.expand > thead > tr:first-child > th:last-child {
+  -webkit-border-top-right-radius: 0px;
+  -moz-border-radius-topright: 0px;
+  border-top-right-radius: 0px;
+}
+.jui .xtable.scroll > .body > .table.classic,
+.jui .xtable.scroll > .body .table.expand {
+  -webkit-border-bottom-right-radius: 0px;
+  -moz-border-radius-bottomright: 0px;
+  border-bottom-right-radius: 0px;
+  -webkit-border-bottom-left-radius: 0px;
+  -moz-border-radius-bottomleft: 0px;
+  border-bottom-left-radius: 0px;
+}
+.jui .xtable.scroll > .body > .table.classic > tbody > tr > td:first-child,
+.jui .xtable.scroll > .body .table.expand > tbody > tr > td:first-child {
+  border-left-width: 0px;
+}
+.jui .xtable.scroll > .body > .table.classic > tbody > tr > td:last-child,
+.jui .xtable.scroll > .body .table.expand > tbody > tr > td:last-child {
+  border-right-width: 0px;
+}
+.jui .xtable.scroll > .body > .table.classic > tbody > tr:last-child > td:first-child,
+.jui .xtable.scroll > .body .table.expand > tbody > tr:last-child > td:first-child {
+  -webkit-border-bottom-left-radius: 0px;
+  -moz-border-radius-bottomleft: 0px;
+  border-bottom-left-radius: 0px;
+}
+.jui .xtable.scroll > .body > .table.classic > tbody > tr:last-child > td:last-child,
+.jui .xtable.scroll > .body .table.expand > tbody > tr:last-child > td:last-child {
+  -webkit-border-bottom-right-radius: 0px;
+  -moz-border-radius-bottomright: 0px;
+  border-bottom-right-radius: 0px;
 }
 .jui .xtable.nowrap > .body > table > tbody td {
   overflow: hidden;

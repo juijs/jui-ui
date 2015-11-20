@@ -1682,19 +1682,27 @@
   -o-transition: border linear .2s, box-shadow linear .2s;
   transition: border linear .2s, box-shadow linear .2s;
 }
-.jui .xtable > .body {
-  border-bottom: 1px solid #404040 !important;
+.jui .xtable > .loading {
+  background-image: url("img/theme/dark/xtable-loading.gif");
 }
-.jui .xtable > .body::-webkit-scrollbar {
+.jui .xtable.scroll > .head {
+  border-left: 1px solid #5d5d5d;
+  border-right: 1px solid #5d5d5d;
+}
+.jui .xtable.scroll > .body {
+  border-left: 1px solid #5d5d5d;
+  border-bottom: 1px solid #5d5d5d;
+}
+.jui .xtable.scroll > .body::-webkit-scrollbar {
   width: 10px;
   height: 10px;
 }
-.jui .xtable > .body::-webkit-scrollbar-corner {
+.jui .xtable.scroll > .body::-webkit-scrollbar-corner {
   background: transparent;
   border-right: 1px solid #404040;
   border-bottom: 1px solid #404040;
 }
-.jui .xtable > .body::-webkit-scrollbar-track {
+.jui .xtable.scroll > .body::-webkit-scrollbar-track {
   background-color: #000000;
   background-image: -moz-linear-gradient(left, #000000 0%, #272727 100%);
   background-image: linear-gradient(left, #000000 0%, #272727 100%);
@@ -1703,19 +1711,16 @@
   background-image: -ms-linear-gradient(left, #000000 0%, #272727 100%);
   border: 1px solid #404040;
 }
-.jui .xtable > .body::-webkit-scrollbar-thumb {
+.jui .xtable.scroll > .body::-webkit-scrollbar-thumb {
   background: #545454;
   border: 1px solid #5d5d5d;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
 }
-.jui .xtable > .body::-webkit-scrollbar-thumb:hover {
+.jui .xtable.scroll > .body::-webkit-scrollbar-thumb:hover {
   background: #8a8a8a;
   border: 1px solid #737373;
-}
-.jui .xtable > .loading {
-  background-image: url("img/theme/dark/xtable-loading.gif");
 }
 .jui .combo > ul {
   background-color: #181818;
