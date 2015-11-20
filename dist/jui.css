@@ -2167,6 +2167,25 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.jui .xtable {
+  position: relative;
+}
+.jui .xtable table {
+  margin: 0px !important;
+  border-bottom-width: 0px !important;
+}
+.jui .xtable > .head {
+  overflow: hidden !important;
+}
+.jui .xtable > .body {
+  overflow-x: auto !important;
+}
+.jui .xtable > .body th {
+  border-top-width: 0px !important;
+  border-bottom-width: 0px !important;
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+}
 .jui .xtable > .body > .table.classic,
 .jui .xtable > .body .table.expand {
   -webkit-border-bottom-right-radius: 0px;

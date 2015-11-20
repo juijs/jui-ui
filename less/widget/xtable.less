@@ -1,6 +1,24 @@
 .xtable {
+  position: relative;
+
+  table {
+    margin: 0px !important;
+    border-bottom-width: 0px !important;
+  }
+
+  > .head {
+    overflow: hidden !important;
+  }
+
   > .body {
-    //.border-radius(5px);
+    overflow-x: auto !important;
+
+    th {
+      border-top-width: 0px !important;
+      border-bottom-width: 0px !important;
+      padding-top: 0px !important;
+      padding-bottom: 0px !important;
+    }
 
     // 클래식 테이블일 경우, RADIUS 처리
     > .table.classic, .table.expand {

@@ -13930,14 +13930,6 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 			function setTableAllStyle(self, head, body) {
 				var opts = self.options;
 
-				$(self.root).css({
-					"position": "relative"
-				});
-
-				$(self.root).find("table").css({
-					"margin": 0
-				});
-
 				if(opts.scrollWidth > 0) {
 					self.scrollWidth(opts.scrollWidth, true);
 				} else {
@@ -13950,14 +13942,6 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 			function setTableHeadStyle(self, head) {
 				$(head.root).wrap("<div class='head'></div>");
 				$(head.root).children("tbody").remove();
-
-				$(head.root).css({
-					"border-bottom-width": 0
-				});
-
-				$(head.root).parent().css({
-					"overflow": "hidden"
-				});
 			}
 
 			function setTableBodyStyle(self, body) {
@@ -13967,10 +13951,6 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 				if (self.options.buffer != "page") {
 					$(body.root).wrap("<div class='body' style='max-height: " + self.options.scrollHeight + "px'></div>");
 
-					$(body.root).css({
-						"border-bottom-width": 0
-					});
-
 					$(body.root).parent().css({
 						"overflow-y": "scroll"
 					});
@@ -13978,25 +13958,12 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 					$(body.root).wrap("<div class='body'></div>");
 				}
 
-				// X-Table 바디 영역 스크롤 X축 설정
-				$(body.root).parent().css({
-					"overflow-x": "auto"
-				});
-
                 // X-Table 바디 영역의 헤더라인은 마지막 노드를 제외하고 제거
                 $(body.root).find("thead > tr").outerHeight(0).not(":last-child").remove();
 
 				// X-Table 바디 영역의 헤더 설정
 				for(var i = 0; i < cols.length; i++) {
-					var $elem = $(cols[i].element);
-
-					$elem.html("").outerHeight(0).attr("style",
-						$elem.attr("style") +
-						"border-top-width: 0px !important;" +
-						"border-bottom-width: 0px !important;" +
-						"padding-top: 0px !important;" +
-						"padding-bottom: 0px !important"
-					);
+					$(cols[i].element).html("").outerHeight(0);
 				}
 			}
 		}
