@@ -7572,12 +7572,12 @@ jui.defineUI("ui.notify", [ "jquery" ], function($) {
             
             var padding = (typeof(opts.padding) == "object") ? DEF_PADDING : opts.padding;
         	var paddingObj = {
-                "top":    		{ top: padding, bottom: null, left: padding, right: padding },
-                "top-right":    { top: padding, bottom: null, left: null, right: padding },
-                "top-left":     { top: padding, bottom: null, left: padding, right: null },
-                "bottom":  		{ top: null, bottom: padding, left: padding, right: padding },
-                "bottom-right": { top: null, bottom: padding, left: null, right: padding },
-                "bottom-left":  { top: null, bottom: padding, left: padding, right: padding }
+                "top":    		{ top: padding, bottom: "auto", left: padding, right: padding },
+                "top-right":    { top: padding, bottom: "auto", left: "auto", right: padding },
+                "top-left":     { top: padding, bottom: "auto", left: padding, right: "auto" },
+                "bottom":  		{ top: "auto", bottom: padding, left: padding, right: padding },
+                "bottom-right": { top: "auto", bottom: padding, left: "auto", right: padding },
+                "bottom-left":  { top: "auto", bottom: padding, left: padding, right: padding }
             };
 
             paddingPos = paddingObj[opts.position];
