@@ -67,23 +67,38 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
         }
 
         function getCalendarHtml(self, obj) {
-            var opts = self.options;
-            var resHtml = "",
-            	tmpItems = [];
+            var opts = self.options,
+                resHtml = [],
+                tmpItems = [];
             
             // 활성화 날짜 캐시 초기화
             items = {};
 
-            for(var i = 0; i < obj.objs.length; i++) {
-                tmpItems.push(obj.nums[i]);
+            if(self.tpl["date"]) {
+                for(var i = 0; i < obj.objs.length; i++) {
+                    tmpItems.push(self.tpl["date"]({
+                        type: obj.objs[i].type,
+                        date: obj.objs[i].no,
+                        day: tmpItems.length
+                    }));
 
-                if(isNextBr(i)) {
-                    resHtml += self.tpl["dates"]({ dates: tmpItems });
-                    tmpItems = [];
+                    if(isNextBr(i)) {
+                        resHtml.push("<tr>" + tmpItems.join("") + "</tr>");
+                        tmpItems = [];
+                    }
+                }
+            } else {
+                for(var i = 0; i < obj.objs.length; i++) {
+                    tmpItems.push(obj.nums[i]);
+
+                    if(isNextBr(i)) {
+                        resHtml.push(self.tpl["dates"]({ dates: tmpItems }));
+                        tmpItems = [];
+                    }
                 }
             }
 
-            var $list = $(resHtml);
+            var $list = $(resHtml.join(""));
             $list.find("td").each(function(i) {
                 $(this).addClass(obj.objs[i].type);
 
