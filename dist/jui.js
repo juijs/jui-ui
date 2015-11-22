@@ -3952,6 +3952,7 @@ jui.define("util.svg.element", [], function() {
             this.parent = null;
             this.styles = {};
             this.attributes = {};
+            this.order = 0;
 
             // 기본 속성 설정
             this.attr(attr);
@@ -5058,9 +5059,14 @@ jui.define("util.svg",
         }
         
         function appendAll(target) {
-            var len = target.children.length;
-            for(var i = 0; i < len; i++) {
-                var child = target.children[i];
+            var childs = target.children;
+
+            childs.sort(function(a, b) {
+               return a.order - b.order;
+            });
+
+            for(var i = 0, len = childs.length; i < len; i++) {
+                var child = childs[i];
 
                 if(child) {
                     if(child.children.length > 0) {
