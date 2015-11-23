@@ -28799,7 +28799,7 @@ jui.define("chart.brush.polygon.column",
 					"stroke-opacity": this.chart.theme("polygonColumnBorderOpacity")
 				});
 
-				for(var j = 0; j < key.length; j++) {
+				for (var j = 0; j < key.length; j++) {
 					var value = p.vertices[key[j]];
 					face.point(value[0], value[1]);
 				}
@@ -28807,7 +28807,10 @@ jui.define("chart.brush.polygon.column",
 				g.append(face);
 			}
 
-			return g;
+			return {
+				element: g,
+				depth: p.max().z / 2
+			};
 		}
 
 		this.drawBefore = function() {
@@ -28827,19 +28830,19 @@ jui.define("chart.brush.polygon.column",
 
 			for(var i = 0; i < datas.length; i++) {
 				for(var j = 0; j < targets.length; j++) {
-					var p = this.createColumn(datas[i], targets[j], i, j);
+					var obj = this.createColumn(datas[i], targets[j], i, j);
 
-					this.addEvent(p, i, j);
-
-					if(!groups[j]) groups[j] = [];
-					groups[j].push(p);
+					this.addEvent(obj.element, i, j);
+					groups.push(obj);
 				}
 			}
 
-			for(var i = groups.length - 1; i >= 0; i--) {
-				for(var j = 0; j < groups[i].length; j++) {
-					g.append(groups[i][j]);
-				}
+			groups.sort(function(a, b) {
+				return b.depth - a.depth;
+			});
+
+			for(var i = 0; i < groups.length; i++) {
+				g.append(groups[i].element);
 			}
 
 			return g;
