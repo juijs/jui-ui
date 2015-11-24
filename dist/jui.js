@@ -11127,7 +11127,6 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
 
                 if(typeof(callback) == "function") { // editRow일 경우
                     callback();
-                    is_edit = false;
                 } else {
                     var data = {};
                     data[column.name] = $input.val();
@@ -12041,6 +12040,7 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
                     // 이벤트 리턴 값이 false가 아닐 경우에만 업데이트
                     if(res !== false) {
                         self.update(row.index, data);
+                        is_edit = false;
                     } else {
                         row.data = originData;
                     }

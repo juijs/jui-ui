@@ -62,7 +62,7 @@ jui.ready(function(ui, uix, _) {
             },
             editend: function(row) {
                 for(var key in row.data) {
-                    if(key == "min" && isNaN(row.data[key])) {
+                    if(key == "max" && isNaN(row.data[key])) {
                         alert("숫자만 입력할 수 있습니다.");
                         return false;
                     }
