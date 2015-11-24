@@ -42,6 +42,10 @@ jui.define("chart.brush.polygon.scatter",
 				cy: p.vertices[0][1]
 			});
 
+			if(data[target] != 0) {
+				this.addEvent(elem, dataIndex, targetIndex);
+			}
+
 			return elem;
 		}
 
@@ -53,8 +57,6 @@ jui.define("chart.brush.polygon.scatter",
 			for(var i = 0; i < datas.length; i++) {
 				for(var j = 0; j < targets.length; j++) {
 					var p = this.createScatter(datas[i], targets[j], i, j);
-
-					this.addEvent(p, i, j);
 					g.append(p);
 				}
 			}

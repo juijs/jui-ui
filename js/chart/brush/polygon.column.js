@@ -41,6 +41,10 @@ jui.define("chart.brush.polygon.column",
 				g.append(face);
 			}
 
+			if(data[target] != 0) {
+				this.addEvent(g, dataIndex, targetIndex);
+			}
+
 			return {
 				element: g,
 				depth: p.max().z / 2
@@ -65,8 +69,6 @@ jui.define("chart.brush.polygon.column",
 			for(var i = 0; i < datas.length; i++) {
 				for(var j = 0; j < targets.length; j++) {
 					var obj = this.createColumn(datas[i], targets[j], i, j);
-
-					this.addEvent(obj.element, i, j);
 					groups.push(obj);
 				}
 			}
