@@ -43,17 +43,33 @@ jui.ready(function(ui, uix, _) {
         sort: true,
         resize: true,
         data: table_data,
-        editRow: true,
+        editRow: [ 1 ],
+        editEvent: false,
+        expand: true,
+        expandEvent: false,
         event: {
+            click: function(row, e) {
+                if($(e.target).hasClass("icon-edit")) {
+                    this.hideExpand();
+                    this.showEditRow(row.index);
+                } else if($(e.target)[0].tagName != "INPUT") {
+                    if(this.getExpand() == row) {
+                        this.hideExpand();
+                    } else {
+                        this.showExpand(row.index);
+                    }
+                }
+            },
             editend: function(row) {
-                console.log(row);
-
                 for(var key in row.data) {
                     if(key == "min" && isNaN(row.data[key])) {
                         alert("숫자만 입력할 수 있습니다.");
                         return false;
                     }
                 }
+            },
+            expandend: function(row) {
+                console.log("expandend");
             }
         }
     });
@@ -87,7 +103,7 @@ jui.ready(function(ui, uix, _) {
 <script data-jui="#table" data-tpl="row" type="text/template">
     <tr>
         <td><?= row.data["min,m"] ?></td>
-        <td><?= max ?></td>
+        <td><?= max ?> <i class="icon-edit"></i></td>
         <td><?= count ?></td>
         <td><?= hash ?></td>
         <td><?= failure ?></td>
@@ -95,6 +111,10 @@ jui.ready(function(ui, uix, _) {
         <td><?= avgTime ?></td>
         <td><?= name ?></td>
     </tr>
+</script>
+
+<script data-jui="#table" data-tpl="expand" type="text/template">
+expand
 </script>
 
 </body>

@@ -1682,6 +1682,12 @@
   -o-transition: border linear .2s, box-shadow linear .2s;
   transition: border linear .2s, box-shadow linear .2s;
 }
+.jui .table > tbody td > .edit[disabled],
+.jui .table > tbody td > .edit[readonly] {
+  cursor: not-allowed;
+  background-color: #2a2a2a;
+  color: #d5d5d5;
+}
 .jui .xtable > .loading {
   background-image: url("img/theme/dark/xtable-loading.gif");
 }

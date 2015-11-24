@@ -11109,7 +11109,7 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
             });
 
             // 포커스가 바뀌었을 경우 업데이트
-            self.addEvent($obj.tbody.find("tr"), "click", function(e) {
+            self.addEvent($obj.tbody, "mousedown", function(e) {
                 if(e.target.tagName == "TD" || e.target.tagName == "TR") {
                     update(e);
                 }
@@ -11936,9 +11936,6 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
          * @param {Integer} index
          */
         this.showExpand = function(index, obj, e) {
-            if(!this.options.expand) return;
-
-            // 초기화
             this.unselect();
             this.hideEditRow();
 
@@ -11968,7 +11965,6 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
          * Hides the extended row area of a specified index.
          */
         this.hideExpand = function(e) {
-            if(!this.options.expand) return;
             if(rowIndex == null) return;
 
             var row = this.get(rowIndex);
@@ -11991,8 +11987,6 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
          * @return {RowObject} row
          */
         this.getExpand = function() {
-            if(!this.options.expand) return;
-
             if(rowIndex == null) return null;
             return this.get(rowIndex);
         }
@@ -12027,12 +12021,12 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
 
                         if(column.name != null) {
                             var value = $(this).find(".edit").val();
-                            data[column.name] = (!isNaN(value) && value != null) ? parseFloat(value) : value;
+                            data[column.name] = (!isNaN(value) && value != null && value != "") ? parseFloat(value) : value;
                         }
                     });
 
                     // 변경된 값으로 데이터 갱신하기
-                    row.data = data;
+                    row.data = $.extend(row.data, data);
 
                     // 콜백 결과 가져오기
                     var res = self.emit("editend", [ row, e ]);
@@ -12075,8 +12069,6 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
          * @return {RowObject} row
          */
         this.getEditRow = function() {
-            if(!this.options.editRow) return;
-
             if(rowIndex == null) return null;
             return this.get(rowIndex);
         }

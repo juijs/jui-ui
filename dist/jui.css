@@ -2017,6 +2017,11 @@
 .jui table.table > thead th {
   font-weight: bold;
   text-align: left;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
