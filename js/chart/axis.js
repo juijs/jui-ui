@@ -81,6 +81,7 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             obj.chart = chart;
             obj.axis = axis;
             obj.grid = axis[k];
+            obj.svg = chart.svg;
 
             var elem = obj.render();
 
@@ -125,6 +126,7 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             map.chart = chart;
             map.axis = axis;
             map.map = axis[k];
+            map.svg = chart.svg;
 
             // 그리드 별 위치 선정하기
             var elem = map.render();

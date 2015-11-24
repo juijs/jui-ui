@@ -15403,6 +15403,7 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             obj.chart = chart;
             obj.axis = axis;
             obj.grid = axis[k];
+            obj.svg = chart.svg;
 
             var elem = obj.render();
 
@@ -15447,6 +15448,7 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             map.chart = chart;
             map.axis = axis;
             map.map = axis[k];
+            map.svg = chart.svg;
 
             // 그리드 별 위치 선정하기
             var elem = map.render();
@@ -16492,6 +16494,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                     draw.chart = self;
                     draw.axis = axis;
                     draw.brush = draws[i];
+                    draw.svg = self.svg;
 
                     // 브러쉬 렌더링
                     draw.render();
@@ -16517,6 +16520,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                     draw.chart = self;
                     draw.axis = _axis[0];
                     draw.widget = draws[i];
+                    draw.svg = self.svg;
 
                     // 위젯은 렌더 옵션이 false일 때, 최초 한번만 로드함 (연산 + 드로잉)
                     // 하지만 isAll이 true이면, 강제로 연산 및 드로잉을 함 (테마 변경 및 리사이징 시)
