@@ -1,4 +1,4 @@
-jui.defineUI("ui.slider", [ "jquery", "util.base" ], function($, _) {
+jui.defineUI("ui.slider", [ "jquery", "util.base", "util.math" ], function($, _, math) {
 
     /**
      * @class ui.slider
@@ -255,17 +255,19 @@ jui.defineUI("ui.slider", [ "jquery", "util.base" ], function($, _) {
                 }
             }
 
-            var value = (min() + (max() - min()) * dist);
-            var temp = value % step();
+            var minValue = min();
+            var maxValue = max();
 
-            value = value - temp;
+            var value = (minValue + (maxValue - minValue) * dist);
 
-            if (temp >= step()/2) {
-                value += step();
+            var stepValue = step();
+            var temp = math.remain(value, stepValue);
+
+            value = math.minus(value, temp);
+
+            if (temp > math.div(stepValue, 2)) {
+                value = math.plus(value, stepValue);
             }
-
-            //TODO: rounding number
-            //value = value.toFixed(2);
 
             return value;
         }

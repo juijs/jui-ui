@@ -2472,11 +2472,13 @@ jui.define("util.math", [ "util.base" ], function(_) {
 			};
 
 			func.multi = function (a, b) {
-				return Math.round((a * pow) * (b * pow)) / pow;
+				return Math.round((a * pow) * (b * pow)) / (pow*pow);
 			};
 
 			func.div = function (a, b) {
-				return Math.round((a * pow) / (b * pow)) / pow;
+				var result = (a * pow) / (b * pow);
+				var pow2 = Math.pow(10, this.getFixed(result, 0));
+				return Math.round(result*pow2) / pow2;
 			};
 
 			func.remain = function (a, b) {
@@ -2505,12 +2507,15 @@ jui.define("util.math", [ "util.base" ], function(_) {
 
 		multi : function (a, b) {
 			var pow = Math.pow(10, this.getFixed(a, b));
-			return Math.round((a * pow) * (b * pow)) / pow;
+			return Math.round((a * pow) * (b * pow)) / (pow*pow);
 		},
 
 		div : function (a, b) {
 			var pow = Math.pow(10, this.getFixed(a, b));
-			return Math.round((a * pow) / (b * pow));
+
+			var result = (a * pow) / (b * pow);
+			var pow2 = Math.pow(10, this.getFixed(result, 0));
+			return Math.round(result*pow2) / pow2;
 		},
 
 		remain : function (a, b) {
@@ -8872,7 +8877,7 @@ jui.defineUI("ui.switch", [ "jquery", "util.base" ], function($, _) {
 
     return UI;
 });
-jui.defineUI("ui.slider", [ "jquery", "util.base" ], function($, _) {
+jui.defineUI("ui.slider", [ "jquery", "util.base", "util.math" ], function($, _, math) {
 
     /**
      * @class ui.slider
@@ -9129,17 +9134,19 @@ jui.defineUI("ui.slider", [ "jquery", "util.base" ], function($, _) {
                 }
             }
 
-            var value = (min() + (max() - min()) * dist);
-            var temp = value % step();
+            var minValue = min();
+            var maxValue = max();
 
-            value = value - temp;
+            var value = (minValue + (maxValue - minValue) * dist);
 
-            if (temp >= step()/2) {
-                value += step();
+            var stepValue = step();
+            var temp = math.remain(value, stepValue);
+
+            value = math.minus(value, temp);
+
+            if (temp > math.div(stepValue, 2)) {
+                value = math.plus(value, stepValue);
             }
-
-            //TODO: rounding number
-            //value = value.toFixed(2);
 
             return value;
         }
