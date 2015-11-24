@@ -5066,9 +5066,12 @@ jui.define("util.svg",
         function appendAll(target) {
             var childs = target.children;
 
-            childs.sort(function(a, b) {
-               return a.order - b.order;
-            });
+            // 엘리먼트 렌더링 순서 정하기
+            if(isOrderingChild(childs)) {
+                childs.sort(function (a, b) {
+                    return a.order - b.order;
+                });
+            }
 
             for(var i = 0, len = childs.length; i < len; i++) {
                 var child = childs[i];
@@ -5088,6 +5091,16 @@ jui.define("util.svg",
                     }
                 }
             }
+        }
+
+        function isOrderingChild(childs) { // order가 0 이상인 엘리먼트가 하나라도 있을 경우
+            for(var i = 0, len = childs.length; i < len; i++) {
+                if(childs[i].order > 0) {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         this.create = function(obj, type, attr, callback) {
