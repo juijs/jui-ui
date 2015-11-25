@@ -10937,7 +10937,6 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
         }
 
         function setColumnMenu(self) {
-            var $ddObj = null;
             var columns = self.listColumn(),
                 columnNames = [];
 
@@ -10945,7 +10944,7 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
                 columnNames.push($(columns[i].element).text());
             }
 
-            $ddObj = $(self.tpl.menu({ columns: columnNames }));
+            var $ddObj = $(self.tpl.menu({ columns: columnNames }));
 
             $("body").append($ddObj);
             ddUi = dropdown($ddObj, { close: false });
@@ -11253,22 +11252,26 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
                 })(i);
             }
 
-            self.addEvent("body", "mousemove", function(e) {
+            self.addEvent(document, "mousemove", function(e) {
                 if(resizeX > 0) {
                     colResizeWidth(self, e.pageX - resizeX);
                 }
             });
 
-            self.addEvent("body", "mouseup", function(e) {
+            self.addEvent(document, "mouseup", function(e) {
                 if(resizeX > 0) {
                     resizeX = 0;
-                    is_resize = false;
 
                     // 리사이징 바, 위치 이동
                     var left = $(col.element).offset().left - tablePos.left;
                     $(colResize).css("left", $(col.element).outerWidth() + left - 1);
 
                     self.emit("colresize", [ col, e ]);
+
+                    // 리사이징 상태 변경 (delay)
+                    setTimeout(function() {
+                        is_resize = false;
+                    }, 100);
 
                     return false;
                 }
@@ -14166,23 +14169,27 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
                 })(i);
             }
 
-            self.addEvent("body", "mousemove", function(e) {
+            self.addEvent(document, "mousemove", function(e) {
                 if(resizeX > 0) {
                     colResizeWidth(e.pageX - resizeX);
                 }
             });
 
-            self.addEvent("body", "mouseup", function(e) {
+            self.addEvent(document, "mouseup", function(e) {
                 if(resizeX > 0) {
                     resizeX = 0;
-                    is_resize = false;
 
                     // 리사이징 바, 위치 이동
 					reloadScrollWidthResizeBar(500);
                     head.emit("colresize", [ column.head, e ]);
 
-                    return false;
-                }
+                	// 리사이징 상태 변경 (delay)
+					setTimeout(function() {
+						is_resize = false;
+					}, 100);
+
+					return false;
+				}
             });
 
             // 리사이징 바 위치 설정
