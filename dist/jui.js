@@ -14125,16 +14125,18 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
             // 리사이즈 엘리먼트 삭제
             $(self.root).find("thead .resize").remove();
 
-            for(var i = 0; i < head.uit.getColumnCount() - 1; i++) {
+            for(var i = 0, len = head.uit.getColumnCount(); i < len; i++) {
                 var $colElem = $(head.getColumn(i).element),
                     $resizeBar = $("<div class='resize'></div>");
-                var pos = $colElem.position();
+
+                var pos = $colElem.position(),
+					left = $colElem.outerWidth() + (pos.left - 1);
 
                 $resizeBar.css({
                     position: "absolute",
                     width: "8px",
                     height: $colElem.outerHeight(),
-                    left: ($colElem.outerWidth() + (pos.left - 1)) + "px",
+                    left: ((i == len - 1) ? left - 8 : left) + "px",
                     top: pos.top + "px",
                     cursor: "w-resize",
                     "z-index": "1"
