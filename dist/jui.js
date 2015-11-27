@@ -13897,8 +13897,6 @@ jui.defineUI("uix.window", [ "jquery", "util.base", "ui.modal" ], function($, _,
 	return UI;
 });
 jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], function($, _, modal, table) {
-	var p_type = null;
-
 	_.resize(function() {
 		var call_list = jui.get("uix.xtable");
 		
@@ -13925,6 +13923,7 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 		var rows = [], o_rows = null;
 		var ui_modal = null, page = 1;
         var is_loading = false, is_resize = false;
+		var w_resize = 8;
 
 		function createTableList(self) {
 			var exceptOpts = [ 
@@ -14130,13 +14129,13 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
                     $resizeBar = $("<div class='resize'></div>");
 
                 var pos = $colElem.position(),
-					left = $colElem.outerWidth() + (pos.left - 1);
+					left = $colElem.outerWidth() + pos.left - 1;
 
                 $resizeBar.css({
                     position: "absolute",
-                    width: "8px",
+                    width: w_resize + "px",
                     height: $colElem.outerHeight(),
-                    left: ((i == len - 1) ? left - 8 : left) + "px",
+                    left: ((i == len - 1) ? left - w_resize : left) + "px",
                     top: pos.top + "px",
                     cursor: "w-resize",
                     "z-index": "1"
@@ -14145,7 +14144,7 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
                 $colElem.append($resizeBar);
 
                 // Event Start
-                (function(index) {
+                (function(index, isLast) {
                     self.addEvent($resizeBar, "mousedown", function(e) {
                         if(resizeX == 0) {
                             resizeX = e.pageX;
@@ -14154,7 +14153,8 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
                         // 컬럼 객체 가져오기
                         column = {
                             head: head.getColumn(index),
-                            body: body.getColumn(index)
+                            body: body.getColumn(index),
+							isLast: isLast
                         };
 
                         width = {
@@ -14168,7 +14168,7 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 
                         return false;
                     });
-                })(i);
+                })(i, i == len - 1);
             }
 
             self.addEvent(document, "mousemove", function(e) {
@@ -14179,6 +14179,18 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 
             self.addEvent(document, "mouseup", function(e) {
                 if(resizeX > 0) {
+					// 마지막 컬럼 크기를 0보다 크게 리사이징시 가로 스크롤 위치 조정
+					if(column.isLast) {
+						var scrollLeft = $(body.root).parent().scrollLeft(),
+							disWidth = e.pageX - resizeX;
+
+						if(disWidth > 0) {
+							$(head.root).parent().scrollLeft(scrollLeft + disWidth);
+							$(body.root).parent().scrollLeft(scrollLeft + disWidth);
+						}
+					}
+
+					// 스크롤 위치 초기화
                     resizeX = 0;
 
                     // 리사이징 바, 위치 이동
@@ -14220,10 +14232,13 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 
 		function reloadScrollWidthResizeBar(delay) {
 			setTimeout(function() {
-				for(var i = 0; i < head.uit.getColumnCount() - 1; i++) {
+				for(var i = 0, len = head.uit.getColumnCount(); i < len; i++) {
 					var $colElem = $(head.getColumn(i).element);
 
-					$colElem.find(".resize").css("left", ($colElem.outerWidth() + $colElem.position().left) + "px");
+					var pos = $colElem.position(),
+						left = $colElem.outerWidth() + pos.left - 1;
+
+					$colElem.find(".resize").css("left", ((i == len - 1) ? left - w_resize : left) + "px");
 				}
 			}, delay);
 		}
@@ -14347,9 +14362,7 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 			if(this.options.buffer == "scroll") return false;
 			if(this.getPage() == pNo) return false;
 			
-			p_type = (page > pNo) ? "prev" : "next";
 			this.clear();
-			
 			page = (pNo < 1) ? 1 : pNo;
 			this.next();
 		}
