@@ -17772,7 +17772,9 @@ jui.define("chart.theme.jennifer", [], function() {
         polygonColumnBackgroundOpacity: 0.6,
         polygonColumnBorderOpacity: 0.5,
         polygonScatterRadialOpacity: 0.7,
-        polygonScatterBackgroundOpacity: 0.8
+        polygonScatterBackgroundOpacity: 0.8,
+        polygonLineBackgroundOpacity: 0.9,
+        polygonLineBorderOpacity: 0.8
     }
 });
 jui.define("chart.theme.gradient", [], function() {
@@ -18003,7 +18005,9 @@ jui.define("chart.theme.gradient", [], function() {
         polygonColumnBackgroundOpacity: 0.6,
         polygonColumnBorderOpacity: 0.5,
         polygonScatterRadialOpacity: 0.7,
-        polygonScatterBackgroundOpacity: 0.8
+        polygonScatterBackgroundOpacity: 0.8,
+        polygonLineBackgroundOpacity: 0.9,
+        polygonLineBorderOpacity: 0.8
     }
 });
 jui.define("chart.theme.dark", [], function() {
@@ -18232,7 +18236,9 @@ jui.define("chart.theme.dark", [], function() {
         polygonColumnBackgroundOpacity: 0.6,
         polygonColumnBorderOpacity: 0.5,
         polygonScatterRadialOpacity: 0.7,
-        polygonScatterBackgroundOpacity: 0.8
+        polygonScatterBackgroundOpacity: 0.8,
+        polygonLineBackgroundOpacity: 0.9,
+        polygonLineBorderOpacity: 0.8
     }
 });
 jui.define("chart.theme.pastel", [], function() {
@@ -18458,7 +18464,9 @@ jui.define("chart.theme.pastel", [], function() {
 		polygonColumnBackgroundOpacity: 0.6,
 		polygonColumnBorderOpacity: 0.5,
 		polygonScatterRadialOpacity: 0.7,
-		polygonScatterBackgroundOpacity: 0.8
+		polygonScatterBackgroundOpacity: 0.8,
+		polygonLineBackgroundOpacity: 0.9,
+		polygonLineBorderOpacity: 0.8
 	}
 }); 
 jui.define("chart.theme.pattern", [], function() {
@@ -18684,7 +18692,9 @@ jui.define("chart.theme.pattern", [], function() {
         polygonColumnBackgroundOpacity: 0.6,
         polygonColumnBorderOpacity: 0.5,
         polygonScatterRadialOpacity: 0.7,
-        polygonScatterBackgroundOpacity: 0.8
+        polygonScatterBackgroundOpacity: 0.8,
+        polygonLineBackgroundOpacity: 0.9,
+        polygonLineBorderOpacity: 0.8
     }
 });
 jui.define("chart.pattern.jennifer", [], function() {
@@ -19105,8 +19115,8 @@ jui.define("chart.polygon.core", [ "util.transform", "util.math" ], function(Tra
 
     return PolygonCore;
 });
-jui.define("chart.polygon.face", [], function() {
-    var FacePolygon = function(type, width, height, depth) {
+jui.define("chart.polygon.grid", [], function() {
+    var GridPolygon = function(type, width, height, depth) {
         var matrix = {
             center: [
                 new Float32Array([ 0, 0, depth, 1 ]),
@@ -19131,7 +19141,7 @@ jui.define("chart.polygon.face", [], function() {
         this.vertices = matrix[type];
     }
 
-    return FacePolygon;
+    return GridPolygon;
 }, "chart.polygon.core");
 jui.define("chart.polygon.line", [], function() {
     var LinePolygon = function(x1, y1, d1, x2, y2, d2) {
@@ -19424,8 +19434,8 @@ jui.define("chart.grid.draw2d", [ "util.base", "util.math" ], function(_, math) 
 
     return Draw2DGrid;
 }, "chart.draw");
-jui.define("chart.grid.draw3d", [ "util.base", "chart.polygon.face", "chart.polygon.line", "chart.polygon.point" ],
-    function(_, FacePolygon, LinePolygon, PointPolygon) {
+jui.define("chart.grid.draw3d", [ "util.base", "chart.polygon.grid", "chart.polygon.line", "chart.polygon.point" ],
+    function(_, GridPolygon, LinePolygon, PointPolygon) {
 
     /**
      * @class chart.grid.draw3d
@@ -19516,14 +19526,14 @@ jui.define("chart.grid.draw3d", [ "util.base", "chart.polygon.face", "chart.poly
                 d = this.axis.depth;
 
             if(position == "center") {
-                p = new FacePolygon("center", w, h, d);
+                p = new GridPolygon("center", w, h, d);
             } else {
                 if(isTopOrBottom) {
                     h = (position == "bottom") ? h : 0;
-                    p = new FacePolygon("horizontal", w, h, d);
+                    p = new GridPolygon("horizontal", w, h, d);
                 } else {
                     w = (position == "right") ? w : 0;
-                    p = new FacePolygon("vertical", w, h, d);
+                    p = new GridPolygon("vertical", w, h, d);
                 }
             }
 
@@ -28917,6 +28927,93 @@ jui.define("chart.brush.polygon.column",
 	}
 
 	return PolygonColumnBrush;
+}, "chart.brush.polygon.core");
+
+jui.define("chart.brush.polygon.line",
+	[ "util.base", "util.color", "util.math", "chart.polygon.point" ],
+	function(_, ColorUtil, MathUtil, PointPolygon) {
+
+	/**
+	 * @class chart.brush.polygon.line
+	 * @extends chart.brush.polygon.core
+	 */
+	var PolygonLineBrush = function() {
+		this.createLine = function(datas, target, dataIndex, targetIndex) {
+			var color = this.color(dataIndex, targetIndex),
+				d = this.axis.z.rangeBand() - this.brush.padding * 2,
+				x1 = this.axis.x(dataIndex),
+				y1 = this.axis.y(datas[dataIndex][target]),
+				z1 = this.axis.z(targetIndex) - d / 2,
+				x2 = this.axis.x(dataIndex + 1),
+				y2 = this.axis.y(datas[dataIndex + 1][target]),
+				z2 = this.axis.z(targetIndex) + d / 2,
+				maxDepth = 0;
+
+			var elem = this.chart.svg.polygon({
+				fill: color,
+				"fill-opacity": this.chart.theme("polygonLineBackgroundOpacity"),
+				stroke: ColorUtil.darken(color, this.chart.theme("polygonLineBorderOpacity")),
+				"stroke-opacity": this.chart.theme("polygonLineBorderOpacity")
+			});
+
+			var points = [
+				new PointPolygon(x1, y1, z1),
+				new PointPolygon(x1, y1, z2),
+				new PointPolygon(x2, y2, z2),
+				new PointPolygon(x2, y2, z1)
+			];
+
+			for(var i = 0; i < points.length; i++) {
+				this.calculate3d(points[i]);
+				maxDepth = Math.max(maxDepth, points[i][2]);
+			}
+
+			for(var i = 0; i < points.length; i++) {
+				var value = points[i].vertices[0];
+				elem.point(value[0], value[1]);
+			}
+
+			return {
+				element: elem,
+				depth: maxDepth / 2
+			};
+		}
+
+		this.draw = function() {
+			var g = this.chart.svg.group(),
+				datas = this.listData(),
+				targets = this.brush.target,
+				groups = [];
+
+			for(var i = 0; i < datas.length - 1; i++) {
+				for(var j = 0; j < targets.length; j++) {
+					var obj = this.createLine(datas, targets[j], i, j);
+					groups.push(obj);
+				}
+			}
+
+			groups.sort(function(a, b) {
+				return b.depth - a.depth;
+			});
+
+			for(var i = 0; i < groups.length; i++) {
+				g.append(groups[i].element);
+			}
+
+			return g;
+		}
+	}
+
+	PolygonLineBrush.setup = function() {
+		return {
+			/** @cfg {Number} [padding=20] Determines the outer margin of a bar.  */
+			padding: 10,
+			/** @cfg {Boolean} [clip=false] If the brush is drawn outside of the chart, cut the area. */
+			clip: false
+		};
+	}
+
+	return PolygonLineBrush;
 }, "chart.brush.polygon.core");
 
 jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {

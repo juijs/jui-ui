@@ -75,7 +75,7 @@ module.exports = function(grunt) {
 
         // chart.polygon
         "js/chart/polygon/core.js",
-        "js/chart/polygon/face.js",
+        "js/chart/polygon/grid.js",
         "js/chart/polygon/line.js",
         "js/chart/polygon/point.js",
         "js/chart/polygon/cube.js",
@@ -166,6 +166,7 @@ module.exports = function(grunt) {
         "js/chart/brush/polygon.core.js",
         "js/chart/brush/polygon.scatter.js",
         "js/chart/brush/polygon.column.js",
+        "js/chart/brush/polygon.line.js",
 
         // chart.widget
         "js/chart/widget/core.js",

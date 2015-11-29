@@ -1,5 +1,5 @@
-jui.define("chart.polygon.face", [], function() {
-    var FacePolygon = function(type, width, height, depth) {
+jui.define("chart.polygon.grid", [], function() {
+    var GridPolygon = function(type, width, height, depth) {
         var matrix = {
             center: [
                 new Float32Array([ 0, 0, depth, 1 ]),
@@ -24,5 +24,5 @@ jui.define("chart.polygon.face", [], function() {
         this.vertices = matrix[type];
     }
 
-    return FacePolygon;
+    return GridPolygon;
 }, "chart.polygon.core");

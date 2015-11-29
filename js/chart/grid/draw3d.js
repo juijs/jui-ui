@@ -1,5 +1,5 @@
-jui.define("chart.grid.draw3d", [ "util.base", "chart.polygon.face", "chart.polygon.line", "chart.polygon.point" ],
-    function(_, FacePolygon, LinePolygon, PointPolygon) {
+jui.define("chart.grid.draw3d", [ "util.base", "chart.polygon.grid", "chart.polygon.line", "chart.polygon.point" ],
+    function(_, GridPolygon, LinePolygon, PointPolygon) {
 
     /**
      * @class chart.grid.draw3d
@@ -90,14 +90,14 @@ jui.define("chart.grid.draw3d", [ "util.base", "chart.polygon.face", "chart.poly
                 d = this.axis.depth;
 
             if(position == "center") {
-                p = new FacePolygon("center", w, h, d);
+                p = new GridPolygon("center", w, h, d);
             } else {
                 if(isTopOrBottom) {
                     h = (position == "bottom") ? h : 0;
-                    p = new FacePolygon("horizontal", w, h, d);
+                    p = new GridPolygon("horizontal", w, h, d);
                 } else {
                     w = (position == "right") ? w : 0;
-                    p = new FacePolygon("vertical", w, h, d);
+                    p = new GridPolygon("vertical", w, h, d);
                 }
             }
 

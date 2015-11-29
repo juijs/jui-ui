@@ -232,6 +232,8 @@ jui.define("chart.theme.jennifer", [], function() {
         polygonColumnBackgroundOpacity: 0.6,
         polygonColumnBorderOpacity: 0.5,
         polygonScatterRadialOpacity: 0.7,
-        polygonScatterBackgroundOpacity: 0.8
+        polygonScatterBackgroundOpacity: 0.8,
+        polygonLineBackgroundOpacity: 0.9,
+        polygonLineBorderOpacity: 0.8
     }
 });
