@@ -19115,7 +19115,8 @@ jui.define("chart.polygon.core", [ "util.transform", "util.math" ], function(Tra
                 cz = depth / 2;
 
             // 5가지 항목 미리 합성
-            var M = t.matrix("move3d", cx, cy, cz);
+            var M = t.matrix("move3d", cx, cy, cz),
+                M3 = t.matrix("move3d", -cx, -cy, -cz);
             M = math.matrix3d(M, t.matrix("rotate3dx", degree.x));
             M = math.matrix3d(M, t.matrix("rotate3dy", degree.y));
             M = math.matrix3d(M, t.matrix("rotate3dz", degree.z));
@@ -19126,7 +19127,7 @@ jui.define("chart.polygon.core", [ "util.transform", "util.math" ], function(Tra
                     s = math.scaleValue(z, 0, depth, 1, p);
 
                 var M2 = math.matrix3d(M, t.matrix("scale3d", s, s, 1));
-                M2 = math.matrix3d(M2, t.matrix("move3d", -cx, -cy, -cz));
+                M2 = math.matrix3d(M2, M3);
 
                 this.vertices[i] = math.matrix3d(M2, this.vertices[i]);
             }
