@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="charset=utf-8;"/>
+    <script src="../../lib/jquery-1.8.0.min.js"></script>
+    <script src="../../js/base.js"></script>
+    <script src="../../js/util/math.js"></script>
+    <script src="../../js/util/transform.js"></script>
+    <script src="../../js/chart/vector3d.js"></script>
+</head>
+<body >
+
+<div id="chart"></div>
+
+<script id="script_code">
+    jui.ready([ "chart.vector3d" ], function(Vector3D) {
+        var v1 = new Vector3D(1, 1, 1),
+            v2 = v1.multiply(5);
+
+        console.log(v1, v2);
+        console.log(v2.getMagnitude());
+        console.log("-----------------");
+
+        var v3 = new Vector3D(1, 1, 1),
+            v4 = new Vector3D(2, 2, 2);
+
+        console.log(v3.add(v4));
+	});
+</script>
+
+
+</body>
+</html>
