@@ -2343,6 +2343,99 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 });
 jui.define("util.math", [ "util.base" ], function(_) {
 
+	// 2x1 or 3x1 or ?x1 형태의 매트릭스 연산
+	function matrix(a, b) {
+		var m = [];
+
+		for(var i = 0, len = a.length; i < len; i++) {
+			var sum = 0;
+
+			for(var j = 0, len2 = a[i].length; j < len2; j++) {
+				sum += a[i][j] * b[j];
+			}
+
+			m.push(sum);
+		}
+
+		return m;
+	}
+
+	// 2x2 or 3x3 or ?x? 형태의 매트릭스 연산
+	function deepMatrix(a, b) {
+		var m = [], nm = [];
+
+		for(var i = 0, len = b.length; i < len; i++) {
+			m[i] = [];
+			nm[i] = [];
+		}
+
+		for(var i = 0, len = b.length; i < len; i++) {
+			for(var j = 0, len2 = b[i].length; j < len2; j++) {
+				m[j].push(b[i][j]);
+			}
+		}
+
+		for(var i = 0, len = m.length; i < len; i++) {
+			var mm = matrix(a, m[i]);
+
+			for(var j = 0, len2 = mm.length; j < len2; j++) {
+				nm[j].push(mm[j]);
+			}
+		}
+
+		return nm;
+	}
+
+	function matrix3d(a, b) {
+		var m = new Float32Array(4);
+
+		m[0] = a[0][0] * b[0] + a[0][1] * b[1] + a[0][2] * b[2]  + a[0][3] * b[3];
+		m[1] = a[1][0] * b[0] + a[1][1] * b[1] + a[1][2] * b[2]  + a[1][3] * b[3];
+		m[2] = a[2][0] * b[0] + a[2][1] * b[1] + a[2][2] * b[2]  + a[2][3] * b[3];
+		m[3] = a[3][0] * b[0] + a[3][1] * b[1] + a[3][2] * b[2]  + a[3][3] * b[3];
+
+		return m;
+	}
+
+	function deepMatrix3d(a, b) {
+		var nm = [
+			new Float32Array(4),
+			new Float32Array(4),
+			new Float32Array(4),
+			new Float32Array(4)
+		];
+
+		var m = [
+			new Float32Array([b[0][0],b[1][0],b[2][0],b[3][0]]),
+			new Float32Array([b[0][1],b[1][1],b[2][1],b[3][1]]),
+			new Float32Array([b[0][2],b[1][2],b[2][2],b[3][2]]),
+			new Float32Array([b[0][3],b[1][3],b[2][3],b[3][3]])
+		];
+
+		nm[0][0] = a[0][0] * m[0][0] + a[0][1] * m[0][1] + a[0][2] * m[0][2]  + a[0][3] * m[0][3];
+		nm[1][0] = a[1][0] * m[0][0] + a[1][1] * m[0][1] + a[1][2] * m[0][2]  + a[1][3] * m[0][3];
+		nm[2][0] = a[2][0] * m[0][0] + a[2][1] * m[0][1] + a[2][2] * m[0][2]  + a[2][3] * m[0][3];
+		nm[3][0] = a[3][0] * m[0][0] + a[3][1] * m[0][1] + a[3][2] * m[0][2]  + a[3][3] * m[0][3];
+
+		nm[0][1] = a[0][0] * m[1][0] + a[0][1] * m[1][1] + a[0][2] * m[1][2]  + a[0][3] * m[1][3];
+		nm[1][1] = a[1][0] * m[1][0] + a[1][1] * m[1][1] + a[1][2] * m[1][2]  + a[1][3] * m[1][3];
+		nm[2][1] = a[2][0] * m[1][0] + a[2][1] * m[1][1] + a[2][2] * m[1][2]  + a[2][3] * m[1][3];
+		nm[3][1] = a[3][0] * m[1][0] + a[3][1] * m[1][1] + a[3][2] * m[1][2]  + a[3][3] * m[1][3];
+
+		nm[0][2] = a[0][0] * m[2][0] + a[0][1] * m[2][1] + a[0][2] * m[2][2]  + a[0][3] * m[2][3];
+		nm[1][2] = a[1][0] * m[2][0] + a[1][1] * m[2][1] + a[1][2] * m[2][2]  + a[1][3] * m[2][3];
+		nm[2][2] = a[2][0] * m[2][0] + a[2][1] * m[2][1] + a[2][2] * m[2][2]  + a[2][3] * m[2][3];
+		nm[3][2] = a[3][0] * m[2][0] + a[3][1] * m[2][1] + a[3][2] * m[2][2]  + a[3][3] * m[2][3];
+
+		nm[0][3] = a[0][0] * m[3][0] + a[0][1] * m[3][1] + a[0][2] * m[3][2]  + a[0][3] * m[3][3];
+		nm[1][3] = a[1][0] * m[3][0] + a[1][1] * m[3][1] + a[1][2] * m[3][2]  + a[1][3] * m[3][3];
+		nm[2][3] = a[2][0] * m[3][0] + a[2][1] * m[3][1] + a[2][2] * m[3][2]  + a[2][3] * m[3][3];
+		nm[3][3] = a[3][0] * m[3][0] + a[3][1] * m[3][1] + a[3][2] * m[3][2]  + a[3][3] * m[3][3];
+
+		return nm;
+	}
+
+
 	/**
 	 * @class util.math
 	 *
@@ -2598,55 +2691,19 @@ jui.define("util.math", [ "util.base" ], function(_) {
 		},
 
 		matrix: function(a, b) {
-			// 2x1 or 3x1 or ?x1 형태의 매트릭스 연산
-			function matrix(a, b) {
-				var m = [];
-
-				for(var i = 0, len = a.length; i < len; i++) {
-					var sum = 0;
-
-					for(var j = 0, len2 = a[i].length; j < len2; j++) {
-						sum += a[i][j] * b[j];
-					}
-
-					m.push(sum);
-				}
-
-				return m;
-			}
-
-
-			// 2x2 or 3x3 형태의 매트릭스 연산
-			function deepMatrix(a, b) {
-				var m = [], nm = [];
-
-				for(var i = 0, len = b.length; i < len; i++) {
-					m[i] = [];
-					nm[i] = [];
-				}
-
-				for(var i = 0, len = b.length; i < len; i++) {
-					for(var j = 0, len2 = b[i].length; j < len2; j++) {
-						m[j].push(b[i][j]);
-					}
-				}
-
-				for(var i = 0, len = m.length; i < len; i++) {
-					var mm = matrix(a, m[i]);
-
-					for(var j = 0, len2 = mm.length; j < len2; j++) {
-						nm[j].push(mm[j]);
-					}
-				}
-
-				return nm;
-			}
-
 			if(_.typeCheck("array", b[0])) {
 				return deepMatrix(a, b);
 			}
 
 			return matrix(a, b);
+		},
+
+		matrix3d: function(a, b) {
+			if(b[0] instanceof Array || b[0] instanceof Float32Array) {
+				return deepMatrix3d(a, b);
+			}
+
+			return matrix3d(a, b);
 		},
 
 		scaleValue: function(value, minValue, maxValue, minScale, maxScale) {
@@ -2686,58 +2743,60 @@ jui.define("util.transform", [ "util.math" ], function(math) {
             var a = arguments,
                 type = a[0];
 
-            var map = {
-                // 2D 행렬, 3x3
-                move: [
-                    [ 1, 0, a[1] ],
-                    [ 0, 1, a[2] ],
-                    [ 0, 0, 1 ]
-                ],
-                scale: [
-                    [ a[1], 0, 0 ],
-                    [ 0, a[2], 0 ],
-                    [ 0, 0, 1 ]
-                ],
-                rotate: [
-                    [ Math.cos(math.radian(a[1])), -Math.sin(math.radian(a[1])), 0 ],
-                    [ Math.sin(math.radian(a[1])), Math.cos(math.radian(a[1])), 0 ],
-                    [ 0, 0, 1 ]
-                ],
-
-                // 3D 행렬, 4x4
-                move3d: [
-                    [ 1, 0, 0, a[1] ],
-                    [ 0, 1, 0, a[2] ],
-                    [ 0, 0, 1, a[3] ],
-                    [ 0, 0, 0, 1 ]
-                ],
-                scale3d: [
-                    [ a[1], 0, 0, 0 ],
-                    [ 0, a[2], 0, 0 ],
-                    [ 0, 0, a[3], 0 ],
-                    [ 0, 0, 0, 1 ]
-                ],
-                rotate3dz: [
-                    [ Math.cos(math.radian(a[1])), -Math.sin(math.radian(a[1])), 0, 0 ],
-                    [ Math.sin(math.radian(a[1])), Math.cos(math.radian(a[1])), 0, 0 ],
-                    [ 0, 0, 1, 0 ],
-                    [ 0, 0, 0, 1 ]
-                ],
-                rotate3dx: [
-                    [ 1, 0, 0, 0 ],
-                    [ 0, Math.cos(math.radian(a[1])), -Math.sin(math.radian(a[1])), 0 ],
-                    [ 0, Math.sin(math.radian(a[1])), Math.cos(math.radian(a[1])), 0 ],
-                    [ 0, 0, 0, 1 ]
-                ],
-                rotate3dy: [
-                    [ Math.cos(math.radian(a[1])), 0, Math.sin(math.radian(a[1])), 0 ],
-                    [ 0, 1, 0, 0 ],
-                    [ -Math.sin(math.radian(a[1])), 0, Math.cos(math.radian(a[1])), 0 ],
-                    [ 0, 0, 0, 1 ]
-                ]
+            if(type == "move") {
+                return [
+                    new Float32Array([1, 0, a[1]]),
+                    new Float32Array([0, 1, a[2]]),
+                    new Float32Array([0, 0, 1])
+                ];
+            } else if(type == "scale") {
+                return [
+                    new Float32Array([ a[1], 0, 0 ]),
+                    new Float32Array([ 0, a[2], 0 ]),
+                    new Float32Array([ 0, 0, 1 ])
+                ];
+            } else if(type == "rotate") {
+                return [
+                    new Float32Array([ Math.cos(math.radian(a[1])), -Math.sin(math.radian(a[1])), 0 ]),
+                    new Float32Array([ Math.sin(math.radian(a[1])), Math.cos(math.radian(a[1])), 0 ]),
+                    new Float32Array([ 0, 0, 1 ])
+                ];
+            } else if(type == "move3d") {
+                return [
+                    new Float32Array([ 1, 0, 0, a[1] ]),
+                    new Float32Array([ 0, 1, 0, a[2] ]),
+                    new Float32Array([ 0, 0, 1, a[3] ]),
+                    new Float32Array([ 0, 0, 0, 1 ])
+                ];
+            } else if(type == "scale3d") {
+                return [
+                    new Float32Array([ a[1], 0, 0, 0 ]),
+                    new Float32Array([ 0, a[2], 0, 0 ]),
+                    new Float32Array([ 0, 0, a[3], 0 ]),
+                    new Float32Array([ 0, 0, 0, 1 ])
+                ];
+            } else if(type == "rotate3dz") {
+                return [
+                    new Float32Array([ Math.cos(math.radian(a[1])), -Math.sin(math.radian(a[1])), 0, 0 ]),
+                    new Float32Array([ Math.sin(math.radian(a[1])), Math.cos(math.radian(a[1])), 0, 0 ]),
+                    new Float32Array([ 0, 0, 1, 0 ]),
+                    new Float32Array([ 0, 0, 0, 1 ])
+                ];
+            } else if(type == "rotate3dx") {
+                return [
+                    new Float32Array([ 1, 0, 0, 0 ]),
+                    new Float32Array([ 0, Math.cos(math.radian(a[1])), -Math.sin(math.radian(a[1])), 0 ]),
+                    new Float32Array([ 0, Math.sin(math.radian(a[1])), Math.cos(math.radian(a[1])), 0 ]),
+                    new Float32Array([ 0, 0, 0, 1 ])
+                ];
+            } else if(type == "rotate3dy") {
+                return [
+                    new Float32Array([ Math.cos(math.radian(a[1])), 0, Math.sin(math.radian(a[1])), 0 ]),
+                    new Float32Array([ 0, 1, 0, 0 ]),
+                    new Float32Array([ -Math.sin(math.radian(a[1])), 0, Math.cos(math.radian(a[1])), 0 ]),
+                    new Float32Array([ 0, 0, 0, 1 ])
+                ];
             }
-
-            return map[type];
         }
 
         // 2차원 이동
@@ -9357,18 +9416,23 @@ jui.define("chart.polygon.core", [ "util.transform", "util.math" ], function(Tra
                 cy = height / 2,
                 cz = depth / 2;
 
-            t.merge2(function(x, y, z, w) {
-                var s = math.scaleValue(z, 0, depth, 1, p);
+            // 5가지 항목 미리 합성
+            var M = t.matrix("move3d", cx, cy, cz),
+                M3 = t.matrix("move3d", -cx, -cy, -cz);
+            M = math.matrix3d(M, t.matrix("rotate3dx", degree.x));
+            M = math.matrix3d(M, t.matrix("rotate3dy", degree.y));
+            M = math.matrix3d(M, t.matrix("rotate3dz", degree.z));
 
-                return [
-                    [ "move3d", cx, cy, cz ],
-                    [ "rotate3dx", degree.x ],
-                    [ "rotate3dy", degree.y ],
-                    [ "rotate3dz", degree.z ],
-                    [ "scale3d", s, s, 1 ],
-                    [ "move3d", -cx, -cy, -cz ]
-                ]
-            });
+            // scale 만 따로 합성
+            for(var i = 0, count = this.vertices.length; i < count; i++) {
+                var z = this.vertices[i][2],
+                    s = math.scaleValue(z, 0, depth, 1, p);
+
+                var M2 = math.matrix3d(M, t.matrix("scale3d", s, s, 1));
+                M2 = math.matrix3d(M2, M3);
+
+                this.vertices[i] = math.matrix3d(M2, this.vertices[i]);
+            }
         }
 
         this.min = function() {
