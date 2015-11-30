@@ -2343,35 +2343,17 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 });
 jui.define("util.math", [ "util.base" ], function(_) {
 
-
-	function printArray (arr) {
-
-		var value = [];
-
-		for(var i = 0, len = arr.length; i  < len; i++) {
-			if (typeof arr[i] == "string") value.push("'" + arr[i] + "'");
-			else if (arr[i].length) { value.push(printArray(arr[i]));}
-			else value.push(arr[i]);
-		}
-
-		return '[' + value.join(",") + ']';
-	}
-
 	// 2x1 or 3x1 or ?x1 형태의 매트릭스 연산
 	function matrix(a, b) {
 		var m = new Float32Array(4);
 
-		//console.log('matrix', printArray(m));
 		m[0] = a[0][0] * b[0] + a[0][1] * b[1] + a[0][2] * b[2]  + a[0][3] * b[3];
 		m[1] = a[1][0] * b[0] + a[1][1] * b[1] + a[1][2] * b[2]  + a[1][3] * b[3];
 		m[2] = a[2][0] * b[0] + a[2][1] * b[1] + a[2][2] * b[2]  + a[2][3] * b[3];
 		m[3] = a[3][0] * b[0] + a[3][1] * b[1] + a[3][2] * b[2]  + a[3][3] * b[3];
 
-		//console.log('m', printArray(m));
-
 		return m;
 	}
-
 
 	// 2x2 or 3x3 형태의 매트릭스 연산
 	function deepMatrix(a, b) {
@@ -2382,14 +2364,12 @@ jui.define("util.math", [ "util.base" ], function(_) {
 			new Float32Array(4)
 		];
 
-
 		var m = [
 			new Float32Array([b[0][0],b[1][0],b[2][0],b[3][0]]),
 			new Float32Array([b[0][1],b[1][1],b[2][1],b[3][1]]),
 			new Float32Array([b[0][2],b[1][2],b[2][2],b[3][2]]),
 			new Float32Array([b[0][3],b[1][3],b[2][3],b[3][3]])
 		];
-
 
 		nm[0][0] = a[0][0] * m[0][0] + a[0][1] * m[0][1] + a[0][2] * m[0][2]  + a[0][3] * m[0][3];
 		nm[1][0] = a[1][0] * m[0][0] + a[1][1] * m[0][1] + a[1][2] * m[0][2]  + a[1][3] * m[0][3];
@@ -2413,6 +2393,7 @@ jui.define("util.math", [ "util.base" ], function(_) {
 
 		return nm;
 	}
+
 
 	/**
 	 * @class util.math
@@ -9373,15 +9354,16 @@ jui.define("chart.polygon.core", [ "util.transform", "util.math" ], function(Tra
             M = math.matrix(M, t.matrix("rotate3dx", degree.x));
             M = math.matrix(M, t.matrix("rotate3dy", degree.y));
             M = math.matrix(M, t.matrix("rotate3dz", degree.z));
-            M = math.matrix(M, t.matrix("move3d", -cx, -cy, -cz));
 
             // scale 만 따로 합성
             for(var i = 0, count = this.vertices.length; i < count; i++) {
                 var z = this.vertices[i][2],
-                    s = math.scaleValue(z, 0, depth, 1, p),
-                    result = t.matrix("scale3d", s, s, 1);
+                    s = math.scaleValue(z, 0, depth, 1, p);
 
-                this.vertices[i] = math.matrix(math.matrix(M, result), this.vertices[i]);
+                var M2 = math.matrix(M, t.matrix("scale3d", s, s, 1));
+                M2 = math.matrix(M2, t.matrix("move3d", -cx, -cy, -cz));
+
+                this.vertices[i] = math.matrix(M2, this.vertices[i]);
             }
         }
 

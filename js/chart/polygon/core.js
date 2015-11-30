@@ -30,15 +30,16 @@ jui.define("chart.polygon.core", [ "util.transform", "util.math" ], function(Tra
             M = math.matrix(M, t.matrix("rotate3dx", degree.x));
             M = math.matrix(M, t.matrix("rotate3dy", degree.y));
             M = math.matrix(M, t.matrix("rotate3dz", degree.z));
-            M = math.matrix(M, t.matrix("move3d", -cx, -cy, -cz));
 
             // scale 만 따로 합성
             for(var i = 0, count = this.vertices.length; i < count; i++) {
                 var z = this.vertices[i][2],
-                    s = math.scaleValue(z, 0, depth, 1, p),
-                    result = t.matrix("scale3d", s, s, 1);
+                    s = math.scaleValue(z, 0, depth, 1, p);
 
-                this.vertices[i] = math.matrix(math.matrix(M, result), this.vertices[i]);
+                var M2 = math.matrix(M, t.matrix("scale3d", s, s, 1));
+                M2 = math.matrix(M2, t.matrix("move3d", -cx, -cy, -cz));
+
+                this.vertices[i] = math.matrix(M2, this.vertices[i]);
             }
         }
 
