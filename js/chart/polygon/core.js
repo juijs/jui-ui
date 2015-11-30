@@ -26,21 +26,20 @@ jui.define("chart.polygon.core", [ "util.transform", "util.math" ], function(Tra
                 cz = depth / 2;
 
             // 5가지 항목 미리 합성
-            var M = t.move3d(null, cx, cy, cz);
-            M = math.matrix(M, t.rotate3dx(null, degree.x));
-            M = math.matrix(M, t.rotate3dy(null, degree.y));
-            M = math.matrix(M, t.rotate3dz(null, degree.z));
-            M = math.matrix(M, t.move3d(null, -cx, -cy, -cz));
+            var M = t.matrix("move3d", cx, cy, cz);
+            M = math.matrix(M, t.matrix("rotate3dx", degree.x));
+            M = math.matrix(M, t.matrix("rotate3dy", degree.y));
+            M = math.matrix(M, t.matrix("rotate3dz", degree.z));
+            M = math.matrix(M, t.matrix("move3d", -cx, -cy, -cz));
 
             // scale 만 따로 합성
             for(var i = 0, count = this.vertices.length; i < count; i++) {
-                var z = this.vertices[i][2];
-                var s = math.scaleValue(z, 0, depth, 1, p);
-                var result = t.scale3d(null, s, s, 1);
+                var z = this.vertices[i][2],
+                    s = math.scaleValue(z, 0, depth, 1, p),
+                    result = t.matrix("scale3d", s, s, 1);
 
                 this.vertices[i] = math.matrix(math.matrix(M, result), this.vertices[i]);
             }
-
         }
 
         this.min = function() {

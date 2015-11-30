@@ -2714,144 +2714,100 @@ jui.define("util.transform", [ "util.math" ], function(math) {
             var a = arguments,
                 type = a[0];
 
-            var map = {
-                // 2D 행렬, 3x3
-                move: [
-                    [ 1, 0, a[1] ],
-                    [ 0, 1, a[2] ],
-                    [ 0, 0, 1 ]
-                ],
-                scale: [
-                    [ a[1], 0, 0 ],
-                    [ 0, a[2], 0 ],
-                    [ 0, 0, 1 ]
-                ],
-                rotate: [
-                    [ Math.cos(math.radian(a[1])), -Math.sin(math.radian(a[1])), 0 ],
-                    [ Math.sin(math.radian(a[1])), Math.cos(math.radian(a[1])), 0 ],
-                    [ 0, 0, 1 ]
-                ],
-
-                // 3D 행렬, 4x4
-                move3d: [
-                    [ 1, 0, 0, a[1] ],
-                    [ 0, 1, 0, a[2] ],
-                    [ 0, 0, 1, a[3] ],
-                    [ 0, 0, 0, 1 ]
-                ],
-                scale3d: [
-                    [ a[1], 0, 0, 0 ],
-                    [ 0, a[2], 0, 0 ],
-                    [ 0, 0, a[3], 0 ],
-                    [ 0, 0, 0, 1 ]
-                ],
-                rotate3dz: [
-                    [ Math.cos(math.radian(a[1])), -Math.sin(math.radian(a[1])), 0, 0 ],
-                    [ Math.sin(math.radian(a[1])), Math.cos(math.radian(a[1])), 0, 0 ],
-                    [ 0, 0, 1, 0 ],
-                    [ 0, 0, 0, 1 ]
-                ],
-                rotate3dx: [
-                    [ 1, 0, 0, 0 ],
-                    [ 0, Math.cos(math.radian(a[1])), -Math.sin(math.radian(a[1])), 0 ],
-                    [ 0, Math.sin(math.radian(a[1])), Math.cos(math.radian(a[1])), 0 ],
-                    [ 0, 0, 0, 1 ]
-                ],
-                rotate3dy: [
-                    [ Math.cos(math.radian(a[1])), 0, Math.sin(math.radian(a[1])), 0 ],
-                    [ 0, 1, 0, 0 ],
-                    [ -Math.sin(math.radian(a[1])), 0, Math.cos(math.radian(a[1])), 0 ],
-                    [ 0, 0, 0, 1 ]
-                ]
+            if(type == "move") {
+                return [
+                    new Float32Array([1, 0, a[1]]),
+                    new Float32Array([0, 1, a[2]]),
+                    new Float32Array([0, 0, 1])
+                ];
+            } else if(type == "scale") {
+                return [
+                    new Float32Array([ a[1], 0, 0 ]),
+                    new Float32Array([ 0, a[2], 0 ]),
+                    new Float32Array([ 0, 0, 1 ])
+                ];
+            } else if(type == "rotate") {
+                return [
+                    new Float32Array([ Math.cos(math.radian(a[1])), -Math.sin(math.radian(a[1])), 0 ]),
+                    new Float32Array([ Math.sin(math.radian(a[1])), Math.cos(math.radian(a[1])), 0 ]),
+                    new Float32Array([ 0, 0, 1 ])
+                ];
+            } else if(type == "move3d") {
+                return [
+                    new Float32Array([ 1, 0, 0, a[1] ]),
+                    new Float32Array([ 0, 1, 0, a[2] ]),
+                    new Float32Array([ 0, 0, 1, a[3] ]),
+                    new Float32Array([ 0, 0, 0, 1 ])
+                ];
+            } else if(type == "scale3d") {
+                return [
+                    new Float32Array([ a[1], 0, 0, 0 ]),
+                    new Float32Array([ 0, a[2], 0, 0 ]),
+                    new Float32Array([ 0, 0, a[3], 0 ]),
+                    new Float32Array([ 0, 0, 0, 1 ])
+                ];
+            } else if(type == "rotate3dz") {
+                return [
+                    new Float32Array([ Math.cos(math.radian(a[1])), -Math.sin(math.radian(a[1])), 0, 0 ]),
+                    new Float32Array([ Math.sin(math.radian(a[1])), Math.cos(math.radian(a[1])), 0, 0 ]),
+                    new Float32Array([ 0, 0, 1, 0 ]),
+                    new Float32Array([ 0, 0, 0, 1 ])
+                ];
+            } else if(type == "rotate3dx") {
+                return [
+                    new Float32Array([ 1, 0, 0, 0 ]),
+                    new Float32Array([ 0, Math.cos(math.radian(a[1])), -Math.sin(math.radian(a[1])), 0 ]),
+                    new Float32Array([ 0, Math.sin(math.radian(a[1])), Math.cos(math.radian(a[1])), 0 ]),
+                    new Float32Array([ 0, 0, 0, 1 ])
+                ];
+            } else if(type == "rotate3dy") {
+                return [
+                    new Float32Array([ Math.cos(math.radian(a[1])), 0, Math.sin(math.radian(a[1])), 0 ]),
+                    new Float32Array([ 0, 1, 0, 0 ]),
+                    new Float32Array([ -Math.sin(math.radian(a[1])), 0, Math.cos(math.radian(a[1])), 0 ]),
+                    new Float32Array([ 0, 0, 0, 1 ])
+                ];
             }
-
-            return map[type];
         }
 
         // 2차원 이동
-        this.move = function(t, dx, dy) {
-            var mat = [
-                new Float32Array([ 1, 0, dx ]),
-                new Float32Array([ 0, 1, dy ]),
-                new Float32Array([ 0, 0, 1 ])
-            ];
-
-            return mat;
+        this.move = function(dx, dy) {
+            return calculate(this.matrix("move", dx, dy));
         }
 
         // 3차원 이동
-        this.move3d = function(t, dx, dy, dz) {
-            var mat = [
-                new Float32Array([ 1, 0, 0, dx ]),
-                new Float32Array([ 0, 1, 0, dy ]),
-                new Float32Array([ 0, 0, 1, dz ]),
-                new Float32Array([ 0, 0, 0, 1 ])
-            ];
-            return mat;
+        this.move3d = function(dx, dy, dz) {
+            return calculate(this.matrix("move3d", dx, dy, dz));
         }
 
         // 2차원 스케일
-        this.scale = function(t, sx, sy) {
-            var mat = [
-                new Float32Array([ sx, 0, 0 ]),
-                new Float32Array([ 0, sy, 0 ]),
-                new Float32Array([ 0, 0, 1 ])
-            ];
-            return mat;
+        this.scale = function(sx, sy) {
+            return calculate(this.matrix("scale", sx, sy));
         }
 
         // 3차원 스케일
-        this.scale3d = function(t, sx, sy, sz) {
-            var mat = [
-                new Float32Array([ sx, 0, 0, 0 ]),
-                new Float32Array([ 0, sy, 0, 0 ]),
-                new Float32Array([ 0, 0, sz, 0 ]),
-                new Float32Array([ 0, 0, 0, 1 ])
-            ];
-            return mat;
+        this.scale3d = function(sx, sy, sz) {
+            return calculate(this.matrix("scale3d", sx, sy, sz));
         }
 
         // 2차원 회전
-        this.rotate = function(t, angle) {
-            var mat = [
-                new Float32Array([ Math.cos(math.radian(angle)), -Math.sin(math.radian(angle)), 0 ]),
-                new Float32Array([ Math.sin(math.radian(angle)), Math.cos(math.radian(angle)), 0 ]),
-                new Float32Array([ 0, 0, 1 ])
-            ];
-            return mat;
+        this.rotate = function(angle) {
+            return calculate(this.matrix("rotate", angle));
         }
 
         // Z축 중심 3차원 회전 - 롤(ROLL)
-        this.rotate3dz = function(t, angle) {
-            var mat = [
-                new Float32Array([ Math.cos(math.radian(angle)), -Math.sin(math.radian(angle)), 0, 0 ]),
-                new Float32Array([ Math.sin(math.radian(angle)), Math.cos(math.radian(angle)), 0, 0 ]),
-                new Float32Array([ 0, 0, 1, 0 ]),
-                new Float32Array([ 0, 0, 0, 1 ])
-            ]
-            return mat;
+        this.rotate3dz = function(angle) {
+            return calculate(this.matrix("rotate3dz", angle));
         }
 
         // X축 중심 3차원 회전 - 롤(PITCH)
-        this.rotate3dx = function(t, angle) {
-            var mat = [
-                new Float32Array([ 1, 0, 0, 0 ]),
-                new Float32Array([ 0, Math.cos(math.radian(angle)), -Math.sin(math.radian(angle)), 0 ]),
-                new Float32Array([ 0, Math.sin(math.radian(angle)), Math.cos(math.radian(angle)), 0 ]),
-                new Float32Array([ 0, 0, 0, 1 ])
-            ];
-            return mat;
+        this.rotate3dx = function(angle) {
+            return calculate(this.matrix("rotate3dx", angle));
         }
 
         // Y축 중심 3차원 회전 - 요(YAW)
-        this.rotate3dy = function(t, angle) {
-            var mat = [
-                new Float32Array([ Math.cos(math.radian(angle)), 0, Math.sin(math.radian(angle)), 0 ]),
-                new Float32Array([ 0, 1, 0, 0 ]),
-                new Float32Array([ -Math.sin(math.radian(angle)), 0, Math.cos(math.radian(angle)), 0 ]),
-                new Float32Array([ 0, 0, 0, 1 ])
-            ];
-            return mat;
+        this.rotate3dy = function(angle) {
+            return calculate(this.matrix("rotate3dy", angle));
         }
 
         // 임의의 행렬 처리
@@ -2873,31 +2829,16 @@ jui.define("util.transform", [ "util.math" ], function(math) {
 
         // 행렬의 병합 (콜백 형태)
         this.merge2 = function(callback) {
-
             for(var i = 0, count = points.length; i < count; i++) {
                 var a = callback.apply(null, points[i]),
-                    m = this[a[0][0]].apply(this, a[0]);
+                    m = this.matrix.apply(this, a[0]);
 
                 for(var j = 1; j < a.length; j++) {
-                    var result = this[a[j][0]].apply(this, a[j]);
-                    m = math.matrix(m, result);
+                    m = math.matrix(m, this.matrix.apply(this, a[j]));
                 }
 
                 points[i] = math.matrix(m, points[i]);
             }
-        }
-
-        function printArray (arr) {
-
-            var value = [];
-
-            for(var i = 0, len = arr.length; i  < len; i++) {
-                if (typeof arr[i] == "string") value.push("'" + arr[i] + "'");
-                else if (arr[i].length) { value.push(printArray(arr[i]));}
-                else value.push(arr[i]);
-            }
-
-            return '[' + value.join(",") + ']';
         }
     }
 
@@ -9428,21 +9369,20 @@ jui.define("chart.polygon.core", [ "util.transform", "util.math" ], function(Tra
                 cz = depth / 2;
 
             // 5가지 항목 미리 합성
-            var M = t.move3d(null, cx, cy, cz);
-            M = math.matrix(M, t.rotate3dx(null, degree.x));
-            M = math.matrix(M, t.rotate3dy(null, degree.y));
-            M = math.matrix(M, t.rotate3dz(null, degree.z));
-            M = math.matrix(M, t.move3d(null, -cx, -cy, -cz));
+            var M = t.matrix("move3d", cx, cy, cz);
+            M = math.matrix(M, t.matrix("rotate3dx", degree.x));
+            M = math.matrix(M, t.matrix("rotate3dy", degree.y));
+            M = math.matrix(M, t.matrix("rotate3dz", degree.z));
+            M = math.matrix(M, t.matrix("move3d", -cx, -cy, -cz));
 
             // scale 만 따로 합성
             for(var i = 0, count = this.vertices.length; i < count; i++) {
-                var z = this.vertices[i][2];
-                var s = math.scaleValue(z, 0, depth, 1, p);
-                var result = t.scale3d(null, s, s, 1);
+                var z = this.vertices[i][2],
+                    s = math.scaleValue(z, 0, depth, 1, p),
+                    result = t.matrix("scale3d", s, s, 1);
 
                 this.vertices[i] = math.matrix(math.matrix(M, result), this.vertices[i]);
             }
-
         }
 
         this.min = function() {
