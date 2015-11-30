@@ -73,15 +73,15 @@ var table_data = [
 ];
 
 jui.ready(function(ui, uix, _) {
-    var table_width = $("#xtable").outerWidth();
+    var body_width = $("body").width();
 
     xtable = uix.xtable("#xtable", {
         fields: [ "min", "max", "count", "hash", "failure", "sumTime", "avgTime", "name" ],
         csvNumber: [ 0, 1, 2, 3, 4, 5, "avgTime" ],
         sort: true,
         sortLoading: true,
-        //width: 800,
-        scrollWidth: $("body").width(),
+        width: body_width + body_width * 0.15,
+        scrollWidth: body_width,
         buffer: "scroll",
         bufferCount: 10,
         resize: true,
