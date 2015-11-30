@@ -2874,26 +2874,17 @@ jui.define("util.transform", [ "util.math" ], function(math) {
         // 행렬의 병합 (콜백 형태)
         this.merge2 = function(callback) {
 
-            //console.log('start', printArray(points));
-
             for(var i = 0, count = points.length; i < count; i++) {
                 var a = callback.apply(null, points[i]),
                     m = this[a[0][0]].apply(this, a[0]);
 
-                //console.log('a', printArray(a));
-                //console.log('m', printArray(m));
-
                 for(var j = 1; j < a.length; j++) {
                     var result = this[a[j][0]].apply(this, a[j]);
-                    //console.log('result', printArray(m), printArray(result));
                     m = math.matrix(m, result);
-
-                    //console.log('2nd m', printArray(m));
                 }
 
                 points[i] = math.matrix(m, points[i]);
             }
-            //console.log('end', printArray(points));
         }
 
         function printArray (arr) {

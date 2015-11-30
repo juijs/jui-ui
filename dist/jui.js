@@ -2874,26 +2874,17 @@ jui.define("util.transform", [ "util.math" ], function(math) {
         // 행렬의 병합 (콜백 형태)
         this.merge2 = function(callback) {
 
-            //console.log('start', printArray(points));
-
             for(var i = 0, count = points.length; i < count; i++) {
                 var a = callback.apply(null, points[i]),
                     m = this[a[0][0]].apply(this, a[0]);
 
-                //console.log('a', printArray(a));
-                //console.log('m', printArray(m));
-
                 for(var j = 1; j < a.length; j++) {
                     var result = this[a[j][0]].apply(this, a[j]);
-                    //console.log('result', printArray(m), printArray(result));
                     m = math.matrix(m, result);
-
-                    //console.log('2nd m', printArray(m));
                 }
 
                 points[i] = math.matrix(m, points[i]);
             }
-            //console.log('end', printArray(points));
         }
 
         function printArray (arr) {
@@ -19154,18 +19145,22 @@ jui.define("chart.polygon.core", [ "util.transform", "util.math" ], function(Tra
                 cy = height / 2,
                 cz = depth / 2;
 
-            t.merge2(function(x, y, z, w) {
-                var s = math.scaleValue(z, 0, depth, 1, p);
+            // 5가지 항목 미리 합성
+            var M = t.move3d(null, cx, cy, cz);
+            M = math.matrix(M, t.rotate3dx(null, degree.x));
+            M = math.matrix(M, t.rotate3dy(null, degree.y));
+            M = math.matrix(M, t.rotate3dz(null, degree.z));
+            M = math.matrix(M, t.move3d(null, -cx, -cy, -cz));
 
-                return [
-                    [ "move3d", cx, cy, cz ],
-                    [ "rotate3dx", degree.x ],
-                    [ "rotate3dy", degree.y ],
-                    [ "rotate3dz", degree.z ],
-                    [ "scale3d", s, s, 1 ],
-                    [ "move3d", -cx, -cy, -cz ]
-                ]
-            });
+            // scale 만 따로 합성
+            for(var i = 0, count = this.vertices.length; i < count; i++) {
+                var z = this.vertices[i][2];
+                var s = math.scaleValue(z, 0, depth, 1, p);
+                var result = t.scale3d(null, s, s, 1);
+
+                this.vertices[i] = math.matrix(math.matrix(M, result), this.vertices[i]);
+            }
+
         }
 
         this.min = function() {
