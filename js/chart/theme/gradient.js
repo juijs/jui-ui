@@ -227,7 +227,7 @@ jui.define("chart.theme.gradient", [], function() {
         polygonColumnBorderOpacity: 0.5,
         polygonScatterRadialOpacity: 0.7,
         polygonScatterBackgroundOpacity: 0.8,
-        polygonLineBackgroundOpacity: 0.9,
-        polygonLineBorderOpacity: 0.8
+        polygonLineBackgroundOpacity: 0.6,
+        polygonLineBorderOpacity: 0.7
     }
 });

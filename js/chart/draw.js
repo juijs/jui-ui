@@ -180,13 +180,19 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
                 h = this.axis.area("height"),
                 d = this.axis.depth,
                 r = this.axis.degree,
+                p = this.axis.perspective,
                 list = arguments;
 
             if(_.typeCheck("integer", r)) {
                 r = { x: r, y: r, z: r };
+            } else if(_.typeCheck("object", r)) {
+                if(!_.typeCheck("integer", r.x)) r.x = 0;
+                if(!_.typeCheck("integer", r.y)) r.y = 0;
+                if(!_.typeCheck("integer", r.z)) r.z = 0;
             }
 
-            for (var i = 0; i < list.length; i++) {
+            for(var i = 0; i < list.length; i++) {
+                list[i].perspective = p;
                 list[i].rotate(w, h, d, r);
             }
         }

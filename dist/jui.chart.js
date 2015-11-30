@@ -5600,13 +5600,19 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
                 h = this.axis.area("height"),
                 d = this.axis.depth,
                 r = this.axis.degree,
+                p = this.axis.perspective,
                 list = arguments;
 
             if(_.typeCheck("integer", r)) {
                 r = { x: r, y: r, z: r };
+            } else if(_.typeCheck("object", r)) {
+                if(!_.typeCheck("integer", r.x)) r.x = 0;
+                if(!_.typeCheck("integer", r.y)) r.y = 0;
+                if(!_.typeCheck("integer", r.z)) r.z = 0;
             }
 
-            for (var i = 0; i < list.length; i++) {
+            for(var i = 0; i < list.length; i++) {
+                list[i].perspective = p;
                 list[i].rotate(w, h, d, r);
             }
         }
@@ -5923,7 +5929,8 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
                 end : cloneAxis.end,
 
                 degree : cloneAxis.degree,
-                depth : cloneAxis.depth
+                depth : cloneAxis.depth,
+                perspective : cloneAxis.perspective
             });
 
             // 원본 데이터 설정
@@ -6223,7 +6230,9 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             /** @cfg {Number} [degree=0]  Set degree of 3d chart */
             degree: 0,
             /** @cfg {Number} [depth=0]  Set depth of 3d chart  */
-            depth: 0
+            depth: 0,
+            /** @cfg {Number} [perspective=0.9]  Set perspective values in the 3d chart  */
+            perspective: 0.9
         }
     }
 
@@ -8055,8 +8064,8 @@ jui.define("chart.theme.jennifer", [], function() {
         polygonColumnBorderOpacity: 0.5,
         polygonScatterRadialOpacity: 0.7,
         polygonScatterBackgroundOpacity: 0.8,
-        polygonLineBackgroundOpacity: 0.9,
-        polygonLineBorderOpacity: 0.8
+        polygonLineBackgroundOpacity: 0.6,
+        polygonLineBorderOpacity: 0.7
     }
 });
 jui.define("chart.theme.gradient", [], function() {
@@ -8288,8 +8297,8 @@ jui.define("chart.theme.gradient", [], function() {
         polygonColumnBorderOpacity: 0.5,
         polygonScatterRadialOpacity: 0.7,
         polygonScatterBackgroundOpacity: 0.8,
-        polygonLineBackgroundOpacity: 0.9,
-        polygonLineBorderOpacity: 0.8
+        polygonLineBackgroundOpacity: 0.6,
+        polygonLineBorderOpacity: 0.7
     }
 });
 jui.define("chart.theme.dark", [], function() {
@@ -8519,8 +8528,8 @@ jui.define("chart.theme.dark", [], function() {
         polygonColumnBorderOpacity: 0.5,
         polygonScatterRadialOpacity: 0.7,
         polygonScatterBackgroundOpacity: 0.8,
-        polygonLineBackgroundOpacity: 0.9,
-        polygonLineBorderOpacity: 0.8
+        polygonLineBackgroundOpacity: 0.6,
+        polygonLineBorderOpacity: 0.7
     }
 });
 jui.define("chart.theme.pastel", [], function() {
@@ -8747,8 +8756,8 @@ jui.define("chart.theme.pastel", [], function() {
 		polygonColumnBorderOpacity: 0.5,
 		polygonScatterRadialOpacity: 0.7,
 		polygonScatterBackgroundOpacity: 0.8,
-		polygonLineBackgroundOpacity: 0.9,
-		polygonLineBorderOpacity: 0.8
+		polygonLineBackgroundOpacity: 0.6,
+		polygonLineBorderOpacity: 0.7
 	}
 }); 
 jui.define("chart.theme.pattern", [], function() {
@@ -8975,8 +8984,8 @@ jui.define("chart.theme.pattern", [], function() {
         polygonColumnBorderOpacity: 0.5,
         polygonScatterRadialOpacity: 0.7,
         polygonScatterBackgroundOpacity: 0.8,
-        polygonLineBackgroundOpacity: 0.9,
-        polygonLineBorderOpacity: 0.8
+        polygonLineBackgroundOpacity: 0.6,
+        polygonLineBorderOpacity: 0.7
     }
 });
 jui.define("chart.pattern.jennifer", [], function() {
