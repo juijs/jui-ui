@@ -34,12 +34,11 @@ jui.define("chart.brush.polygon.line",
 
 			for(var i = 0; i < points.length; i++) {
 				this.calculate3d(points[i]);
-				maxDepth = Math.max(maxDepth, points[i][2]);
-			}
 
-			for(var i = 0; i < points.length; i++) {
-				var value = points[i].vertices[0];
-				elem.point(value[0], value[1]);
+				var vector = points[i].vectors[0];
+				elem.point(vector.x, vector.y);
+
+				maxDepth = Math.max(maxDepth, vector.z);
 			}
 
 			return {

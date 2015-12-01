@@ -25,10 +25,10 @@
                     this.calculate3d(p);
 
                     g.append(this.svg.line({
-                        x1: p.vertices[0][0],
-                        y1: p.vertices[0][1],
-                        x2: p.vertices[1][0],
-                        y2: p.vertices[1][1],
+                        x1: p.vectors[0].x,
+                        y1: p.vectors[0].y,
+                        x2: p.vectors[1].x,
+                        y2: p.vectors[1].y,
                         stroke: this.color(i),
                         "stroke-width": 2
                     }));
@@ -53,8 +53,8 @@
         console.log("두 벡터의 각도: " + Math2.degree(Math.acos(value)));
 
         chart = Builder("#result", {
-            theme: "dark",
-            padding: 100,
+            theme: "jennifer",
+            padding: 150,
             width: 800,
             height: 800,
             axis: [{
@@ -78,7 +78,7 @@
                     reverse: true
                 },
                 data: data,
-                depth: 500
+                depth: 400
             }],
             brush: [{
                 type: "vector"
@@ -89,6 +89,7 @@
             style: {
                 gridXAxisBorderWidth: 1,
                 gridYAxisBorderWidth: 1,
+                gridZAxisBorderWidth: 1,
                 gridTickBorderSize: 0,
                 gridXFontSize: 9,
                 gridYFontSize: 9

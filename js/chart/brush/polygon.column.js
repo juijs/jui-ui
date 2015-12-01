@@ -34,8 +34,8 @@ jui.define("chart.brush.polygon.column",
 				});
 
 				for (var j = 0; j < key.length; j++) {
-					var value = p.vertices[key[j]];
-					face.point(value[0], value[1]);
+					var vector = p.vectors[key[j]];
+					face.point(vector.x, vector.y);
 				}
 
 				g.append(face);

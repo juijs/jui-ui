@@ -38,8 +38,8 @@ jui.define("chart.brush.polygon.scatter",
 				r: r * MathUtil.scaleValue(z, 0, this.axis.depth, 1, p.perspective),
 				fill: color,
 				"fill-opacity": this.chart.theme("polygonScatterBackgroundOpacity"),
-				cx: p.vertices[0][0],
-				cy: p.vertices[0][1]
+				cx: p.vectors[0].x,
+				cy: p.vectors[0].y
 			});
 
 			if(data[target] != 0) {

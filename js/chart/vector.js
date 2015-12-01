@@ -51,10 +51,6 @@ jui.define("chart.vector", [], function() {
         this.getMagnitude = function() {
             return Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
         }
-
-        this.toArray = function() {
-            return new Float32Array([ this.x, this.y, this.z, 1 ]);
-        }
     }
 
     return Vector;

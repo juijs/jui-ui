@@ -13,12 +13,12 @@ jui.define("chart.polygon.cube", [], function() {
         ];
 
         this.faces = [
-            new Float32Array([ 0, 1, 2, 3 ]),
-            new Float32Array([ 3, 2, 6, 7 ]),
-            new Float32Array([ 0, 3, 7, 4 ]),
-            new Float32Array([ 1, 2, 6, 5 ]),
-            new Float32Array([ 0, 1, 5, 4 ]),
-            new Float32Array([ 4, 5, 6, 7 ])
+            [ 0, 1, 2, 3 ],
+            [ 3, 2, 6, 7 ],
+            [ 0, 3, 7, 4 ],
+            [ 1, 2, 6, 5 ],
+            [ 0, 1, 5, 4 ],
+            [ 4, 5, 6, 7 ]
         ];
     }
 

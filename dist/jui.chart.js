@@ -5530,10 +5530,6 @@ jui.define("chart.vector", [], function() {
         this.getMagnitude = function() {
             return Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
         }
-
-        this.toArray = function() {
-            return new Float32Array([ this.x, this.y, this.z, 1 ]);
-        }
     }
 
     return Vector;
@@ -9450,25 +9446,13 @@ jui.define("chart.icon.jennifer", [], function() {
 		"ws" : "\ue969"
 	}
 });
-jui.define("chart.polygon.core", [ "util.transform", "util.math" ], function(Transform, math) {
+jui.define("chart.polygon.core", [ "chart.vector", "util.transform", "util.math" ], function(Vector, Transform, math) {
     var PolygonCore = function() {
         this.perspective = 0.9;
         this.vertices = [];
+        this.vectors = [];
         this.faces = [];
         this.edges = [];
-
-        this.normalize = function() {
-            for(var i = 0; i < this.vertices.length; i++) {
-                var x = this.vertices[i][0],
-                    y = this.vertices[i][1],
-                    z = this.vertices[i][2],
-                    u = Math.sqrt(x*x + y*y + z*z);
-
-                this.vertices[i][0] /= u;
-                this.vertices[i][1] /= u;
-                this.vertices[i][2] /= u;
-            }
-        }
 
         this.rotate = function(width, height, depth, degree) {
             var t = new Transform(this.vertices),
@@ -9493,6 +9477,15 @@ jui.define("chart.polygon.core", [ "util.transform", "util.math" ], function(Tra
                 M2 = math.matrix3d(M2, M3);
 
                 this.vertices[i] = math.matrix3d(M2, this.vertices[i]);
+
+                // 벡터 객체 생성 및 갱신
+                if(this.vectors[i] == null) {
+                    this.vectors[i] = new Vector(this.vertices[i][0], this.vertices[i][1], this.vertices[i][2]);
+                } else {
+                    this.vectors[i].x = this.vertices[i][0];
+                    this.vectors[i].y = this.vertices[i][1];
+                    this.vectors[i].z = this.vertices[i][2];
+                }
             }
         }
 
@@ -9593,12 +9586,12 @@ jui.define("chart.polygon.cube", [], function() {
         ];
 
         this.faces = [
-            new Float32Array([ 0, 1, 2, 3 ]),
-            new Float32Array([ 3, 2, 6, 7 ]),
-            new Float32Array([ 0, 3, 7, 4 ]),
-            new Float32Array([ 1, 2, 6, 5 ]),
-            new Float32Array([ 0, 1, 5, 4 ]),
-            new Float32Array([ 4, 5, 6, 7 ])
+            [ 0, 1, 2, 3 ],
+            [ 3, 2, 6, 7 ],
+            [ 0, 3, 7, 4 ],
+            [ 1, 2, 6, 5 ],
+            [ 0, 1, 5, 4 ],
+            [ 4, 5, 6, 7 ]
         ];
     }
 
@@ -19154,8 +19147,7 @@ jui.define("chart.brush.polygon.core", [], function() {
 
     PolygonCoreBrush.setup = function() {
         return {
-            id: null,
-            degree: null
+            id: null
         }
     }
 
@@ -19201,8 +19193,8 @@ jui.define("chart.brush.polygon.scatter",
 				r: r * MathUtil.scaleValue(z, 0, this.axis.depth, 1, p.perspective),
 				fill: color,
 				"fill-opacity": this.chart.theme("polygonScatterBackgroundOpacity"),
-				cx: p.vertices[0][0],
-				cy: p.vertices[0][1]
+				cx: p.vectors[0].x,
+				cy: p.vectors[0].y
 			});
 
 			if(data[target] != 0) {
@@ -19278,8 +19270,8 @@ jui.define("chart.brush.polygon.column",
 				});
 
 				for (var j = 0; j < key.length; j++) {
-					var value = p.vertices[key[j]];
-					face.point(value[0], value[1]);
+					var vector = p.vectors[key[j]];
+					face.point(vector.x, vector.y);
 				}
 
 				g.append(face);
@@ -19381,12 +19373,11 @@ jui.define("chart.brush.polygon.line",
 
 			for(var i = 0; i < points.length; i++) {
 				this.calculate3d(points[i]);
-				maxDepth = Math.max(maxDepth, points[i][2]);
-			}
 
-			for(var i = 0; i < points.length; i++) {
-				var value = points[i].vertices[0];
-				elem.point(value[0], value[1]);
+				var vector = points[i].vectors[0];
+				elem.point(vector.x, vector.y);
+
+				maxDepth = Math.max(maxDepth, vector.z);
 			}
 
 			return {
