@@ -41,7 +41,7 @@
         return VectorBrush;
     }, "chart.brush.core");
 
-    jui.ready([ "chart.builder", "chart.vector3d", "util.math" ], function(Builder, Vector3D, Math2) {
+    jui.ready([ "chart.builder", "chart.vector", "util.math" ], function(Builder, Vector3D, Math2) {
         var v1 = new Vector3D(10, 0, 0),
             v2 = new Vector3D(0, 0, -10),
             v3 = v1.crossProduct(v2);
