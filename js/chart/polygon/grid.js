@@ -22,6 +22,8 @@ jui.define("chart.polygon.grid", [], function() {
         };
 
         this.vertices = matrix[type];
+
+        this.vectors = [];
     }
 
     return GridPolygon;
