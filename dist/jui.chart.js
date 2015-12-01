@@ -5477,7 +5477,7 @@ jui.define("util.svg",
     return SVG;
 }, "util.svg.3d");
 
-jui.define("chart.vector3d", [ "util.base" ], function(_) {
+jui.define("chart.vector3d", [], function() {
     var Vector3D = function(x, y, z) {
         this.x = x || 0;
         this.y = y || 0;
@@ -5531,7 +5531,7 @@ jui.define("chart.vector3d", [ "util.base" ], function(_) {
             return Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
         }
 
-        this.getValue = function() {
+        this.getFloat32Array = function() {
             return new Float32Array([ this.x, this.y, this.z, 1 ]);
         }
     }
