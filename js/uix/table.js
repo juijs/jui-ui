@@ -819,7 +819,7 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
     var UI = function() {
         var $obj = null, ddUi = null; // table/thead/tbody 구성요소, 컬럼 설정 UI (Dropdown)
         var selectedIndex = null, expandedIndex = null, editableIndex = null, checkedIndexes = {};
-        var is_resize = false, is_edit = false;
+        var is_resize = false;
 
 
         function getExpandHtml(self) {
@@ -1000,30 +1000,7 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
                 return false;
             });
 
-            if(self.options.fields && self.options.editCell) {
-                if(self.options.editEvent === false) return;
-
-                $(row.element).find("td").each(function(i) {
-                    var cell = this;
-
-                    (function(colIndex) {
-                        self.addEvent(cell, "dblclick", function(e) {
-                            if(is_edit) return;
-                            is_edit = true;
-
-                            if(e.target.tagName == "TD") {
-                                setEventEditCell(self, e.currentTarget, row, colIndex);
-                            }
-
-                            self.emit("editstart", [ row, e ]);
-                        });
-                    })(i);
-                });
-            }
-
-            if(self.options.fields && self.options.editRow) {
-                if(self.options.editEvent === false) return;
-
+            if(self.options.editRow && self.options.editEvent) {
                 self.addEvent(row.element, "dblclick", function(e) {
                     if(e.target.tagName == "TD" || e.target.tagName == "TR") {
                         self.showEditRow(row.index, e);
@@ -1034,7 +1011,7 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
 
         function setEventEditCell(self, elem, row, colIndex, event, callback) {
             var column = self.getColumn(colIndex),
-                colkeys = (!callback) ? self.options.editCell : self.options.editRow,
+                colkeys = self.options.editRow,
                 $input = null;
 
             if(!column.name || (colkeys !== true && $.inArray(colIndex, getColumnIndexes(self, colkeys)) == -1)) {
@@ -1052,34 +1029,20 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
             // 엔터 키 이벤트 발생시 업데이트
             self.addEvent($input, "keypress", function(e) {
                 if(e.which == 13) {
-                    update(e);
+                    update();
                 }
             });
 
             // 포커스가 바뀌었을 경우 업데이트
             self.addEvent($obj.tbody, "mousedown", function(e) {
                 if(e.target.tagName == "TD" || e.target.tagName == "TR") {
-                    update(e);
+                    update();
                 }
             });
 
-            function update(e) {
-                if(!is_edit) return;
-
-                if(typeof(callback) == "function") { // editRow일 경우
+            function update() {
+                if(editableIndex != null) {
                     callback();
-                } else { // editCell일 경우
-                    var data = {};
-                    data[column.name] = $input.val();
-
-                    var res = self.emit("editend", [ data ]); // 로우가 아니기 때문에 data만 넘김
-
-                    // 이벤트 리턴 값이 false가 아닐 경우에만 업데이트
-                    if(res !== false) {
-                        self.update(row.index, data);
-                        $input.remove();
-                        is_edit = false;
-                    }
                 }
             }
         }
@@ -1291,7 +1254,7 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
             }
 
             if(!opts.fields) {
-                if(opts.sort || opts.colshow || opts.editCell || opts.editRow) {
+                if(opts.sort || opts.colshow || opts.editRow) {
                     throw new Error("JUI_CRITICAL_ERR: 'fields' option is required");
                 }
             }
@@ -1969,9 +1932,6 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
                 row = this.get(index);
             var $cells = $(row.element).find("td");
 
-            // 현재 테이블 수정 상태
-            is_edit = true;
-
             $cells.each(function(i) {
                 setEventEditCell(self, this, row, i, e, function() {
                     var data = {},
@@ -1998,8 +1958,7 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
 
                     // 이벤트 리턴 값이 false가 아닐 경우에만 업데이트
                     if(res !== false) {
-                        self.update(row.index, data);
-                        is_edit = false;
+                        self.hideEditRow(data);
                     } else {
                         row.data = originData;
                     }
@@ -2014,15 +1973,12 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
          * @method hideEditRow
          * Hides the modified row area of a specified index.
          */
-        this.hideEditRow = function() {
+        this.hideEditRow = function(data) {
             if(editableIndex == null) return;
             var row = this.get(editableIndex);
 
             editableIndex = null;
-
-            // 수정 상태 이전의 로우 데이터로 변경
-            this.emit("editend", [ row ]);
-            this.update(row.index, row.data);
+            this.update(row.index, !data ? row.data : data);
         }
 
         /**
@@ -2226,12 +2182,6 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
              * Sets the Show/Hide state of an extended row area when clicking on a row.
              */
             expandEvent: true,
-
-            /**
-             * @cfg {Boolean|Array} [editCell=false]
-             * Determines whether to use a modified cell area.
-             */
-            editCell: false,
 
             /**
              * @cfg {Boolean|Array} [editRow=false]

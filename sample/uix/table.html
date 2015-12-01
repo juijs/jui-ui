@@ -43,7 +43,7 @@ jui.ready(function(ui, uix, _) {
         sort: true,
         resize: true,
         data: table_data,
-        editRow: [ 2 ],
+        editRow: [ 2, 3, 4 ],
         editEvent: false,
         expand: true,
         expandEvent: false,
@@ -60,6 +60,10 @@ jui.ready(function(ui, uix, _) {
                 }
             },
             editend: function(row) {
+                console.log("editend ----- start");
+                console.log(row.data);
+                console.log("editend ----- end");
+
                 for(var key in row.data) {
                     if(key == "max" && isNaN(row.data[key])) {
                         alert("숫자만 입력할 수 있습니다.");
@@ -71,6 +75,10 @@ jui.ready(function(ui, uix, _) {
                 $(row.list[0]).html("<i class='icon-right'></i>");
             },
             expandend: function(row, e) {
+                console.log("expandend ----- start");
+                console.log(row.data);
+                console.log("expandend ----- end");
+
                 $(row.list[0]).html("<i class='icon-left'></i>");
             }
         }
