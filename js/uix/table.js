@@ -1068,11 +1068,11 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
 
                 if(typeof(callback) == "function") { // editRow일 경우
                     callback();
-                } else {
+                } else { // editCell일 경우
                     var data = {};
                     data[column.name] = $input.val();
 
-                    var res = self.emit("editend", [ data ]);
+                    var res = self.emit("editend", [ data ]); // 로우가 아니기 때문에 data만 넘김
 
                     // 이벤트 리턴 값이 false가 아닐 경우에만 업데이트
                     if(res !== false) {
@@ -2021,7 +2021,7 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
             editableIndex = null;
 
             // 수정 상태 이전의 로우 데이터로 변경
-            this.emit("editend", [ row.data ]);
+            this.emit("editend", [ row ]);
             this.update(row.index, row.data);
         }
 
