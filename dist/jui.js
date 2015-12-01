@@ -11166,15 +11166,17 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
 
         function setEventEditCell(self, elem, row, colIndex, event, callback) {
             var column = self.getColumn(colIndex),
-                data = (column.name) ? column.data[row.index] : $(elem).html(),
-                colkeys = (!callback) ? self.options.editCell : self.options.editRow;
-
-            var $input = $("<input type='text' class='edit' />").val(data).css("width", "100%");
-            $(elem).html($input);
+                colkeys = (!callback) ? self.options.editCell : self.options.editRow,
+                $input = null;
 
             if(!column.name || (colkeys !== true && $.inArray(colIndex, getColumnIndexes(self, colkeys)) == -1)) {
+                $input = $("<div class='edit'></div>").html($(elem).html());
                 $input.attr("disabled", true);
+            } else {
+                $input = $("<input type='text' class='edit' />").val((column.name) ? column.data[row.index] : "");
             }
+
+            $(elem).html($input.css("width", "100%"));
 
             // 클릭 엘리먼트에 포커스 맞추기
             if(event && event.target == elem) $input.focus();
@@ -12101,8 +12103,12 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
                         var column = self.getColumn(colIndex);
 
                         if(column.name != null) {
-                            var value = $(this).find(".edit").val();
-                            data[column.name] = (!isNaN(value) && value != null && value != "") ? parseFloat(value) : value;
+                            var $edit = $(this).find("input.edit");
+
+                            if($edit.size() == 1) {
+                                var value = $edit.val();
+                                data[column.name] = (!isNaN(value) && value != null && value != "") ? parseFloat(value) : value;
+                            }
                         }
                     });
 

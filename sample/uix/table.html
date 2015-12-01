@@ -38,12 +38,12 @@ jui.ready(function(ui, uix, _) {
     ];
 
     table = uix.table("#table", {
-        fields: [ "min,m", "max", "count", "hash", "failure", "sumTime", "avgTime", "name" ],
-        csvNumber: [ 0, 1, 2, 3, 4, 5, "avgTime" ],
+        fields: [ null, "min,m", "max", "count", "hash", "failure", "sumTime", "avgTime", "name" ],
+        csvNumber: [ 1, 2, 3, 4, 5, "avgTime" ],
         sort: true,
         resize: true,
         data: table_data,
-        editRow: [ 1 ],
+        editRow: true,
         editEvent: false,
         expand: true,
         expandEvent: false,
@@ -87,6 +87,7 @@ jui.ready(function(ui, uix, _) {
 <table id="table" class="table classic">
     <thead>
     <tr>
+        <th></th>
         <th>Min</th>
         <th>Max</th>
         <th>Count</th>
@@ -102,6 +103,7 @@ jui.ready(function(ui, uix, _) {
 
 <script data-jui="#table" data-tpl="row" type="text/template">
     <tr>
+        <td><i class="icon-gear"></i></td>
         <td><?= row.data["min,m"] ?></td>
         <td><?= max ?> <i class="icon-edit"></i></td>
         <td><?= count ?></td>
