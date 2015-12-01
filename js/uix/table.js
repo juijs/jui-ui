@@ -1038,7 +1038,7 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
                 $input = null;
 
             if(!column.name || (colkeys !== true && $.inArray(colIndex, getColumnIndexes(self, colkeys)) == -1)) {
-                $input = $("<div class='edit'></div>").html($(elem).html());
+                $input = $("<div class='edit'></div>").html($(elem).html() || "&nbsp;");
                 $input.attr("disabled", true);
             } else {
                 $input = $("<input type='text' class='edit' />").val((column.name) ? column.data[row.index] : "");

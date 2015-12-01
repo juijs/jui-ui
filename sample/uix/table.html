@@ -29,7 +29,7 @@ jui.setup({
 
 jui.ready(function(ui, uix, _) {
     var table_data = [
-        {"min,m":21.55,"max":21.55,"count":1,"sumCpu":0,"hash":1495461794,"sd":0,"tpmc":0,"avgCpu":0,"failure":1,"rate":77.66,"sumTime":21.55,"name":"/db2sql.jsp","avgTime":21.55,"success":0},
+        {"min,m":21.55,"max":21.55,"count":1,"sumCpu":0,"hash":1495461794,"sd":0,"tpmc":0,"avgCpu":0,"failure":1,"rate":77.66,"sumTime":21.55,"name":"","avgTime":21.55,"success":0},
         {"min,m":0.004,"max":1.683,"count":32,"sumCpu":0,"hash":-1976684343,"sd":0.379,"tpmc":0,"avgCpu":0,"failure":27,"rate":16.321,"sumTime":4.529,"name":"/dup.jsp","avgTime":0.142,"success":5},
         {"min,m":0.062,"max":0.273,"count":8,"sumCpu":0,"hash":1886515434,"sd":0.068,"tpmc":0,"avgCpu":0,"failure":0,"rate":4.544,"sumTime":1.261,"name":"/oraclesql2.jsp","avgTime":0.158,"success":8},
         {"min,m":0.03,"max":0.12,"count":6,"sumCpu":0,"hash":1888362476,"sd":0.033,"tpmc":0,"avgCpu":0,"failure":0,"rate":1.236,"sumTime":0.343,"name":"/oraclesql4.jsp","avgTime":0.057,"success":6},
@@ -43,7 +43,7 @@ jui.ready(function(ui, uix, _) {
         sort: true,
         resize: true,
         data: table_data,
-        editRow: true,
+        editRow: [ 2 ],
         editEvent: false,
         expand: true,
         expandEvent: false,
