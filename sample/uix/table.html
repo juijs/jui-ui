@@ -50,7 +50,6 @@ jui.ready(function(ui, uix, _) {
         event: {
             click: function(row, e) {
                 if($(e.target).hasClass("icon-edit")) {
-                    this.hideExpand();
                     this.showEditRow(row.index);
                 } else if($(e.target)[0].tagName != "INPUT") {
                     if(this.getExpand() == row) {
@@ -68,8 +67,11 @@ jui.ready(function(ui, uix, _) {
                     }
                 }
             },
-            expandend: function(row) {
-                console.log("expandend");
+            expand: function(row, e) {
+                $(row.list[0]).html("<i class='icon-right'></i>");
+            },
+            expandend: function(row, e) {
+                $(row.list[0]).html("<i class='icon-left'></i>");
             }
         }
     });
@@ -103,7 +105,7 @@ jui.ready(function(ui, uix, _) {
 
 <script data-jui="#table" data-tpl="row" type="text/template">
     <tr>
-        <td><i class="icon-gear"></i></td>
+        <td><i class="icon-left"></i></td>
         <td><?= row.data["min,m"] ?></td>
         <td><?= max ?> <i class="icon-edit"></i></td>
         <td><?= count ?></td>
