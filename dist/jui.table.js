@@ -7053,10 +7053,10 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
                 if(self.options.expand) {
                     if(self.options.expandEvent === false) return;
 
-                    if(rowIndex === row.index) {
+                    if(expandedIndex === row.index) {
                         self.hideExpand(e);
                     } else {
-                        if(rowIndex != null) {
+                        if(expandedIndex != null) {
                             self.hideExpand(e);
                         }
 
@@ -8179,7 +8179,7 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
          * @return {Integer} index
          */
         this.activeIndex = function() { // 활성화된 확장/수정/선택 상태의 로우 인덱스를 리턴
-            return rowIndex;
+            return selectedIndex || expandedIndex || editableIndex;
         }
     }
 
