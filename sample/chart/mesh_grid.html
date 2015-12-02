@@ -38,11 +38,9 @@
              */
             var PolygonMeshGridBrush = function() {
 
-                var maxY, minY, dist;
+                var maxY, minY, dist, colors = [], darken = [], fillOpacity, strokeOpacity;
 
                 this.createGrid = function(meshGrid, row, col) {
-                    var g = this.chart.svg.group();
-
                     var pos1 = row * meshGrid.clen + col;
                     var pos2 = row * meshGrid.clen + (col+1);
                     var pos3 = (row+1) * meshGrid.clen + (col+1);
@@ -65,26 +63,23 @@
                     if (maxZ < points[2][2]) maxZ = points[2][2];
                     if (maxZ < points[3][2]) maxZ = points[3][2];
 
-                    var colorIndex = (Math.abs(max - minY)/dist) * 5%5 + 1;
-
+                    var colorIndex = (Math.abs(max - minY)/dist) * 5 + 1;
                     colorIndex = Math.floor(colorIndex);
 
-                    var color = this.color(colorIndex);
                     var face = this.chart.svg.polygon({
-                        fill: color,
-                        "fill-opacity": this.chart.theme("polygonColumnBackgroundOpacity"),
-                        stroke: ColorUtil.darken(color, this.chart.theme("polygonColumnBorderOpacity")),
-                        "stroke-opacity": this.chart.theme("polygonColumnBorderOpacity")
+                        fill: colors[colorIndex],
+                        "fill-opacity": fillOpacity,
+                        stroke: darken[colorIndex],
+                        "stroke-opacity": strokeOpacity
                     });
 
-                    for(var i = 0, len = points.length; i < len; i++) {
-                        face.point(points[i][0], points[i][1]);
-                    }
-
-                    g.append(face);
+                    face.point(points[0][0], points[0][1]);
+                    face.point(points[1][0], points[1][1]);
+                    face.point(points[2][0], points[2][1]);
+                    face.point(points[3][0], points[3][1]);
 
                     return {
-                        element: g,
+                        element: face,
                         depth: maxZ / 2
                     };
                 }
@@ -94,6 +89,16 @@
                     minY = this.axis.y.min();
 
                     dist = Math.abs(maxY - minY) ;
+
+                    var borderColor = this.chart.theme("polygonColumnBorderOpacity");
+
+                    for(var i  = 0; i < 10; i++) {
+                        colors[i] = this.color(i);
+                        darken[i] = ColorUtil.darken(colors[i], borderColor);
+                    }
+
+                    fillOpacity = this.chart.theme("polygonColumnBackgroundOpacity");
+                    strokeOpacity = this.chart.theme("polygonColumnBorderOpacity");
                 }
 
                 this.draw = function() {
@@ -152,8 +157,8 @@
          surf(x,y,z);
          */
 
-        var x = r.ticks(32);
-        var z = r.ticks(32);
+        var x = r.ticks(64);
+        var z = r.ticks(64);
 
 
         function sinc(n) {
