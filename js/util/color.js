@@ -1,4 +1,4 @@
-jui.define("util.color", ["jquery"], function($) {
+jui.define("util.color", ["jquery", "util.math"], function($, math) {
 
 	/**
 	 *  @class util.color
@@ -12,13 +12,13 @@ jui.define("util.color", ["jquery"], function($) {
 		format : function(obj, type) {
 			if (type == 'hex') {
 				var r = obj.r.toString(16);
-				if (r < 10) r = "0" + r;
+				if (obj.r < 16) r = "0" + r;
 
 				var g = obj.g.toString(16);
-				if (g < 10) g = "0" + g;
+				if (obj.g < 16) g = "0" + g;
 
 				var b = obj.b.toString(16);
-				if (b < 10) b = "0" + b;
+				if (obj.b < 16) b = "0" + b;
 
 				return "#" + [r,g,b].join("").toUpperCase();
 			} else if (type == 'rgb') {
@@ -53,49 +53,88 @@ jui.define("util.color", ["jquery"], function($) {
 				return func;
 			}
 
+			func.ticks = function (n) {
+				var unit = (1/n);
+
+				var start = 0;
+				var colors = [];
+				while(start <= 1) {
+					var c = func(start, 'hex');
+					colors.push(c);
+					start = math.plus(start, unit);
+				}
+
+				return colors;
+
+			}
+
 			return func;
 		},
 
-		rgb : function (str) {
-			if (str.indexOf("rgb(") > -1) {
-				var arr = str.replace("rgb(", "").replace(")","").split(",");
+		map : function (color_list, count) {
 
-				for(var i = 0, len = arr.length; i < len; i++) {
-					arr[i] = parseInt($.trim(arr[i]), 10);
+			var colors = [];
+			count = count || 5;
+			var scale = self.scale();
+			for(var i = 0, len = color_list.length-1; i < len; i++) {
+				if (i == 0) {
+					colors = scale.domain(color_list[i], color_list[i + 1]).ticks(count);
+				} else {
+					var colors2 = scale.domain(color_list[i], color_list[i + 1]).ticks(count);
+					colors2.shift();
+					colors = colors.concat(colors2);
 				}
+			}
 
-				return { r : arr[0], g : arr[1], b : arr[2], a : 1	};
-			} else if (str.indexOf("rgba(") > -1) {
-				var arr = str.replace("rgba(", "").replace(")","").split(",");
+			return colors;
+		},
 
-				for(var i = 0, len = arr.length; i < len; i++) {
+		rgb : function (str) {
 
-					if (len - 1 == i) {
-						arr[i] = parseFloat($.trim(arr[i]));
-					} else {
+			if (typeof str == 'string') {
+				if (str.indexOf("rgb(") > -1) {
+					var arr = str.replace("rgb(", "").replace(")","").split(",");
+
+					for(var i = 0, len = arr.length; i < len; i++) {
 						arr[i] = parseInt($.trim(arr[i]), 10);
 					}
-				}
 
-				return { r : arr[0], g : arr[1], b : arr[2], a : arr[3]};
-			} else if (str.indexOf("#") == 0) {
+					return { r : arr[0], g : arr[1], b : arr[2], a : 1	};
+				} else if (str.indexOf("rgba(") > -1) {
+					var arr = str.replace("rgba(", "").replace(")","").split(",");
 
-				str = str.replace("#", "");
+					for(var i = 0, len = arr.length; i < len; i++) {
 
-				var arr = [];
-				if (str.length == 3) {
-					for(var i = 0, len = str.length; i < len; i++) {
-						var char = str.substr(i, 1);
-						arr.push(parseInt(char+char, 16));
+						if (len - 1 == i) {
+							arr[i] = parseFloat($.trim(arr[i]));
+						} else {
+							arr[i] = parseInt($.trim(arr[i]), 10);
+						}
 					}
-				} else {
-					for(var i = 0, len = str.length; i < len; i+=2) {
-						arr.push(parseInt(str.substr(i, 2), 16));
-					}
-				}
 
-				return { r : arr[0], g : arr[1], b : arr[2], a : 1	};
+					return { r : arr[0], g : arr[1], b : arr[2], a : arr[3]};
+				} else if (str.indexOf("#") == 0) {
+
+					str = str.replace("#", "");
+
+					var arr = [];
+					if (str.length == 3) {
+						for(var i = 0, len = str.length; i < len; i++) {
+							var char = str.substr(i, 1);
+							arr.push(parseInt(char+char, 16));
+						}
+					} else {
+						for(var i = 0, len = str.length; i < len; i+=2) {
+							arr.push(parseInt(str.substr(i, 2), 16));
+						}
+					}
+
+					return { r : arr[0], g : arr[1], b : arr[2], a : 1	};
+				}
 			}
+
+			return str;
+
 		},
 
 		HSVtoRGB : function (H, S, V) {
@@ -335,6 +374,10 @@ jui.define("util.color", ["jquery"], function($) {
 
 		}
 
+	};
+
+	self.map.hsv = function (count) {
+		return self.map(['#ff0000', '#ffff00', '#00ff00', '#00ffff', '#0000ff', '#ff00ff', '#ff0000'], count);
 	}
 
 	return self;
