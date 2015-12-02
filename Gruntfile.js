@@ -55,6 +55,7 @@ module.exports = function(grunt) {
 
     var chart_src = [
         // chart (core)
+        "js/chart/vector.js",
         "js/chart/draw.js",
         "js/chart/axis.js",
         "js/chart/map.js",

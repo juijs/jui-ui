@@ -15158,6 +15158,63 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 
 	return UI;
 });
+jui.define("chart.vector", [], function() {
+    var Vector = function(x, y, z) {
+        this.x = x || 0;
+        this.y = y || 0;
+        this.z = z || 0;
+
+        this.add = function(numberOrVector) {
+            if(numberOrVector instanceof Vector) {
+                return new Vector(this.x + numberOrVector.x, this.y + numberOrVector.y, this.z + numberOrVector.z);
+            }
+
+            return new Vector(this.x + numberOrVector, this.y + numberOrVector, this.z + numberOrVector);
+        }
+
+        this.subtract = function(numberOrVector) {
+            if(numberOrVector instanceof Vector) {
+                return new Vector(this.x - numberOrVector.x, this.y - numberOrVector.y, this.z - numberOrVector.z);
+            }
+
+            return new Vector(this.x - numberOrVector, this.y - numberOrVector, this.z - numberOrVector);
+        }
+
+        this.multiply = function(numberOrVector) {
+            if(numberOrVector instanceof Vector) {
+                return new Vector(this.x * numberOrVector.x, this.y * numberOrVector.y, this.z * numberOrVector.z);
+            }
+
+            return new Vector(this.x * numberOrVector, this.y * numberOrVector, this.z * numberOrVector);
+        }
+
+        this.dotProduct = function(vector) {
+            return this.x * vector.x + this.y * vector.y + this.z * vector.z;
+        }
+
+        this.crossProduct = function(vector) {
+            return new Vector(
+                this.y * vector.z - this.z * vector.y,
+                this.z * vector.x - this.x * vector.z,
+                this.x * vector.y - this.y * vector.x
+            );
+        }
+
+        this.normalize = function() {
+            var mag = this.getMagnitude();
+
+            this.x /= mag;
+            this.y /= mag;
+            this.z /= mag;
+        }
+
+        this.getMagnitude = function() {
+            return Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
+        }
+    }
+
+    return Vector;
+});
 jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
     /**
      * @class chart.draw
@@ -19070,25 +19127,11 @@ jui.define("chart.icon.jennifer", [], function() {
 		"ws" : "\ue969"
 	}
 });
-jui.define("chart.polygon.core", [ "util.transform", "util.math" ], function(Transform, math) {
+jui.define("chart.polygon.core", [ "chart.vector", "util.transform", "util.math", "util.base" ],
+    function(Vector, Transform, math, _) {
+
     var PolygonCore = function() {
         this.perspective = 0.9;
-        this.vertices = [];
-        this.faces = [];
-        this.edges = [];
-
-        this.normalize = function() {
-            for(var i = 0; i < this.vertices.length; i++) {
-                var x = this.vertices[i][0],
-                    y = this.vertices[i][1],
-                    z = this.vertices[i][2],
-                    u = Math.sqrt(x*x + y*y + z*z);
-
-                this.vertices[i][0] /= u;
-                this.vertices[i][1] /= u;
-                this.vertices[i][2] /= u;
-            }
-        }
 
         this.rotate = function(width, height, depth, degree) {
             var t = new Transform(this.vertices),
@@ -19113,6 +19156,17 @@ jui.define("chart.polygon.core", [ "util.transform", "util.math" ], function(Tra
                 M2 = math.matrix3d(M2, M3);
 
                 this.vertices[i] = math.matrix3d(M2, this.vertices[i]);
+
+                // 벡터 객체 생성 및 갱신
+                if(_.typeCheck("array", this.vectors)) {
+                    if (this.vectors[i] == null) {
+                        this.vectors[i] = new Vector(this.vertices[i][0], this.vertices[i][1], this.vertices[i][2]);
+                    } else {
+                        this.vectors[i].x = this.vertices[i][0];
+                        this.vectors[i].y = this.vertices[i][1];
+                        this.vectors[i].z = this.vertices[i][2];
+                    }
+                }
             }
         }
 
@@ -19175,6 +19229,8 @@ jui.define("chart.polygon.grid", [], function() {
         };
 
         this.vertices = matrix[type];
+
+        this.vectors = [];
     }
 
     return GridPolygon;
@@ -19184,7 +19240,9 @@ jui.define("chart.polygon.line", [], function() {
         this.vertices = [
             new Float32Array([ x1, y1, d1, 1 ]),
             new Float32Array([ x2, y2, d2, 1 ])
-        ]
+        ];
+
+        this.vectors = [];
     }
 
     return LinePolygon;
@@ -19193,7 +19251,9 @@ jui.define("chart.polygon.point", [], function() {
     var PointPolygon = function(x, y, d) {
         this.vertices = [
             new Float32Array([ x, y, d, 1 ])
-        ]
+        ];
+
+        this.vectors = [];
     }
 
     return PointPolygon;
@@ -19213,13 +19273,15 @@ jui.define("chart.polygon.cube", [], function() {
         ];
 
         this.faces = [
-            new Float32Array([ 0, 1, 2, 3 ]),
-            new Float32Array([ 3, 2, 6, 7 ]),
-            new Float32Array([ 0, 3, 7, 4 ]),
-            new Float32Array([ 1, 2, 6, 5 ]),
-            new Float32Array([ 0, 1, 5, 4 ]),
-            new Float32Array([ 4, 5, 6, 7 ])
+            [ 0, 1, 2, 3 ],
+            [ 3, 2, 6, 7 ],
+            [ 0, 3, 7, 4 ],
+            [ 1, 2, 6, 5 ],
+            [ 0, 1, 5, 4 ],
+            [ 4, 5, 6, 7 ]
         ];
+
+        this.vectors = [];
     }
 
     return CubePolygon;
@@ -19575,8 +19637,8 @@ jui.define("chart.grid.draw3d", [ "util.base", "chart.polygon.grid", "chart.poly
 
             // 사각면 위치 계산 및 추가
             this.calculate3d(p);
-            for(var i = 0; i < p.vertices.length; i++) {
-                face.point(p.vertices[i][0], p.vertices[i][1]);
+            for(var i = 0; i < p.vectors.length; i++) {
+                face.point(p.vectors[i].x, p.vectors[i].y);
             }
 
             axis.append(face);
@@ -19615,19 +19677,19 @@ jui.define("chart.grid.draw3d", [ "util.base", "chart.polygon.grid", "chart.poly
                 var lo1 = this.line({
                     stroke: this.chart.theme("gridBorderColor"),
                     "stroke-width": this.chart.theme("gridBorderWidth"),
-                    x1: l1.vertices[0][0],
-                    y1: l1.vertices[0][1],
-                    x2: l1.vertices[1][0],
-                    y2: l1.vertices[1][1]
+                    x1: l1.vectors[0].x,
+                    y1: l1.vectors[0].y,
+                    x2: l1.vectors[1].x,
+                    y2: l1.vectors[1].y
                 });
 
                 var lo2 = this.line({
                     stroke: this.chart.theme("gridBorderColor"),
                     "stroke-width": this.chart.theme("gridBorderWidth"),
-                    x1: l2.vertices[0][0],
-                    y1: l2.vertices[0][1],
-                    x2: l2.vertices[1][0],
-                    y2: l2.vertices[1][1]
+                    x1: l2.vectors[0].x,
+                    y1: l2.vectors[0].y,
+                    x2: l2.vectors[1].x,
+                    y2: l2.vectors[1].y
                 });
 
                 if (line.type.indexOf("dashed") > -1) {
@@ -19659,19 +19721,19 @@ jui.define("chart.grid.draw3d", [ "util.base", "chart.polygon.grid", "chart.poly
                 axis.append(this.line({
                     stroke: this.chart.theme("gridBorderColor"),
                     "stroke-width": this.chart.theme("gridBorderWidth"),
-                    x1: p1.vertices[0][0],
-                    y1: p1.vertices[0][1],
-                    x2: p1.vertices[1][0],
-                    y2: p1.vertices[1][1]
+                    x1: p1.vectors[0].x,
+                    y1: p1.vectors[0].y,
+                    x2: p1.vectors[1].x,
+                    y2: p1.vectors[1].y
                 }));
 
                 axis.append(this.line({
                     stroke: this.chart.theme("gridBorderColor"),
                     "stroke-width": this.chart.theme("gridBorderWidth"),
-                    x1: p2.vertices[0][0],
-                    y1: p2.vertices[0][1],
-                    x2: p2.vertices[1][0],
-                    y2: p2.vertices[1][1]
+                    x1: p2.vectors[0].x,
+                    y1: p2.vectors[0].y,
+                    x2: p2.vectors[1].x,
+                    y2: p2.vectors[1].y
                 }));
             }
         }
@@ -19706,8 +19768,8 @@ jui.define("chart.grid.draw3d", [ "util.base", "chart.polygon.grid", "chart.poly
             this.calculate3d(p);
 
             axis.append(this.getTextRotate(this.chart.text({
-                x: p.vertices[0][0],
-                y: p.vertices[0][1],
+                x: p.vectors[0].x,
+                y: p.vectors[0].y,
                 dx: !isVertical ? this.chart.theme("gridXFontSize") / 3 : 0,
                 dy: isVertical ? this.chart.theme("gridYFontSize") / 3 : 0,
                 fill: this.chart.theme(isVertical ? "gridYFontColor" : "gridXFontColor"),
@@ -19737,8 +19799,8 @@ jui.define("chart.grid.draw3d", [ "util.base", "chart.polygon.grid", "chart.poly
                 this.calculate3d(p);
 
                 axis.append(this.getTextRotate(this.chart.text({
-                    x: p.vertices[0][0],
-                    y: p.vertices[0][1],
+                    x: p.vectors[0].x,
+                    y: p.vectors[0].y,
                     fill: this.chart.theme("gridZFontColor"),
                     "text-anchor": (isLeft) ? "start" : "end",
                     "font-size": this.chart.theme("gridZFontSize"),
@@ -28774,8 +28836,7 @@ jui.define("chart.brush.polygon.core", [], function() {
 
     PolygonCoreBrush.setup = function() {
         return {
-            id: null,
-            degree: null
+            id: null
         }
     }
 
@@ -28821,8 +28882,8 @@ jui.define("chart.brush.polygon.scatter",
 				r: r * MathUtil.scaleValue(z, 0, this.axis.depth, 1, p.perspective),
 				fill: color,
 				"fill-opacity": this.chart.theme("polygonScatterBackgroundOpacity"),
-				cx: p.vertices[0][0],
-				cy: p.vertices[0][1]
+				cx: p.vectors[0].x,
+				cy: p.vectors[0].y
 			});
 
 			if(data[target] != 0) {
@@ -28898,8 +28959,8 @@ jui.define("chart.brush.polygon.column",
 				});
 
 				for (var j = 0; j < key.length; j++) {
-					var value = p.vertices[key[j]];
-					face.point(value[0], value[1]);
+					var vector = p.vectors[key[j]];
+					face.point(vector.x, vector.y);
 				}
 
 				g.append(face);
@@ -29001,12 +29062,11 @@ jui.define("chart.brush.polygon.line",
 
 			for(var i = 0; i < points.length; i++) {
 				this.calculate3d(points[i]);
-				maxDepth = Math.max(maxDepth, points[i][2]);
-			}
 
-			for(var i = 0; i < points.length; i++) {
-				var value = points[i].vertices[0];
-				elem.point(value[0], value[1]);
+				var vector = points[i].vectors[0];
+				elem.point(vector.x, vector.y);
+
+				maxDepth = Math.max(maxDepth, vector.z);
 			}
 
 			return {

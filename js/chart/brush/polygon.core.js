@@ -61,8 +61,7 @@ jui.define("chart.brush.polygon.core", [], function() {
 
     PolygonCoreBrush.setup = function() {
         return {
-            id: null,
-            degree: null
+            id: null
         }
     }
 

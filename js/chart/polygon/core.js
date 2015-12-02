@@ -1,22 +1,8 @@
-jui.define("chart.polygon.core", [ "util.transform", "util.math" ], function(Transform, math) {
+jui.define("chart.polygon.core", [ "chart.vector", "util.transform", "util.math", "util.base" ],
+    function(Vector, Transform, math, _) {
+
     var PolygonCore = function() {
         this.perspective = 0.9;
-        this.vertices = [];
-        this.faces = [];
-        this.edges = [];
-
-        this.normalize = function() {
-            for(var i = 0; i < this.vertices.length; i++) {
-                var x = this.vertices[i][0],
-                    y = this.vertices[i][1],
-                    z = this.vertices[i][2],
-                    u = Math.sqrt(x*x + y*y + z*z);
-
-                this.vertices[i][0] /= u;
-                this.vertices[i][1] /= u;
-                this.vertices[i][2] /= u;
-            }
-        }
 
         this.rotate = function(width, height, depth, degree) {
             var t = new Transform(this.vertices),
@@ -41,6 +27,17 @@ jui.define("chart.polygon.core", [ "util.transform", "util.math" ], function(Tra
                 M2 = math.matrix3d(M2, M3);
 
                 this.vertices[i] = math.matrix3d(M2, this.vertices[i]);
+
+                // 벡터 객체 생성 및 갱신
+                if(_.typeCheck("array", this.vectors)) {
+                    if (this.vectors[i] == null) {
+                        this.vectors[i] = new Vector(this.vertices[i][0], this.vertices[i][1], this.vertices[i][2]);
+                    } else {
+                        this.vectors[i].x = this.vertices[i][0];
+                        this.vectors[i].y = this.vertices[i][1];
+                        this.vectors[i].z = this.vertices[i][2];
+                    }
+                }
             }
         }
 
