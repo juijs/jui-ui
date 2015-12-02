@@ -29,8 +29,8 @@
         return PointMeshGrid;
     }, "chart.polygon.core");
 
-    jui.define("chart.brush.mesh.grid", [ "util.base", "util.math", "util.color", "chart.polygon.face", "chart.polygon.meshgrid" ],
-        function(_, MathUtil, ColorUtil, FacePolygon, MeshGrid) {
+    jui.define("chart.brush.mesh.grid", [ "util.base", "util.math", "util.color", "chart.polygon.meshgrid" ],
+        function(_, MathUtil, ColorUtil, MeshGrid) {
 
             /**
              * @class chart.brush.polygon.column
@@ -38,28 +38,34 @@
              */
             var PolygonMeshGridBrush = function() {
 
+                var maxY, minY, dist;
+
                 this.createGrid = function(meshGrid, row, col) {
                     var g = this.chart.svg.group();
+
+                    var pos1 = row * meshGrid.clen + col;
+                    var pos2 = row * meshGrid.clen + (col+1);
+                    var pos3 = (row+1) * meshGrid.clen + (col+1);
+                    var pos4 = (row+1) * meshGrid.clen + col;
+
                     var points = [
-                        meshGrid.vertices[row * meshGrid.clen + col],
-                        meshGrid.vertices[row * meshGrid.clen + (col+1)],
-                        meshGrid.vertices[(row+1) * meshGrid.clen + (col+1)],
-                        meshGrid.vertices[(row+1) * meshGrid.clen + col]
+                        meshGrid.vertices[pos1],
+                        meshGrid.vertices[pos2],
+                        meshGrid.vertices[pos3],
+                        meshGrid.vertices[pos4]
                     ];
 
-                    var max = points[0][1];
-                    if (max < points[1][1]) max = points[1][1];
-                    if (max < points[2][1]) max = points[2][1];
-                    if (max < points[3][1]) max = points[3][1];
+                    var max = this.axis.data[row][col].y;
+                    if (max < this.axis.data[row][col+1].y) max = this.axis.data[row][col+1].y;
+                    if (max < this.axis.data[row+1][col+1].y) max = this.axis.data[row+1][col+1].y;
+                    if (max < this.axis.data[row+1][col].y) max = this.axis.data[row+1][col].y;
 
                     var maxZ = points[0][2];
                     if (maxZ < points[1][2]) maxZ = points[1][2];
                     if (maxZ < points[2][2]) maxZ = points[2][2];
                     if (maxZ < points[3][2]) maxZ = points[3][2];
 
-                    max = this.axis.y.invert(max);
-
-                    var colorIndex = ((max - this.axis.y.min())/(this.axis.y.max() - this.axis.y.min())) * 5*5 + 1;
+                    var colorIndex = (Math.abs(max - minY)/dist) * 5%5 + 1;
 
                     colorIndex = Math.floor(colorIndex);
 
@@ -84,9 +90,10 @@
                 }
 
                 this.drawBefore = function() {
-                    var padding = this.brush.padding,
-                            width = this.axis.x.rangeBand(),
-                            height = this.axis.z.rangeBand();
+                    maxY = this.axis.y.max();
+                    minY = this.axis.y.min();
+
+                    dist = Math.abs(maxY - minY) ;
                 }
 
                 this.draw = function() {
