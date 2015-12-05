@@ -9385,7 +9385,7 @@ jui.define("chart.pattern.jennifer", [], function() {
 });
 jui.define("chart.icon.jennifer", [], function() {
 	return {
-		"pin" : "\ue945",
+		"lock" : "\ue971",
 		"add-dir" : "\ue900",
 		"add-dir2" : "\ue901",
 		"align-center" : "\ue902",
@@ -9393,104 +9393,112 @@ jui.define("chart.icon.jennifer", [], function() {
 		"align-right" : "\ue904",
 		"analysis" : "\ue905",
 		"analysis2" : "\ue906",
-		"arrow1" : "\ue907",
-		"arrow2" : "\ue908",
-		"arrow3" : "\ue909",
-		"bell" : "\ue90a",
-		"blogger" : "\ue90b",
-		"bold" : "\ue90c",
-		"calendar" : "\ue90d",
-		"caution" : "\ue90e",
-		"caution2" : "\ue90f",
-		"chart-area" : "\ue910",
-		"chart-bar" : "\ue911",
-		"chart-candle" : "\ue912",
-		"chart-column" : "\ue913",
-		"chart-gauge" : "\ue914",
-		"chart-line" : "\ue915",
-		"chart-radar" : "\ue916",
-		"chart-scatter" : "\ue917",
-		"chart" : "\ue918",
-		"check" : "\ue919",
-		"checkmark" : "\ue91a",
-		"chevron-left" : "\ue91b",
-		"chevron-right" : "\ue91c",
-		"close" : "\ue91d",
-		"connection" : "\ue91e",
-		"dashboard" : "\ue91f",
-		"dashboardlist" : "\ue920",
-		"db" : "\ue921",
-		"device" : "\ue922",
-		"document" : "\ue923",
-		"download" : "\ue924",
-		"edit" : "\ue925",
-		"etc" : "\ue926",
-		"exit" : "\ue927",
-		"facebook" : "\ue928",
-		"gear" : "\ue929",
-		"github" : "\ue92a",
-		"googleplus" : "\ue92b",
-		"help" : "\ue92c",
-		"hide" : "\ue92d",
-		"home" : "\ue92e",
-		"html" : "\ue92f",
-		"image" : "\ue930",
-		"indent" : "\ue931",
-		"info-message" : "\ue932",
-		"info" : "\ue933",
-		"italic" : "\ue934",
-		"jennifer-server" : "\ue935",
-		"label" : "\ue936",
-		"left" : "\ue937",
-		"like" : "\ue938",
-		"line-height" : "\ue939",
-		"link" : "\ue93a",
-		"loading" : "\ue93b",
-		"menu" : "\ue93c",
-		"message" : "\ue93d",
-		"minus" : "\ue93e",
-		"monitoring" : "\ue93f",
-		"more" : "\ue940",
-		"new-window" : "\ue941",
-		"orderedlist" : "\ue942",
-		"outdent" : "\ue943",
-		"pause" : "\ue944",
-		"play" : "\ue946",
-		"plus" : "\ue947",
-		"preview" : "\ue948",
-		"printer" : "\ue949",
-		"profile" : "\ue94a",
-		"realtime" : "\ue94b",
-		"refresh" : "\ue94c",
-		"refresh2" : "\ue94d",
-		"report-build" : "\ue94e",
-		"report-link" : "\ue94f",
-		"report" : "\ue950",
-		"report2" : "\ue951",
-		"resize" : "\ue952",
-		"return" : "\ue953",
-		"right" : "\ue954",
-		"rule" : "\ue955",
-		"save" : "\ue956",
-		"search" : "\ue957",
-		"server" : "\ue958",
-		"share" : "\ue959",
-		"statistics" : "\ue95a",
-		"stop" : "\ue95b",
-		"stoppage" : "\ue95c",
-		"table" : "\ue95d",
-		"template" : "\ue95e",
-		"text" : "\ue95f",
-		"textcolor" : "\ue960",
-		"tool" : "\ue961",
-		"trashcan" : "\ue962",
-		"twitter" : "\ue963",
-		"underline" : "\ue964",
-		"unorderedlist" : "\ue965",
-		"upload" : "\ue966",
-		"user" : "\ue967",
-		"was" : "\ue968",
-		"ws" : "\ue969"
+		"arrow4" : "\ue907",
+		"arrow1" : "\ue908",
+		"arrow2" : "\ue909",
+		"arrow3" : "\ue90a",
+		"bell" : "\ue90b",
+		"blogger" : "\ue90c",
+		"bold" : "\ue90d",
+		"build" : "\ue90e",
+		"business" : "\ue90f",
+		"calendar" : "\ue910",
+		"caution" : "\ue911",
+		"caution2" : "\ue912",
+		"chart-area" : "\ue913",
+		"chart-bar" : "\ue914",
+		"chart-candle" : "\ue915",
+		"chart-column" : "\ue916",
+		"chart-gauge" : "\ue917",
+		"chart-line" : "\ue918",
+		"chart-radar" : "\ue919",
+		"chart-scatter" : "\ue91a",
+		"chart" : "\ue91b",
+		"check" : "\ue91c",
+		"checkmark" : "\ue91d",
+		"chevron-left" : "\ue91e",
+		"chevron-right" : "\ue91f",
+		"close" : "\ue920",
+		"connection" : "\ue921",
+		"dashboard" : "\ue922",
+		"dashboardlist" : "\ue923",
+		"db" : "\ue924",
+		"device" : "\ue925",
+		"document" : "\ue926",
+		"domain" : "\ue927",
+		"download" : "\ue928",
+		"edit" : "\ue929",
+		"etc" : "\ue92a",
+		"exit" : "\ue92b",
+		"facebook" : "\ue92c",
+		"gear" : "\ue92d",
+		"github" : "\ue92e",
+		"googleplus" : "\ue92f",
+		"help" : "\ue930",
+		"hide" : "\ue931",
+		"home" : "\ue932",
+		"html" : "\ue933",
+		"image" : "\ue934",
+		"indent" : "\ue935",
+		"info-message" : "\ue936",
+		"info" : "\ue937",
+		"italic" : "\ue938",
+		"jennifer-server" : "\ue939",
+		"label" : "\ue93a",
+		"left" : "\ue93b",
+		"like" : "\ue93c",
+		"line-height" : "\ue93d",
+		"link" : "\ue93e",
+		"loading" : "\ue93f",
+		"menu" : "\ue940",
+		"message" : "\ue941",
+		"minus" : "\ue942",
+		"monitoring" : "\ue943",
+		"more" : "\ue944",
+		"new-window" : "\ue945",
+		"orderedlist" : "\ue946",
+		"outdent" : "\ue947",
+		"pause" : "\ue948",
+		"pin" : "\ue949",
+		"play" : "\ue94a",
+		"plus" : "\ue94b",
+		"preview" : "\ue94c",
+		"printer" : "\ue94d",
+		"profile" : "\ue94e",
+		"realtime" : "\ue94f",
+		"refresh" : "\ue950",
+		"refresh2" : "\ue951",
+		"report-build" : "\ue952",
+		"report-link" : "\ue953",
+		"report" : "\ue954",
+		"report2" : "\ue955",
+		"resize" : "\ue956",
+		"return" : "\ue957",
+		"right" : "\ue958",
+		"rule" : "\ue959",
+		"save" : "\ue95a",
+		"script" : "\ue95b",
+		"search" : "\ue95c",
+		"server" : "\ue95d",
+		"share" : "\ue95e",
+		"statistics" : "\ue95f",
+		"stop" : "\ue960",
+		"stoppage" : "\ue961",
+		"table" : "\ue962",
+		"template" : "\ue963",
+		"text" : "\ue964",
+		"textcolor" : "\ue965",
+		"themes" : "\ue966",
+		"themes2" : "\ue967",
+		"tool" : "\ue968",
+		"trashcan" : "\ue969",
+		"twitter" : "\ue96a",
+		"underline" : "\ue96b",
+		"unorderedlist" : "\ue96c",
+		"upload" : "\ue96d",
+		"user" : "\ue96e",
+		"was" : "\ue96f",
+		"ws" : "\ue970"
 	}
 });
 jui.define("chart.polygon.core", [ "chart.vector", "util.transform", "util.math", "util.base" ],
@@ -9500,32 +9508,34 @@ jui.define("chart.polygon.core", [ "chart.vector", "util.transform", "util.math"
         this.perspective = 0.9;
 
         this.rotate = function(width, height, depth, degree) {
-            var t = new Transform(this.vertices),
-                p = this.perspective,
+            var p = this.perspective,
                 cx = width / 2,
                 cy = height / 2,
-                cz = depth / 2;
+                cz = depth / 2,
+                t = new Transform(this.vertices),
+                m = t.matrix("move3d", cx, cy, cz);
 
-            // 5가지 항목 미리 합성
-            var M = t.matrix("move3d", cx, cy, cz),
-                M3 = t.matrix("move3d", -cx, -cy, -cz);
-            M = math.matrix3d(M, t.matrix("rotate3dx", degree.x));
-            M = math.matrix3d(M, t.matrix("rotate3dy", degree.y));
-            M = math.matrix3d(M, t.matrix("rotate3dz", degree.z));
+            // 폴리곤 이동 및 각도 변경
+            m = math.matrix3d(m, t.matrix("rotate3dx", degree.x));
+            m = math.matrix3d(m, t.matrix("rotate3dy", degree.y));
+            m = math.matrix3d(m, t.matrix("rotate3dz", degree.z));
+            m = math.matrix3d(m, t.matrix("move3d", -cx, -cy, -cz));
+            this.vertices = t.custom(m);
 
-            // scale 만 따로 합성
-            for(var i = 0, count = this.vertices.length; i < count; i++) {
-                var z = this.vertices[i][2],
-                    s = math.scaleValue(z, 0, depth, 1, p);
+            for (var i = 0, count = this.vertices.length; i < count; i++) {
+                var far = Math.abs(this.vertices[i][2] - depth),
+                    s = math.scaleValue(far, 0, depth, p, 1),
+                    t2 = new Transform(),
+                    m2 = t2.matrix("move3d", cx, cy, cz);
 
-                var M2 = math.matrix3d(M, t.matrix("scale3d", s, s, 1));
-                M2 = math.matrix3d(M2, M3);
-
-                this.vertices[i] = math.matrix3d(M2, this.vertices[i]);
+                // 폴리곤 스케일 변경
+                m2 = math.matrix3d(m2, t2.matrix("scale3d", s, s, s));
+                m2 = math.matrix3d(m2, t2.matrix("move3d", -cx, -cy, -cz));
+                this.vertices[i] = math.matrix3d(m2, this.vertices[i]);
 
                 // 벡터 객체 생성 및 갱신
                 if(_.typeCheck("array", this.vectors)) {
-                    if (this.vectors[i] == null) {
+                    if(this.vectors[i] == null) {
                         this.vectors[i] = new Vector(this.vertices[i][0], this.vertices[i][1], this.vertices[i][2]);
                     } else {
                         this.vectors[i].x = this.vertices[i][0];
@@ -19198,11 +19208,16 @@ jui.define("chart.brush.polygon.core", [], function() {
 
             return g;
         }
+
+        this.relocate3d = function(polygon, element) {
+            element.order = this.axis.depth - polygon.max().z;
+        }
     }
 
     PolygonCoreBrush.setup = function() {
         return {
-            id: null
+            id: null,
+            clip: false
         }
     }
 
@@ -19256,6 +19271,9 @@ jui.define("chart.brush.polygon.scatter",
 				this.addEvent(elem, dataIndex, targetIndex);
 			}
 
+			// 렌더링 우선순위 설정
+			this.relocate3d(p, elem);
+
 			return elem;
 		}
 
@@ -19266,8 +19284,7 @@ jui.define("chart.brush.polygon.scatter",
 
 			for(var i = 0; i < datas.length; i++) {
 				for(var j = 0; j < targets.length; j++) {
-					var p = this.createScatter(datas[i], targets[j], i, j);
-					g.append(p);
+					g.append(this.createScatter(datas[i], targets[j], i, j));
 				}
 			}
 
@@ -19336,10 +19353,10 @@ jui.define("chart.brush.polygon.column",
 				this.addEvent(g, dataIndex, targetIndex);
 			}
 
-			return {
-				element: g,
-				depth: p.max().z / 2
-			};
+			// 렌더링 우선순위 설정
+			this.relocate3d(p, g);
+
+			return g;
 		}
 
 		this.drawBefore = function() {
@@ -19354,22 +19371,12 @@ jui.define("chart.brush.polygon.column",
 		this.draw = function() {
 			var g = this.chart.svg.group(),
 				datas = this.listData(),
-				targets = this.brush.target,
-				groups = [];
+				targets = this.brush.target;
 
 			for(var i = 0; i < datas.length; i++) {
 				for(var j = 0; j < targets.length; j++) {
-					var obj = this.createColumn(datas[i], targets[j], i, j);
-					groups.push(obj);
+					g.append(this.createColumn(datas[i], targets[j], i, j));
 				}
-			}
-
-			groups.sort(function(a, b) {
-				return b.depth - a.depth;
-			});
-
-			for(var i = 0; i < groups.length; i++) {
-				g.append(groups[i].element);
 			}
 
 			return g;
@@ -19410,7 +19417,7 @@ jui.define("chart.brush.polygon.line",
 				x2 = this.axis.x(dataIndex + 1),
 				y2 = this.axis.y(datas[dataIndex + 1][target]),
 				z2 = this.axis.z(targetIndex) + d / 2,
-				maxDepth = 0;
+				maxPoint = null;
 
 			var elem = this.chart.svg.polygon({
 				fill: color,
@@ -19432,34 +19439,30 @@ jui.define("chart.brush.polygon.line",
 				var vector = points[i].vectors[0];
 				elem.point(vector.x, vector.y);
 
-				maxDepth = Math.max(maxDepth, vector.z);
+				if(maxPoint == null) {
+					maxPoint = points[i];
+				} else {
+					if(vector.z > maxPoint.vectors[0].z) {
+						maxPoint = points[i];
+					}
+				}
 			}
 
-			return {
-				element: elem,
-				depth: maxDepth / 2
-			};
+			// 렌더링 우선순위 설정
+			this.relocate3d(maxPoint, elem);
+
+			return elem;
 		}
 
 		this.draw = function() {
 			var g = this.chart.svg.group(),
 				datas = this.listData(),
-				targets = this.brush.target,
-				groups = [];
+				targets = this.brush.target;
 
 			for(var i = 0; i < datas.length - 1; i++) {
 				for(var j = 0; j < targets.length; j++) {
-					var obj = this.createLine(datas, targets[j], i, j);
-					groups.push(obj);
+					g.append(this.createLine(datas, targets[j], i, j));
 				}
-			}
-
-			groups.sort(function(a, b) {
-				return b.depth - a.depth;
-			});
-
-			for(var i = 0; i < groups.length; i++) {
-				g.append(groups[i].element);
 			}
 
 			return g;

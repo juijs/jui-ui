@@ -16,7 +16,7 @@ jui.define("chart.brush.polygon.line",
 				x2 = this.axis.x(dataIndex + 1),
 				y2 = this.axis.y(datas[dataIndex + 1][target]),
 				z2 = this.axis.z(targetIndex) + d / 2,
-				maxDepth = 0;
+				maxPoint = null;
 
 			var elem = this.chart.svg.polygon({
 				fill: color,
@@ -38,34 +38,30 @@ jui.define("chart.brush.polygon.line",
 				var vector = points[i].vectors[0];
 				elem.point(vector.x, vector.y);
 
-				maxDepth = Math.max(maxDepth, vector.z);
+				if(maxPoint == null) {
+					maxPoint = points[i];
+				} else {
+					if(vector.z > maxPoint.vectors[0].z) {
+						maxPoint = points[i];
+					}
+				}
 			}
 
-			return {
-				element: elem,
-				depth: maxDepth / 2
-			};
+			// 렌더링 우선순위 설정
+			this.relocate3d(maxPoint, elem);
+
+			return elem;
 		}
 
 		this.draw = function() {
 			var g = this.chart.svg.group(),
 				datas = this.listData(),
-				targets = this.brush.target,
-				groups = [];
+				targets = this.brush.target;
 
 			for(var i = 0; i < datas.length - 1; i++) {
 				for(var j = 0; j < targets.length; j++) {
-					var obj = this.createLine(datas, targets[j], i, j);
-					groups.push(obj);
+					g.append(this.createLine(datas, targets[j], i, j));
 				}
-			}
-
-			groups.sort(function(a, b) {
-				return b.depth - a.depth;
-			});
-
-			for(var i = 0; i < groups.length; i++) {
-				g.append(groups[i].element);
 			}
 
 			return g;

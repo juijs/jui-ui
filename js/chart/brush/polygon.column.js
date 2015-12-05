@@ -45,10 +45,10 @@ jui.define("chart.brush.polygon.column",
 				this.addEvent(g, dataIndex, targetIndex);
 			}
 
-			return {
-				element: g,
-				depth: p.max().z / 2
-			};
+			// 렌더링 우선순위 설정
+			this.relocate3d(p, g);
+
+			return g;
 		}
 
 		this.drawBefore = function() {
@@ -63,22 +63,12 @@ jui.define("chart.brush.polygon.column",
 		this.draw = function() {
 			var g = this.chart.svg.group(),
 				datas = this.listData(),
-				targets = this.brush.target,
-				groups = [];
+				targets = this.brush.target;
 
 			for(var i = 0; i < datas.length; i++) {
 				for(var j = 0; j < targets.length; j++) {
-					var obj = this.createColumn(datas[i], targets[j], i, j);
-					groups.push(obj);
+					g.append(this.createColumn(datas[i], targets[j], i, j));
 				}
-			}
-
-			groups.sort(function(a, b) {
-				return b.depth - a.depth;
-			});
-
-			for(var i = 0; i < groups.length; i++) {
-				g.append(groups[i].element);
 			}
 
 			return g;

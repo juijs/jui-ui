@@ -57,11 +57,16 @@ jui.define("chart.brush.polygon.core", [], function() {
 
             return g;
         }
+
+        this.relocate3d = function(polygon, element) {
+            element.order = this.axis.depth - polygon.max().z;
+        }
     }
 
     PolygonCoreBrush.setup = function() {
         return {
-            id: null
+            id: null,
+            clip: false
         }
     }
 

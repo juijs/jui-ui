@@ -46,6 +46,9 @@ jui.define("chart.brush.polygon.scatter",
 				this.addEvent(elem, dataIndex, targetIndex);
 			}
 
+			// 렌더링 우선순위 설정
+			this.relocate3d(p, elem);
+
 			return elem;
 		}
 
@@ -56,8 +59,7 @@ jui.define("chart.brush.polygon.scatter",
 
 			for(var i = 0; i < datas.length; i++) {
 				for(var j = 0; j < targets.length; j++) {
-					var p = this.createScatter(datas[i], targets[j], i, j);
-					g.append(p);
+					g.append(this.createScatter(datas[i], targets[j], i, j));
 				}
 			}
 
