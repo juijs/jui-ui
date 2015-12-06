@@ -10,45 +10,41 @@ jui.define("chart.brush.polygon.column",
 		var col_width, col_height;
 
 		this.createColumn = function(data, target, dataIndex, targetIndex) {
-			var g = this.chart.svg.group(),
-				w = col_width,
+			var w = col_width,
 				h = col_height,
 				x = this.axis.x(dataIndex) - w/2,
 				y = this.axis.y(data[target]),
 				yy = this.axis.y(0),
 				z = this.axis.z(targetIndex) - h/2,
-				p = new CubePolygon(x, yy, z, w, y - yy, h),
 				color = this.color(targetIndex);
 
-			// 3D 좌표 계산
-			this.calculate3d(p);
+			return this.drawPolygon(new CubePolygon(x, yy, z, w, y - yy, h), function(p) {
+				var g = this.svg.group();
 
-			for(var i = 0; i < p.faces.length; i++) {
-				var key = p.faces[i];
+				for(var i = 0; i < p.faces.length; i++) {
+					var key = p.faces[i];
 
-				var face = this.chart.svg.polygon({
-					fill: color,
-					"fill-opacity": this.chart.theme("polygonColumnBackgroundOpacity"),
-					stroke: ColorUtil.darken(color, this.chart.theme("polygonColumnBorderOpacity")),
-					"stroke-opacity": this.chart.theme("polygonColumnBorderOpacity")
-				});
+					var face = this.svg.polygon({
+						fill: color,
+						"fill-opacity": this.chart.theme("polygonColumnBackgroundOpacity"),
+						stroke: ColorUtil.darken(color, this.chart.theme("polygonColumnBorderOpacity")),
+						"stroke-opacity": this.chart.theme("polygonColumnBorderOpacity")
+					});
 
-				for (var j = 0; j < key.length; j++) {
-					var vector = p.vectors[key[j]];
-					face.point(vector.x, vector.y);
+					for (var j = 0; j < key.length; j++) {
+						var vector = p.vectors[key[j]];
+						face.point(vector.x, vector.y);
+					}
+
+					g.append(face);
 				}
 
-				g.append(face);
-			}
+				if(data[target] != 0) {
+					this.addEvent(g, dataIndex, targetIndex);
+				}
 
-			if(data[target] != 0) {
-				this.addEvent(g, dataIndex, targetIndex);
-			}
-
-			// 렌더링 우선순위 설정
-			this.relocate3d(p, g);
-
-			return g;
+				return g;
+			});
 		}
 
 		this.drawBefore = function() {

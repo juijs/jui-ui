@@ -58,8 +58,14 @@ jui.define("chart.brush.polygon.core", [], function() {
             return g;
         }
 
-        this.relocate3d = function(polygon, element) {
-            element.order = this.axis.depth - polygon.max().z;
+        this.drawPolygon = function(polygon, callback) {
+            this.calculate3d(polygon);
+
+            var element = callback.call(this, polygon);
+            if(element) {
+                element.order = this.axis.depth - polygon.max().z;
+                return element;
+            }
         }
     }
 

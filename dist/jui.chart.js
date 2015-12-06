@@ -19209,8 +19209,14 @@ jui.define("chart.brush.polygon.core", [], function() {
             return g;
         }
 
-        this.relocate3d = function(polygon, element) {
-            element.order = this.axis.depth - polygon.max().z;
+        this.drawPolygon = function(polygon, callback) {
+            this.calculate3d(polygon);
+
+            var element = callback.call(this, polygon);
+            if(element) {
+                element.order = this.axis.depth - polygon.max().z;
+                return element;
+            }
         }
     }
 
@@ -19256,25 +19262,21 @@ jui.define("chart.brush.polygon.scatter",
 				);
 			}
 
-			var p = new PointPolygon(x, y, z);
-			this.calculate3d(p);
+			return this.drawPolygon(new PointPolygon(x, y, z), function(p) {
+				var elem = this.chart.svg.circle({
+					r: r * MathUtil.scaleValue(z, 0, this.axis.depth, 1, p.perspective),
+					fill: color,
+					"fill-opacity": this.chart.theme("polygonScatterBackgroundOpacity"),
+					cx: p.vectors[0].x,
+					cy: p.vectors[0].y
+				});
 
-			var elem = this.chart.svg.circle({
-				r: r * MathUtil.scaleValue(z, 0, this.axis.depth, 1, p.perspective),
-				fill: color,
-				"fill-opacity": this.chart.theme("polygonScatterBackgroundOpacity"),
-				cx: p.vectors[0].x,
-				cy: p.vectors[0].y
+				if(data[target] != 0) {
+					this.addEvent(elem, dataIndex, targetIndex);
+				}
+
+				return elem;
 			});
-
-			if(data[target] != 0) {
-				this.addEvent(elem, dataIndex, targetIndex);
-			}
-
-			// 렌더링 우선순위 설정
-			this.relocate3d(p, elem);
-
-			return elem;
 		}
 
 		this.draw = function() {
@@ -19318,45 +19320,41 @@ jui.define("chart.brush.polygon.column",
 		var col_width, col_height;
 
 		this.createColumn = function(data, target, dataIndex, targetIndex) {
-			var g = this.chart.svg.group(),
-				w = col_width,
+			var w = col_width,
 				h = col_height,
 				x = this.axis.x(dataIndex) - w/2,
 				y = this.axis.y(data[target]),
 				yy = this.axis.y(0),
 				z = this.axis.z(targetIndex) - h/2,
-				p = new CubePolygon(x, yy, z, w, y - yy, h),
 				color = this.color(targetIndex);
 
-			// 3D 좌표 계산
-			this.calculate3d(p);
+			return this.drawPolygon(new CubePolygon(x, yy, z, w, y - yy, h), function(p) {
+				var g = this.svg.group();
 
-			for(var i = 0; i < p.faces.length; i++) {
-				var key = p.faces[i];
+				for(var i = 0; i < p.faces.length; i++) {
+					var key = p.faces[i];
 
-				var face = this.chart.svg.polygon({
-					fill: color,
-					"fill-opacity": this.chart.theme("polygonColumnBackgroundOpacity"),
-					stroke: ColorUtil.darken(color, this.chart.theme("polygonColumnBorderOpacity")),
-					"stroke-opacity": this.chart.theme("polygonColumnBorderOpacity")
-				});
+					var face = this.svg.polygon({
+						fill: color,
+						"fill-opacity": this.chart.theme("polygonColumnBackgroundOpacity"),
+						stroke: ColorUtil.darken(color, this.chart.theme("polygonColumnBorderOpacity")),
+						"stroke-opacity": this.chart.theme("polygonColumnBorderOpacity")
+					});
 
-				for (var j = 0; j < key.length; j++) {
-					var vector = p.vectors[key[j]];
-					face.point(vector.x, vector.y);
+					for (var j = 0; j < key.length; j++) {
+						var vector = p.vectors[key[j]];
+						face.point(vector.x, vector.y);
+					}
+
+					g.append(face);
 				}
 
-				g.append(face);
-			}
+				if(data[target] != 0) {
+					this.addEvent(g, dataIndex, targetIndex);
+				}
 
-			if(data[target] != 0) {
-				this.addEvent(g, dataIndex, targetIndex);
-			}
-
-			// 렌더링 우선순위 설정
-			this.relocate3d(p, g);
-
-			return g;
+				return g;
+			});
 		}
 
 		this.drawBefore = function() {
@@ -19434,22 +19432,22 @@ jui.define("chart.brush.polygon.line",
 			];
 
 			for(var i = 0; i < points.length; i++) {
-				this.calculate3d(points[i]);
+				this.drawPolygon(points[i], function(p) {
+					var vector = p.vectors[0];
+					elem.point(vector.x, vector.y);
 
-				var vector = points[i].vectors[0];
-				elem.point(vector.x, vector.y);
-
-				if(maxPoint == null) {
-					maxPoint = points[i];
-				} else {
-					if(vector.z > maxPoint.vectors[0].z) {
-						maxPoint = points[i];
+					if(maxPoint == null) {
+						maxPoint = p;
+					} else {
+						if(vector.z > maxPoint.vectors[0].z) {
+							maxPoint = p;
+						}
 					}
-				}
+				});
 			}
 
-			// 렌더링 우선순위 설정
-			this.relocate3d(maxPoint, elem);
+			// 별도로 우선순위 설정
+			elem.order = this.axis.depth - maxPoint.max().z;
 
 			return elem;
 		}
@@ -21867,7 +21865,10 @@ jui.define("chart.widget.polygon.rotate", [ "util.base" ], function (_) {
                 mouseStartX = 0;
                 mouseStartY = 0,
                 sdx = 0,
-                sdy = 0;
+                sdy = 0,
+                cacheXY = null,
+                unit = self.widget.unit,
+                degree = self.axis.degree;
 
             self.on("bg.mousedown", mousedown);
             self.on("chart.mousedown", mousedown);
@@ -21894,9 +21895,18 @@ jui.define("chart.widget.polygon.rotate", [ "util.base" ], function (_) {
                     dx = Math.floor((gapY / h) * DEGREE_LIMIT),
                     dy = Math.floor((gapX / w) * DEGREE_LIMIT);
 
-                self.axis.degree.x = sdx + dx;
-                self.axis.degree.y = sdy - dy;
+                degree.x = sdx + dx;
+                degree.y = sdy - dy;
+
+                // 각도 Interval이 맞을 경우, 렌더링하지 않음
+                if(degree.x % unit != 0 && degree.y % unit != 0) return;
+
+                // 이전 각도와 동일할 경우, 렌더링하지 않음
+                var newCacheXY = degree.x + ":" + degree.y;
+                if(cacheXY == newCacheXY) return;
+
                 chart.render();
+                cacheXY = newCacheXY;
             }
 
             function mouseup(e) {
@@ -21918,6 +21928,12 @@ jui.define("chart.widget.polygon.rotate", [ "util.base" ], function (_) {
             setScrollEvent(this.axis.area("width"), this.axis.area("height"));
 
             return chart.svg.group();
+        }
+    }
+
+    PolygonRotateWdiget.setup = function() {
+        return {
+            unit: 5 // 회전 최소 각도
         }
     }
 

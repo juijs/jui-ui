@@ -33,22 +33,22 @@ jui.define("chart.brush.polygon.line",
 			];
 
 			for(var i = 0; i < points.length; i++) {
-				this.calculate3d(points[i]);
+				this.drawPolygon(points[i], function(p) {
+					var vector = p.vectors[0];
+					elem.point(vector.x, vector.y);
 
-				var vector = points[i].vectors[0];
-				elem.point(vector.x, vector.y);
-
-				if(maxPoint == null) {
-					maxPoint = points[i];
-				} else {
-					if(vector.z > maxPoint.vectors[0].z) {
-						maxPoint = points[i];
+					if(maxPoint == null) {
+						maxPoint = p;
+					} else {
+						if(vector.z > maxPoint.vectors[0].z) {
+							maxPoint = p;
+						}
 					}
-				}
+				});
 			}
 
-			// 렌더링 우선순위 설정
-			this.relocate3d(maxPoint, elem);
+			// 별도로 우선순위 설정
+			elem.order = this.axis.depth - maxPoint.max().z;
 
 			return elem;
 		}

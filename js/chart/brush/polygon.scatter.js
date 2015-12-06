@@ -31,25 +31,21 @@ jui.define("chart.brush.polygon.scatter",
 				);
 			}
 
-			var p = new PointPolygon(x, y, z);
-			this.calculate3d(p);
+			return this.drawPolygon(new PointPolygon(x, y, z), function(p) {
+				var elem = this.chart.svg.circle({
+					r: r * MathUtil.scaleValue(z, 0, this.axis.depth, 1, p.perspective),
+					fill: color,
+					"fill-opacity": this.chart.theme("polygonScatterBackgroundOpacity"),
+					cx: p.vectors[0].x,
+					cy: p.vectors[0].y
+				});
 
-			var elem = this.chart.svg.circle({
-				r: r * MathUtil.scaleValue(z, 0, this.axis.depth, 1, p.perspective),
-				fill: color,
-				"fill-opacity": this.chart.theme("polygonScatterBackgroundOpacity"),
-				cx: p.vectors[0].x,
-				cy: p.vectors[0].y
+				if(data[target] != 0) {
+					this.addEvent(elem, dataIndex, targetIndex);
+				}
+
+				return elem;
 			});
-
-			if(data[target] != 0) {
-				this.addEvent(elem, dataIndex, targetIndex);
-			}
-
-			// 렌더링 우선순위 설정
-			this.relocate3d(p, elem);
-
-			return elem;
 		}
 
 		this.draw = function() {
