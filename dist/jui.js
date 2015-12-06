@@ -7479,9 +7479,9 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
      *
      */
 	var UI = function() {
-		var $modal = null, $clone = null;
+		var $modal = {}, $clone = null;
 		var uiObj = null, uiTarget = null;
-		var x = 0, y = 0, z_index = 5000;
+		var z_index = 5000;
 		
 		function setPrevStatus(self) {
 			uiObj = { 
@@ -7496,12 +7496,24 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 				"position": $(self.options.target).css("position")
 			};
 		}
+
+		function getInnerModalPosition(target) {
+			if(target == "body") {
+				return null;
+			} else {
+				if($(target).hasClass("msgbox") || $(target).hasClass("window")) {
+					return "absolute";
+				} else {
+					return "relative;"
+				}
+			}
+		}
 		
 		function getModalInfo(self) {
 			var target = self.options.target,
 				hTarget = (target == "body") ? window : target,
 				pos = (target == "body") ? "fixed" : "absolute",
-				tPos = (target == "body") ? null : "relative",
+				tPos = getInnerModalPosition(target),
                 sLeft = $(target).scrollLeft();
 			
 			var x = (($(hTarget).width() / 2) - ($(self.root).width() / 2)) + $(target).scrollLeft(),
@@ -7530,9 +7542,11 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 		}
 		
 		function createModal(self, w, h) {
-			if($modal != null) return;
+			var mi = self.timestamp;
 			
-			$modal = $("<div id='MODAL_" + self.timestamp + "'></div>").css({ 
+			if( $modal[mi] != null) return;
+			
+			$modal[mi] = $("<div id='MODAL_" + self.timestamp + "'></div>").css({ 
 				position: "absolute",
 				width: w,
 				height: h,
@@ -7544,13 +7558,13 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 			});
 		
 			// 모달 추가
-			$(self.options.target).append($modal);
+			$(self.options.target).append($modal[mi]);
 			
 			// 루트 모달 옆으로 이동
-			$(self.root).insertAfter($modal);
+			$(self.root).insertAfter($modal[mi]);
 
 			// 모달 닫기 이벤트 걸기
-			self.addEvent($modal, "click", function(e) {
+			self.addEvent($modal[mi], "click", function(e) {
 				if(self.options.autoHide) {
 					self.hide();
 				}
@@ -7576,7 +7590,8 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
          * Hides a modal
          */
 		this.hide = function() {
-			var opts = this.options;
+			var opts = this.options,
+				mi = this.timestamp;
 
 			// 모달 대상 객체가 숨겨진 상태가 아닐 경우..
 			if(opts.clone) {
@@ -7587,9 +7602,9 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 			$(opts.target).css("position", uiTarget.position);
 			$(this.root).css(uiObj);
 			
-			if($modal) {
-				$modal.remove();
-				$modal = null;
+			if($modal[mi]) {
+				$modal[mi].remove();
+				delete $modal[mi]; 
 			}
 			
 			this.type = "hide";
@@ -7610,6 +7625,7 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 			}
 
             // 위치 재조정
+			$(this.root).appendTo(opts.target);
             this.resize();
 
 			$(opts.target).css("position", info.tPos);
@@ -7624,7 +7640,8 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
          * Re-adjust the location of a modal
          */
         this.resize = function() {
-            var info = getModalInfo(this);
+            var info = getModalInfo(this),
+            	mi = this.timestamp;
 
             $(this.root).css({
                 "position": info.pos,
@@ -7633,8 +7650,8 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
                 "z-index": (z_index + this.options.index)
             });
 
-            if($modal != null) {
-                $modal.height(info.h);
+            if($modal[mi] != null) {
+            	$modal[mi].height(info.h);
             }
         }
 	}
@@ -7681,6 +7698,7 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 	
 	return UI;
 });
+
 jui.defineUI("ui.notify", [ "jquery" ], function($) {
     var DEF_PADDING = 12;
 

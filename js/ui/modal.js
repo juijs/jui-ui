@@ -32,7 +32,7 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 	var UI = function() {
 		var $modal = {}, $clone = null;
 		var uiObj = null, uiTarget = null;
-		var x = 0, y = 0, z_index = 5000;
+		var z_index = 5000;
 		
 		function setPrevStatus(self) {
 			uiObj = { 
@@ -47,12 +47,24 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 				"position": $(self.options.target).css("position")
 			};
 		}
+
+		function getInnerModalPosition(target) {
+			if(target == "body") {
+				return null;
+			} else {
+				if($(target).hasClass("msgbox") || $(target).hasClass("window")) {
+					return "absolute";
+				} else {
+					return "relative";
+				}
+			}
+		}
 		
 		function getModalInfo(self) {
 			var target = self.options.target,
 				hTarget = (target == "body") ? window : target,
 				pos = (target == "body") ? "fixed" : "absolute",
-				tPos = (target == "body") ? null : $(target).hasClass("msgbox") ? "absolute": "relative",
+				tPos = getInnerModalPosition(target),
                 sLeft = $(target).scrollLeft();
 			
 			var x = (($(hTarget).width() / 2) - ($(self.root).width() / 2)) + $(target).scrollLeft(),
