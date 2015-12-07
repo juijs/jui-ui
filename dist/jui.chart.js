@@ -6883,7 +6883,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         var _padding, _area,  _theme, _hash = {};
         var _initialize = false, _options = null, _handler = { render: [], renderAll: [] }; // 리셋 대상 커스텀 이벤트 핸들러
         var _scale = 1, _xbox = 0, _ybox = 0; // 줌인/아웃, 뷰박스X/Y 관련 변수
-        var _isDelay = false; // 렌더링 딜레이
 
         function calculate(self) {
             var max = self.svg.size();
@@ -7676,8 +7675,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
          * @param {Boolean} isAll
          */
         this.render = function(isAll) {
-            if(_isDelay) return;
-
             // SVG 메인 리셋
             this.svg.reset(isAll);
 
@@ -7707,15 +7704,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
 
             // 초기화 및 렌더링 체크 설정
             _initialize = true;
-
-            // 렌더링 딜레이 설정
-            if(_options.delay > 0) {
-                _isDelay = true;
-
-                setTimeout(function () {
-                    _isDelay = false;
-                }, _options.delay);
-            }
         }
 
         /**
@@ -7892,8 +7880,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             format: null,
             /** @cfg {Boolean} [render=true] Does not render a chart when a rendering-related method is called with false (although the render method is not included). */
             render: true,
-            /** @cfg {Integer} [delay=0] The minimum delay of the chart rendering. */
-            delay: 0,
 
             /**
              * @cfg {Object} icon Icon-related settings available in the chart.
