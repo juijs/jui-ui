@@ -5942,7 +5942,7 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 				if($(target).hasClass("msgbox") || $(target).hasClass("window")) {
 					return "absolute";
 				} else {
-					return "relative;"
+					return "relative";
 				}
 			}
 		}
