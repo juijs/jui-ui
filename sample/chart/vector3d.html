@@ -43,14 +43,14 @@
 
     jui.ready([ "chart.builder", "chart.vector", "util.math" ], function(Builder, Vector3D, Math2) {
         var v1 = new Vector3D(10, 0, 0),
-            v2 = new Vector3D(0, 0, -10),
+            v2 = new Vector3D(-10, 0, 0),
             v3 = v1.crossProduct(v2);
 
         v3.normalize();
         var data = [ v1, v2, v3 ];
 
         var value = v1.dotProduct(v2);
-        console.log("두 벡터의 각도: " + Math2.degree(Math.acos(value)));
+        console.log("두 벡터의 각도: " + Math2.degree(value));
 
         chart = Builder("#result", {
             theme: "jennifer",

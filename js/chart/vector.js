@@ -29,7 +29,8 @@ jui.define("chart.vector", [], function() {
         }
 
         this.dotProduct = function(vector) {
-            return this.x * vector.x + this.y * vector.y + this.z * vector.z;
+            var value = this.x * vector.x + this.y * vector.y + this.z * vector.z;
+            return Math.acos(value / (this.getMagnitude() * vector.getMagnitude()))
         }
 
         this.crossProduct = function(vector) {
