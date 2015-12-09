@@ -20432,7 +20432,9 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 			/** @cfg {Boolean} [reverse=false] Reverses the value on domain values*/
 			reverse: false,
 			/** @cfg {Number} [max=10] Sets the maximum value of a grid. */
-			max: 10
+			max: 10,
+			/** @cfg {Boolean} [hideText=false] Determines whether to show text across the grid. */
+			hideText: false
 		};
 	}
 
@@ -20604,7 +20606,9 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 			/** @cfg {String} [key=null] Sets the value on the grid to the value for the specified key. */
 			key: null,
 			/** @cfg {"years"/"months"/"days"/"hours"/"minutes"/"seconds"/"milliseconds"} [realtime=""] Determines whether to use as a real-time grid. */
-			realtime: null
+			realtime: null,
+			/** @cfg {Boolean} [hideText=false] Determines whether to show text across the grid. */
+			hideText: false
 		};
 	}
 
@@ -20836,7 +20840,9 @@ jui.define("chart.grid.fullblock", [ "util.scale", "util.base" ], function(UtilS
             /** @cfg {Boolean} [reverse=false] Reverses the value on domain values*/
             reverse: false,
             /** @cfg {Number} [max=10] Sets the maximum value of a grid. */
-            max: 10
+            max: 10,
+            /** @cfg {Boolean} [hideText=false] Determines whether to show text across the grid. */
+            hideText: false
         };
     }
 
@@ -21450,7 +21456,9 @@ jui.define("chart.grid.log", [ "util.scale", "util.base" ], function(UtilScale, 
 			/** @cfg {Number} [base=10] log's base */
 			base : 10,
 			step : 4,
-			nice : false
+			nice : false,
+			/** @cfg {Boolean} [hideText=false] Determines whether to show text across the grid. */
+			hideText: false
 		};
 	}
 
