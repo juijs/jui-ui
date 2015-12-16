@@ -107,7 +107,9 @@ jui.define("chart.grid.fullblock", [ "util.scale", "util.base" ], function(UtilS
             /** @cfg {Boolean} [reverse=false] Reverses the value on domain values*/
             reverse: false,
             /** @cfg {Number} [max=10] Sets the maximum value of a grid. */
-            max: 10
+            max: 10,
+            /** @cfg {Boolean} [hideText=false] Determines whether to show text across the grid. */
+            hideText: false
         };
     }
 

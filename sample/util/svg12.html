@@ -1,0 +1,62 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+<META charset="UTF-8">
+<title>[JUI Library] - JavaScript/Table/API</title>	
+
+
+<link rel="stylesheet" href="../../dist/jui.css" />
+<script src="../../lib/jquery-1.8.0.min.js"></script>
+<script src="../../lib/jquery.binder.js"></script>
+<script src="../../js/base.js"></script>
+<script src="../../js/util/math.js"></script>
+<script src="../../js/util/color.js"></script>
+<script src="../../js/util/svgbase.js"></script>
+<script src="../../js/util/svg3d.js"></script>
+<script src="../../js/util/svg.js"></script>
+
+<script>
+
+jui.ready([ "util.svg" ], function(SVGUtil) {
+    svg = new SVGUtil($("#svg").get(0), { width: 300, height: 300 });
+
+    //------------------------------
+
+    var g1 = svg.group({ id: "g1" }, function() {
+        svg.group({ id: "g11" }, function() {
+            svg.rect({
+                width: 20,
+                height: 100,
+                fill: "red"
+            }, function() {
+                svg.animate({
+                    attributeName: "height",
+                    from: 20,
+                    to: 100,
+                    dur: "1s"
+                });
+            }).css({
+                stroke: "blue"
+            });
+        });
+    });
+
+    var l1 = svg.path({
+        //d: "M50,200 L150,150 L100,200 Z",
+        style: "stroke: #006666; fill:none;"
+    })
+    .MoveTo(0, 50)
+    .LineTo(150, 150)
+    .LineTo(100, 200);
+
+    g1.order = 1;
+
+    svg.render();
+});
+</script>
+</head>
+<body class="jui">
+    <div id="svg"></div>
+</body>
+</html>

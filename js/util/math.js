@@ -1,5 +1,98 @@
 jui.define("util.math", [ "util.base" ], function(_) {
 
+	// 2x1 or 3x1 or ?x1 형태의 매트릭스 연산
+	function matrix(a, b) {
+		var m = [];
+
+		for(var i = 0, len = a.length; i < len; i++) {
+			var sum = 0;
+
+			for(var j = 0, len2 = a[i].length; j < len2; j++) {
+				sum += a[i][j] * b[j];
+			}
+
+			m.push(sum);
+		}
+
+		return m;
+	}
+
+	// 2x2 or 3x3 or ?x? 형태의 매트릭스 연산
+	function deepMatrix(a, b) {
+		var m = [], nm = [];
+
+		for(var i = 0, len = b.length; i < len; i++) {
+			m[i] = [];
+			nm[i] = [];
+		}
+
+		for(var i = 0, len = b.length; i < len; i++) {
+			for(var j = 0, len2 = b[i].length; j < len2; j++) {
+				m[j].push(b[i][j]);
+			}
+		}
+
+		for(var i = 0, len = m.length; i < len; i++) {
+			var mm = matrix(a, m[i]);
+
+			for(var j = 0, len2 = mm.length; j < len2; j++) {
+				nm[j].push(mm[j]);
+			}
+		}
+
+		return nm;
+	}
+
+	function matrix3d(a, b) {
+		var m = new Float32Array(4);
+
+		m[0] = a[0][0] * b[0] + a[0][1] * b[1] + a[0][2] * b[2]  + a[0][3] * b[3];
+		m[1] = a[1][0] * b[0] + a[1][1] * b[1] + a[1][2] * b[2]  + a[1][3] * b[3];
+		m[2] = a[2][0] * b[0] + a[2][1] * b[1] + a[2][2] * b[2]  + a[2][3] * b[3];
+		m[3] = a[3][0] * b[0] + a[3][1] * b[1] + a[3][2] * b[2]  + a[3][3] * b[3];
+
+		return m;
+	}
+
+	function deepMatrix3d(a, b) {
+		var nm = [
+			new Float32Array(4),
+			new Float32Array(4),
+			new Float32Array(4),
+			new Float32Array(4)
+		];
+
+		var m = [
+			new Float32Array([b[0][0],b[1][0],b[2][0],b[3][0]]),
+			new Float32Array([b[0][1],b[1][1],b[2][1],b[3][1]]),
+			new Float32Array([b[0][2],b[1][2],b[2][2],b[3][2]]),
+			new Float32Array([b[0][3],b[1][3],b[2][3],b[3][3]])
+		];
+
+		nm[0][0] = a[0][0] * m[0][0] + a[0][1] * m[0][1] + a[0][2] * m[0][2]  + a[0][3] * m[0][3];
+		nm[1][0] = a[1][0] * m[0][0] + a[1][1] * m[0][1] + a[1][2] * m[0][2]  + a[1][3] * m[0][3];
+		nm[2][0] = a[2][0] * m[0][0] + a[2][1] * m[0][1] + a[2][2] * m[0][2]  + a[2][3] * m[0][3];
+		nm[3][0] = a[3][0] * m[0][0] + a[3][1] * m[0][1] + a[3][2] * m[0][2]  + a[3][3] * m[0][3];
+
+		nm[0][1] = a[0][0] * m[1][0] + a[0][1] * m[1][1] + a[0][2] * m[1][2]  + a[0][3] * m[1][3];
+		nm[1][1] = a[1][0] * m[1][0] + a[1][1] * m[1][1] + a[1][2] * m[1][2]  + a[1][3] * m[1][3];
+		nm[2][1] = a[2][0] * m[1][0] + a[2][1] * m[1][1] + a[2][2] * m[1][2]  + a[2][3] * m[1][3];
+		nm[3][1] = a[3][0] * m[1][0] + a[3][1] * m[1][1] + a[3][2] * m[1][2]  + a[3][3] * m[1][3];
+
+		nm[0][2] = a[0][0] * m[2][0] + a[0][1] * m[2][1] + a[0][2] * m[2][2]  + a[0][3] * m[2][3];
+		nm[1][2] = a[1][0] * m[2][0] + a[1][1] * m[2][1] + a[1][2] * m[2][2]  + a[1][3] * m[2][3];
+		nm[2][2] = a[2][0] * m[2][0] + a[2][1] * m[2][1] + a[2][2] * m[2][2]  + a[2][3] * m[2][3];
+		nm[3][2] = a[3][0] * m[2][0] + a[3][1] * m[2][1] + a[3][2] * m[2][2]  + a[3][3] * m[2][3];
+
+		nm[0][3] = a[0][0] * m[3][0] + a[0][1] * m[3][1] + a[0][2] * m[3][2]  + a[0][3] * m[3][3];
+		nm[1][3] = a[1][0] * m[3][0] + a[1][1] * m[3][1] + a[1][2] * m[3][2]  + a[1][3] * m[3][3];
+		nm[2][3] = a[2][0] * m[3][0] + a[2][1] * m[3][1] + a[2][2] * m[3][2]  + a[2][3] * m[3][3];
+		nm[3][3] = a[3][0] * m[3][0] + a[3][1] * m[3][1] + a[3][2] * m[3][2]  + a[3][3] * m[3][3];
+
+		return nm;
+	}
+
+
 	/**
 	 * @class util.math
 	 *
@@ -129,11 +222,13 @@ jui.define("util.math", [ "util.base" ], function(_) {
 			};
 
 			func.multi = function (a, b) {
-				return Math.round((a * pow) * (b * pow)) / pow;
+				return Math.round((a * pow) * (b * pow)) / (pow*pow);
 			};
 
 			func.div = function (a, b) {
-				return Math.round((a * pow) / (b * pow)) / pow;
+				var result = (a * pow) / (b * pow);
+				var pow2 = Math.pow(10, this.getFixed(result, 0));
+				return Math.round(result*pow2) / pow2;
 			};
 
 			func.remain = function (a, b) {
@@ -162,12 +257,15 @@ jui.define("util.math", [ "util.base" ], function(_) {
 
 		multi : function (a, b) {
 			var pow = Math.pow(10, this.getFixed(a, b));
-			return Math.round((a * pow) * (b * pow)) / pow;
+			return Math.round((a * pow) * (b * pow)) / (pow*pow);
 		},
 
 		div : function (a, b) {
 			var pow = Math.pow(10, this.getFixed(a, b));
-			return Math.round((a * pow) / (b * pow));
+
+			var result = (a * pow) / (b * pow);
+			var pow2 = Math.pow(10, this.getFixed(result, 0));
+			return Math.round(result*pow2) / pow2;
 		},
 
 		remain : function (a, b) {
@@ -250,55 +348,19 @@ jui.define("util.math", [ "util.base" ], function(_) {
 		},
 
 		matrix: function(a, b) {
-			// 2x1 or 3x1 or ?x1 형태의 매트릭스 연산
-			function matrix(a, b) {
-				var m = [];
-
-				for(var i = 0, len = a.length; i < len; i++) {
-					var sum = 0;
-
-					for(var j = 0, len2 = a[i].length; j < len2; j++) {
-						sum += a[i][j] * b[j];
-					}
-
-					m.push(sum);
-				}
-
-				return m;
-			}
-
-
-			// 2x2 or 3x3 형태의 매트릭스 연산
-			function deepMatrix(a, b) {
-				var m = [], nm = [];
-
-				for(var i = 0, len = b.length; i < len; i++) {
-					m[i] = [];
-					nm[i] = [];
-				}
-
-				for(var i = 0, len = b.length; i < len; i++) {
-					for(var j = 0, len2 = b[i].length; j < len2; j++) {
-						m[j].push(b[i][j]);
-					}
-				}
-
-				for(var i = 0, len = m.length; i < len; i++) {
-					var mm = matrix(a, m[i]);
-
-					for(var j = 0, len2 = mm.length; j < len2; j++) {
-						nm[j].push(mm[j]);
-					}
-				}
-
-				return nm;
-			}
-
 			if(_.typeCheck("array", b[0])) {
 				return deepMatrix(a, b);
 			}
 
 			return matrix(a, b);
+		},
+
+		matrix3d: function(a, b) {
+			if(b[0] instanceof Array || b[0] instanceof Float32Array) {
+				return deepMatrix3d(a, b);
+			}
+
+			return matrix3d(a, b);
 		},
 
 		scaleValue: function(value, minValue, maxValue, minScale, maxScale) {

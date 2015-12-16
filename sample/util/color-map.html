@@ -1,0 +1,74 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<META charset="UTF-8">
+<title>[JUI Library] - JavaScript/Table/API</title>	
+
+
+<link rel="stylesheet" href="../../dist/jui.css" />
+<script src="../../lib/jquery-1.8.0.min.js"></script>
+<script src="../../lib/jquery.binder.js"></script>
+<script src="../../js/base.js"></script>
+<script src="../../js/util/math.js"></script>
+<script src="../../js/util/color.js"></script>
+<style type="text/css">
+.colormap {
+    display:flex;
+
+    width:500px;
+    height:30px;
+
+    margin-bottom:10px;
+
+}
+
+.item {
+    flex:1;
+    height:30px;
+}
+</style>
+
+<script>
+
+jui.ready([ "util.color" ], function(color) {
+
+    function buildColor(container, colors) {
+        var map = $(container);
+        for(var i = 0, len = colors.length; i < len; i++) {
+            map.append($("<div class='item' />").css({
+                background: colors[i]
+            }));
+        }
+    }
+
+    $(".colormap").each(function() {
+
+        var map = $(this).data('map');
+
+
+        var count = $(this).data('count') || 10;
+
+        if (color.map[map]) {
+            buildColor(this, color.map[map](count))
+        } else {
+            buildColor(this, color.map(map.split(","), count))
+        }
+
+
+    })
+
+});
+</script>
+</head>
+<body class="jui">
+<div class="colormap" data-map="hsv" data-count="40"></div>
+<div class="colormap" data-map="parula" data-count="20"></div>
+<div class="colormap" data-map="jet" data-count="20"></div>
+<div class="colormap" data-map="hot" data-count="20"></div>
+<div class="colormap" data-map="pink" data-count="20"></div>
+<div class="colormap" data-map="bone" data-count="20"></div>
+<div class="colormap" data-map="copper" data-count="20"></div>
+
+
+</body>
+</html>

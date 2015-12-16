@@ -19,6 +19,7 @@ jui.define("util.svg.element", [], function() {
             this.parent = null;
             this.styles = {};
             this.attributes = {};
+            this.order = 0;
 
             // 기본 속성 설정
             this.attr(attr);

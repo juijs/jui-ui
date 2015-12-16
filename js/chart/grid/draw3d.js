@@ -1,5 +1,5 @@
-jui.define("chart.grid.draw3d", [ "util.base", "chart.polygon.face", "chart.polygon.line", "chart.polygon.point" ],
-    function(_, FacePolygon, LinePolygon, PointPolygon) {
+jui.define("chart.grid.draw3d", [ "util.base", "chart.polygon.grid", "chart.polygon.line", "chart.polygon.point" ],
+    function(_, GridPolygon, LinePolygon, PointPolygon) {
 
     /**
      * @class chart.grid.draw3d
@@ -90,21 +90,21 @@ jui.define("chart.grid.draw3d", [ "util.base", "chart.polygon.face", "chart.poly
                 d = this.axis.depth;
 
             if(position == "center") {
-                p = new FacePolygon("center", w, h, d);
+                p = new GridPolygon("center", w, h, d);
             } else {
                 if(isTopOrBottom) {
                     h = (position == "bottom") ? h : 0;
-                    p = new FacePolygon("horizontal", w, h, d);
+                    p = new GridPolygon("horizontal", w, h, d);
                 } else {
                     w = (position == "right") ? w : 0;
-                    p = new FacePolygon("vertical", w, h, d);
+                    p = new GridPolygon("vertical", w, h, d);
                 }
             }
 
             // 사각면 위치 계산 및 추가
             this.calculate3d(p);
-            for(var i = 0; i < p.vertices.length; i++) {
-                face.point(p.vertices[i][0], p.vertices[i][1]);
+            for(var i = 0; i < p.vectors.length; i++) {
+                face.point(p.vectors[i].x, p.vectors[i].y);
             }
 
             axis.append(face);
@@ -143,19 +143,19 @@ jui.define("chart.grid.draw3d", [ "util.base", "chart.polygon.face", "chart.poly
                 var lo1 = this.line({
                     stroke: this.chart.theme("gridBorderColor"),
                     "stroke-width": this.chart.theme("gridBorderWidth"),
-                    x1: l1.vertices[0][0],
-                    y1: l1.vertices[0][1],
-                    x2: l1.vertices[1][0],
-                    y2: l1.vertices[1][1]
+                    x1: l1.vectors[0].x,
+                    y1: l1.vectors[0].y,
+                    x2: l1.vectors[1].x,
+                    y2: l1.vectors[1].y
                 });
 
                 var lo2 = this.line({
                     stroke: this.chart.theme("gridBorderColor"),
                     "stroke-width": this.chart.theme("gridBorderWidth"),
-                    x1: l2.vertices[0][0],
-                    y1: l2.vertices[0][1],
-                    x2: l2.vertices[1][0],
-                    y2: l2.vertices[1][1]
+                    x1: l2.vectors[0].x,
+                    y1: l2.vectors[0].y,
+                    x2: l2.vectors[1].x,
+                    y2: l2.vectors[1].y
                 });
 
                 if (line.type.indexOf("dashed") > -1) {
@@ -187,19 +187,19 @@ jui.define("chart.grid.draw3d", [ "util.base", "chart.polygon.face", "chart.poly
                 axis.append(this.line({
                     stroke: this.chart.theme("gridBorderColor"),
                     "stroke-width": this.chart.theme("gridBorderWidth"),
-                    x1: p1.vertices[0][0],
-                    y1: p1.vertices[0][1],
-                    x2: p1.vertices[1][0],
-                    y2: p1.vertices[1][1]
+                    x1: p1.vectors[0].x,
+                    y1: p1.vectors[0].y,
+                    x2: p1.vectors[1].x,
+                    y2: p1.vectors[1].y
                 }));
 
                 axis.append(this.line({
                     stroke: this.chart.theme("gridBorderColor"),
                     "stroke-width": this.chart.theme("gridBorderWidth"),
-                    x1: p2.vertices[0][0],
-                    y1: p2.vertices[0][1],
-                    x2: p2.vertices[1][0],
-                    y2: p2.vertices[1][1]
+                    x1: p2.vectors[0].x,
+                    y1: p2.vectors[0].y,
+                    x2: p2.vectors[1].x,
+                    y2: p2.vectors[1].y
                 }));
             }
         }
@@ -234,8 +234,8 @@ jui.define("chart.grid.draw3d", [ "util.base", "chart.polygon.face", "chart.poly
             this.calculate3d(p);
 
             axis.append(this.getTextRotate(this.chart.text({
-                x: p.vertices[0][0],
-                y: p.vertices[0][1],
+                x: p.vectors[0].x,
+                y: p.vectors[0].y,
                 dx: !isVertical ? this.chart.theme("gridXFontSize") / 3 : 0,
                 dy: isVertical ? this.chart.theme("gridYFontSize") / 3 : 0,
                 fill: this.chart.theme(isVertical ? "gridYFontColor" : "gridXFontColor"),
@@ -265,8 +265,8 @@ jui.define("chart.grid.draw3d", [ "util.base", "chart.polygon.face", "chart.poly
                 this.calculate3d(p);
 
                 axis.append(this.getTextRotate(this.chart.text({
-                    x: p.vertices[0][0],
-                    y: p.vertices[0][1],
+                    x: p.vectors[0].x,
+                    y: p.vectors[0].y,
                     fill: this.chart.theme("gridZFontColor"),
                     "text-anchor": (isLeft) ? "start" : "end",
                     "font-size": this.chart.theme("gridZFontSize"),

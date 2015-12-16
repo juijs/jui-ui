@@ -9,6 +9,12 @@ select[disabled], textarea[disabled], select[readonly], textarea[readonly] {  //
     height: @baseScrollHandleSize;
   }
 
+  &::-webkit-scrollbar-corner {
+    background: transparent;
+    border-right: 1px solid @baseScrollBorderColor;
+    border-bottom: 1px solid @baseScrollBorderColor;
+  }
+
   &::-webkit-scrollbar-track {
     .btn-bgcolor-2(@baseScrollBackgroundColor1, @baseScrollBackgroundColor2, left);
     border: 1px solid @baseScrollBorderColor;

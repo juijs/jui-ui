@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>[JENNIFER UI Test] - Utility</title>
+<link rel="stylesheet" href="../../lib/qunit-1.14.0.css">
+
+<script src="../../lib/qunit-1.14.0.js"></script>
+<script src="../../lib/jquery-1.8.0.min.js"></script>
+
+<script src="../../js/base.js"></script>
+<script src="../../js/core.js"></script>
+<script src="../../js/util/math.js"></script>
+
+<script>
+
+jui.ready([ "util.math" ], function(_) {
+	var m1, m2;
+
+    QUnit.testStart(function() {
+		m1 = _.matrix(
+			[
+				[ 1, 2, 3 ],
+				[ 4, 5, 6 ],
+				[ 7, 8, 9 ]
+			],
+			[
+				1, 2, 3
+			]
+		);
+
+		m2 = _.matrix(
+			[
+				[ 1, 2 ],
+				[ 3, 4 ]
+			],
+			[
+				[ 1, 2 ],
+				[ 3, 4 ]
+			]
+		);
+    });
+
+    QUnit.test("행렬 곱 연산 테스트", function(assert) {
+		assert.ok(m1[0] == 14 && m1[1] == 32 && m1[2] == 50, "3x1 행렬의 곱");
+		assert.ok(m2[0][0] == 7 && m2[0][1] == 10 && m2[1][0] == 15 && m2[1][1] == 22, "2x2 행렬의 곱");
+    });
+});
+</script>
+
+</head>
+<body>
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+
+</body>
+</html>

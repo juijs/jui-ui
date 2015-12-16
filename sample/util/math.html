@@ -1,0 +1,63 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<META charset="UTF-8">
+<title>[JUI Library] - JavaScript/Table/API</title>	
+
+
+<link rel="stylesheet" href="../../dist/jui.css" />
+<script src="../../lib/jquery-1.8.0.min.js"></script>
+<script src="../../lib/jquery.binder.js"></script>
+<script src="../../js/base.js"></script>
+<script src="../../js/util/math.js"></script>
+
+<script>
+
+jui.ready([ "util.math" ], function(math) {
+
+    console.log('0.1 + 0.2 =', math.plus(0.1, 0.2), 0.1+ 0.2);
+    console.log('0.1 - 0.2 =', math.minus(0.1, 0.2), 0.1- 0.2);
+    console.log('0.1 * 0.2 =', math.multi(0.1, 0.2), 0.1* 0.2);
+    console.log('0.1 / 0.2 =', math.div(0.1, 0.2), 0.1/ 0.2);
+    console.log('0.1 + 0.3 =', math.plus(0.1, 0.3), 0.1+ 0.3);
+    console.log('0.1 - 0.3 =', math.minus(0.1, 0.3), 0.1- 0.3);
+    console.log('0.1 * 0.3 =', math.multi(0.1, 0.3), 0.1* 0.3);
+    console.log('0.1 / 0.3 =', math.div(0.1, 0.3), 0.1/ 0.3);
+    console.log('0.1 % 0.2 =', math.remain(0.1, 0.2), 0.1% 0.2);
+
+    console.log('0.2 + 0.3 =', math.plus(0.2, 0.3), 0.2 + 0.3);
+    console.log('0.35 + 0.9 =', math.plus(0.35, 0.9), 0.35 + 0.9);
+
+    console.log('0.35 * 0.9 =', math.multi(0.35, 0.9), 0.35 * 0.9);
+
+
+    for(var i = 0; i < 3; i = math.plus(i, 0.1)) {
+        console.log(i, ' + ', 0.1, '=', math.plus(i, 0.1), "(native ", i + 0.1, ")");
+    }
+
+
+    for(var i = 0; i < 3; i = math.plus(i, 0.1)) {
+        console.log(i, ' - ', 0.1, '=', math.minus(i, 0.1), "(native ", i - 0.1, ")");
+    }
+
+
+    for(var i = 0; i < 3; i = math.plus(i, 0.1)) {
+        console.log(i, ' * ', 0.1, '=', math.multi(i, 0.1), "(native ", i * 0.1, ")");
+    }
+
+
+    for(var i = 0; i < 3; i = math.plus(i, 0.1)) {
+        console.log(i, ' / ', 0.1, '=', math.div(i, 0.1), "(native ", i / 0.1, ")");
+    }
+
+
+
+
+
+});
+</script>
+</head>
+<body class="jui">
+
+</body>
+</html>

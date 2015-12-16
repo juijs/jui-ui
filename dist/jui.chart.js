@@ -2343,6 +2343,99 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 });
 jui.define("util.math", [ "util.base" ], function(_) {
 
+	// 2x1 or 3x1 or ?x1 형태의 매트릭스 연산
+	function matrix(a, b) {
+		var m = [];
+
+		for(var i = 0, len = a.length; i < len; i++) {
+			var sum = 0;
+
+			for(var j = 0, len2 = a[i].length; j < len2; j++) {
+				sum += a[i][j] * b[j];
+			}
+
+			m.push(sum);
+		}
+
+		return m;
+	}
+
+	// 2x2 or 3x3 or ?x? 형태의 매트릭스 연산
+	function deepMatrix(a, b) {
+		var m = [], nm = [];
+
+		for(var i = 0, len = b.length; i < len; i++) {
+			m[i] = [];
+			nm[i] = [];
+		}
+
+		for(var i = 0, len = b.length; i < len; i++) {
+			for(var j = 0, len2 = b[i].length; j < len2; j++) {
+				m[j].push(b[i][j]);
+			}
+		}
+
+		for(var i = 0, len = m.length; i < len; i++) {
+			var mm = matrix(a, m[i]);
+
+			for(var j = 0, len2 = mm.length; j < len2; j++) {
+				nm[j].push(mm[j]);
+			}
+		}
+
+		return nm;
+	}
+
+	function matrix3d(a, b) {
+		var m = new Float32Array(4);
+
+		m[0] = a[0][0] * b[0] + a[0][1] * b[1] + a[0][2] * b[2]  + a[0][3] * b[3];
+		m[1] = a[1][0] * b[0] + a[1][1] * b[1] + a[1][2] * b[2]  + a[1][3] * b[3];
+		m[2] = a[2][0] * b[0] + a[2][1] * b[1] + a[2][2] * b[2]  + a[2][3] * b[3];
+		m[3] = a[3][0] * b[0] + a[3][1] * b[1] + a[3][2] * b[2]  + a[3][3] * b[3];
+
+		return m;
+	}
+
+	function deepMatrix3d(a, b) {
+		var nm = [
+			new Float32Array(4),
+			new Float32Array(4),
+			new Float32Array(4),
+			new Float32Array(4)
+		];
+
+		var m = [
+			new Float32Array([b[0][0],b[1][0],b[2][0],b[3][0]]),
+			new Float32Array([b[0][1],b[1][1],b[2][1],b[3][1]]),
+			new Float32Array([b[0][2],b[1][2],b[2][2],b[3][2]]),
+			new Float32Array([b[0][3],b[1][3],b[2][3],b[3][3]])
+		];
+
+		nm[0][0] = a[0][0] * m[0][0] + a[0][1] * m[0][1] + a[0][2] * m[0][2]  + a[0][3] * m[0][3];
+		nm[1][0] = a[1][0] * m[0][0] + a[1][1] * m[0][1] + a[1][2] * m[0][2]  + a[1][3] * m[0][3];
+		nm[2][0] = a[2][0] * m[0][0] + a[2][1] * m[0][1] + a[2][2] * m[0][2]  + a[2][3] * m[0][3];
+		nm[3][0] = a[3][0] * m[0][0] + a[3][1] * m[0][1] + a[3][2] * m[0][2]  + a[3][3] * m[0][3];
+
+		nm[0][1] = a[0][0] * m[1][0] + a[0][1] * m[1][1] + a[0][2] * m[1][2]  + a[0][3] * m[1][3];
+		nm[1][1] = a[1][0] * m[1][0] + a[1][1] * m[1][1] + a[1][2] * m[1][2]  + a[1][3] * m[1][3];
+		nm[2][1] = a[2][0] * m[1][0] + a[2][1] * m[1][1] + a[2][2] * m[1][2]  + a[2][3] * m[1][3];
+		nm[3][1] = a[3][0] * m[1][0] + a[3][1] * m[1][1] + a[3][2] * m[1][2]  + a[3][3] * m[1][3];
+
+		nm[0][2] = a[0][0] * m[2][0] + a[0][1] * m[2][1] + a[0][2] * m[2][2]  + a[0][3] * m[2][3];
+		nm[1][2] = a[1][0] * m[2][0] + a[1][1] * m[2][1] + a[1][2] * m[2][2]  + a[1][3] * m[2][3];
+		nm[2][2] = a[2][0] * m[2][0] + a[2][1] * m[2][1] + a[2][2] * m[2][2]  + a[2][3] * m[2][3];
+		nm[3][2] = a[3][0] * m[2][0] + a[3][1] * m[2][1] + a[3][2] * m[2][2]  + a[3][3] * m[2][3];
+
+		nm[0][3] = a[0][0] * m[3][0] + a[0][1] * m[3][1] + a[0][2] * m[3][2]  + a[0][3] * m[3][3];
+		nm[1][3] = a[1][0] * m[3][0] + a[1][1] * m[3][1] + a[1][2] * m[3][2]  + a[1][3] * m[3][3];
+		nm[2][3] = a[2][0] * m[3][0] + a[2][1] * m[3][1] + a[2][2] * m[3][2]  + a[2][3] * m[3][3];
+		nm[3][3] = a[3][0] * m[3][0] + a[3][1] * m[3][1] + a[3][2] * m[3][2]  + a[3][3] * m[3][3];
+
+		return nm;
+	}
+
+
 	/**
 	 * @class util.math
 	 *
@@ -2472,11 +2565,13 @@ jui.define("util.math", [ "util.base" ], function(_) {
 			};
 
 			func.multi = function (a, b) {
-				return Math.round((a * pow) * (b * pow)) / pow;
+				return Math.round((a * pow) * (b * pow)) / (pow*pow);
 			};
 
 			func.div = function (a, b) {
-				return Math.round((a * pow) / (b * pow)) / pow;
+				var result = (a * pow) / (b * pow);
+				var pow2 = Math.pow(10, this.getFixed(result, 0));
+				return Math.round(result*pow2) / pow2;
 			};
 
 			func.remain = function (a, b) {
@@ -2505,12 +2600,15 @@ jui.define("util.math", [ "util.base" ], function(_) {
 
 		multi : function (a, b) {
 			var pow = Math.pow(10, this.getFixed(a, b));
-			return Math.round((a * pow) * (b * pow)) / pow;
+			return Math.round((a * pow) * (b * pow)) / (pow*pow);
 		},
 
 		div : function (a, b) {
 			var pow = Math.pow(10, this.getFixed(a, b));
-			return Math.round((a * pow) / (b * pow));
+
+			var result = (a * pow) / (b * pow);
+			var pow2 = Math.pow(10, this.getFixed(result, 0));
+			return Math.round(result*pow2) / pow2;
 		},
 
 		remain : function (a, b) {
@@ -2593,55 +2691,19 @@ jui.define("util.math", [ "util.base" ], function(_) {
 		},
 
 		matrix: function(a, b) {
-			// 2x1 or 3x1 or ?x1 형태의 매트릭스 연산
-			function matrix(a, b) {
-				var m = [];
-
-				for(var i = 0, len = a.length; i < len; i++) {
-					var sum = 0;
-
-					for(var j = 0, len2 = a[i].length; j < len2; j++) {
-						sum += a[i][j] * b[j];
-					}
-
-					m.push(sum);
-				}
-
-				return m;
-			}
-
-
-			// 2x2 or 3x3 형태의 매트릭스 연산
-			function deepMatrix(a, b) {
-				var m = [], nm = [];
-
-				for(var i = 0, len = b.length; i < len; i++) {
-					m[i] = [];
-					nm[i] = [];
-				}
-
-				for(var i = 0, len = b.length; i < len; i++) {
-					for(var j = 0, len2 = b[i].length; j < len2; j++) {
-						m[j].push(b[i][j]);
-					}
-				}
-
-				for(var i = 0, len = m.length; i < len; i++) {
-					var mm = matrix(a, m[i]);
-
-					for(var j = 0, len2 = mm.length; j < len2; j++) {
-						nm[j].push(mm[j]);
-					}
-				}
-
-				return nm;
-			}
-
 			if(_.typeCheck("array", b[0])) {
 				return deepMatrix(a, b);
 			}
 
 			return matrix(a, b);
+		},
+
+		matrix3d: function(a, b) {
+			if(b[0] instanceof Array || b[0] instanceof Float32Array) {
+				return deepMatrix3d(a, b);
+			}
+
+			return matrix3d(a, b);
 		},
 
 		scaleValue: function(value, minValue, maxValue, minScale, maxScale) {
@@ -2681,58 +2743,60 @@ jui.define("util.transform", [ "util.math" ], function(math) {
             var a = arguments,
                 type = a[0];
 
-            var map = {
-                // 2D 행렬, 3x3
-                move: [
-                    [ 1, 0, a[1] ],
-                    [ 0, 1, a[2] ],
-                    [ 0, 0, 1 ]
-                ],
-                scale: [
-                    [ a[1], 0, 0 ],
-                    [ 0, a[2], 0 ],
-                    [ 0, 0, 1 ]
-                ],
-                rotate: [
-                    [ Math.cos(math.radian(a[1])), -Math.sin(math.radian(a[1])), 0 ],
-                    [ Math.sin(math.radian(a[1])), Math.cos(math.radian(a[1])), 0 ],
-                    [ 0, 0, 1 ]
-                ],
-
-                // 3D 행렬, 4x4
-                move3d: [
-                    [ 1, 0, 0, a[1] ],
-                    [ 0, 1, 0, a[2] ],
-                    [ 0, 0, 1, a[3] ],
-                    [ 0, 0, 0, 1 ]
-                ],
-                scale3d: [
-                    [ a[1], 0, 0, 0 ],
-                    [ 0, a[2], 0, 0 ],
-                    [ 0, 0, a[3], 0 ],
-                    [ 0, 0, 0, 1 ]
-                ],
-                rotate3dz: [
-                    [ Math.cos(math.radian(a[1])), -Math.sin(math.radian(a[1])), 0, 0 ],
-                    [ Math.sin(math.radian(a[1])), Math.cos(math.radian(a[1])), 0, 0 ],
-                    [ 0, 0, 1, 0 ],
-                    [ 0, 0, 0, 1 ]
-                ],
-                rotate3dx: [
-                    [ 1, 0, 0, 0 ],
-                    [ 0, Math.cos(math.radian(a[1])), -Math.sin(math.radian(a[1])), 0 ],
-                    [ 0, Math.sin(math.radian(a[1])), Math.cos(math.radian(a[1])), 0 ],
-                    [ 0, 0, 0, 1 ]
-                ],
-                rotate3dy: [
-                    [ Math.cos(math.radian(a[1])), 0, Math.sin(math.radian(a[1])), 0 ],
-                    [ 0, 1, 0, 0 ],
-                    [ -Math.sin(math.radian(a[1])), 0, Math.cos(math.radian(a[1])), 0 ],
-                    [ 0, 0, 0, 1 ]
-                ]
+            if(type == "move") {
+                return [
+                    new Float32Array([1, 0, a[1]]),
+                    new Float32Array([0, 1, a[2]]),
+                    new Float32Array([0, 0, 1])
+                ];
+            } else if(type == "scale") {
+                return [
+                    new Float32Array([ a[1], 0, 0 ]),
+                    new Float32Array([ 0, a[2], 0 ]),
+                    new Float32Array([ 0, 0, 1 ])
+                ];
+            } else if(type == "rotate") {
+                return [
+                    new Float32Array([ Math.cos(math.radian(a[1])), -Math.sin(math.radian(a[1])), 0 ]),
+                    new Float32Array([ Math.sin(math.radian(a[1])), Math.cos(math.radian(a[1])), 0 ]),
+                    new Float32Array([ 0, 0, 1 ])
+                ];
+            } else if(type == "move3d") {
+                return [
+                    new Float32Array([ 1, 0, 0, a[1] ]),
+                    new Float32Array([ 0, 1, 0, a[2] ]),
+                    new Float32Array([ 0, 0, 1, a[3] ]),
+                    new Float32Array([ 0, 0, 0, 1 ])
+                ];
+            } else if(type == "scale3d") {
+                return [
+                    new Float32Array([ a[1], 0, 0, 0 ]),
+                    new Float32Array([ 0, a[2], 0, 0 ]),
+                    new Float32Array([ 0, 0, a[3], 0 ]),
+                    new Float32Array([ 0, 0, 0, 1 ])
+                ];
+            } else if(type == "rotate3dz") {
+                return [
+                    new Float32Array([ Math.cos(math.radian(a[1])), -Math.sin(math.radian(a[1])), 0, 0 ]),
+                    new Float32Array([ Math.sin(math.radian(a[1])), Math.cos(math.radian(a[1])), 0, 0 ]),
+                    new Float32Array([ 0, 0, 1, 0 ]),
+                    new Float32Array([ 0, 0, 0, 1 ])
+                ];
+            } else if(type == "rotate3dx") {
+                return [
+                    new Float32Array([ 1, 0, 0, 0 ]),
+                    new Float32Array([ 0, Math.cos(math.radian(a[1])), -Math.sin(math.radian(a[1])), 0 ]),
+                    new Float32Array([ 0, Math.sin(math.radian(a[1])), Math.cos(math.radian(a[1])), 0 ]),
+                    new Float32Array([ 0, 0, 0, 1 ])
+                ];
+            } else if(type == "rotate3dy") {
+                return [
+                    new Float32Array([ Math.cos(math.radian(a[1])), 0, Math.sin(math.radian(a[1])), 0 ]),
+                    new Float32Array([ 0, 1, 0, 0 ]),
+                    new Float32Array([ -Math.sin(math.radian(a[1])), 0, Math.cos(math.radian(a[1])), 0 ]),
+                    new Float32Array([ 0, 0, 0, 1 ])
+                ];
             }
-
-            return map[type];
         }
 
         // 2차원 이동
@@ -3590,7 +3654,7 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 	return self;
 });
 
-jui.define("util.color", ["jquery"], function($) {
+jui.define("util.color", ["jquery", "util.math"], function($, math) {
 
 	/**
 	 *  @class util.color
@@ -3604,13 +3668,13 @@ jui.define("util.color", ["jquery"], function($) {
 		format : function(obj, type) {
 			if (type == 'hex') {
 				var r = obj.r.toString(16);
-				if (r < 10) r = "0" + r;
+				if (obj.r < 16) r = "0" + r;
 
 				var g = obj.g.toString(16);
-				if (g < 10) g = "0" + g;
+				if (obj.g < 16) g = "0" + g;
 
 				var b = obj.b.toString(16);
-				if (b < 10) b = "0" + b;
+				if (obj.b < 16) b = "0" + b;
 
 				return "#" + [r,g,b].join("").toUpperCase();
 			} else if (type == 'rgb') {
@@ -3645,49 +3709,88 @@ jui.define("util.color", ["jquery"], function($) {
 				return func;
 			}
 
+			func.ticks = function (n) {
+				var unit = (1/n);
+
+				var start = 0;
+				var colors = [];
+				while(start <= 1) {
+					var c = func(start, 'hex');
+					colors.push(c);
+					start = math.plus(start, unit);
+				}
+
+				return colors;
+
+			}
+
 			return func;
 		},
 
-		rgb : function (str) {
-			if (str.indexOf("rgb(") > -1) {
-				var arr = str.replace("rgb(", "").replace(")","").split(",");
+		map : function (color_list, count) {
 
-				for(var i = 0, len = arr.length; i < len; i++) {
-					arr[i] = parseInt($.trim(arr[i]), 10);
+			var colors = [];
+			count = count || 5;
+			var scale = self.scale();
+			for(var i = 0, len = color_list.length-1; i < len; i++) {
+				if (i == 0) {
+					colors = scale.domain(color_list[i], color_list[i + 1]).ticks(count);
+				} else {
+					var colors2 = scale.domain(color_list[i], color_list[i + 1]).ticks(count);
+					colors2.shift();
+					colors = colors.concat(colors2);
 				}
+			}
 
-				return { r : arr[0], g : arr[1], b : arr[2], a : 1	};
-			} else if (str.indexOf("rgba(") > -1) {
-				var arr = str.replace("rgba(", "").replace(")","").split(",");
+			return colors;
+		},
 
-				for(var i = 0, len = arr.length; i < len; i++) {
+		rgb : function (str) {
 
-					if (len - 1 == i) {
-						arr[i] = parseFloat($.trim(arr[i]));
-					} else {
+			if (typeof str == 'string') {
+				if (str.indexOf("rgb(") > -1) {
+					var arr = str.replace("rgb(", "").replace(")","").split(",");
+
+					for(var i = 0, len = arr.length; i < len; i++) {
 						arr[i] = parseInt($.trim(arr[i]), 10);
 					}
-				}
 
-				return { r : arr[0], g : arr[1], b : arr[2], a : arr[3]};
-			} else if (str.indexOf("#") == 0) {
+					return { r : arr[0], g : arr[1], b : arr[2], a : 1	};
+				} else if (str.indexOf("rgba(") > -1) {
+					var arr = str.replace("rgba(", "").replace(")","").split(",");
 
-				str = str.replace("#", "");
+					for(var i = 0, len = arr.length; i < len; i++) {
 
-				var arr = [];
-				if (str.length == 3) {
-					for(var i = 0, len = str.length; i < len; i++) {
-						var char = str.substr(i, 1);
-						arr.push(parseInt(char+char, 16));
+						if (len - 1 == i) {
+							arr[i] = parseFloat($.trim(arr[i]));
+						} else {
+							arr[i] = parseInt($.trim(arr[i]), 10);
+						}
 					}
-				} else {
-					for(var i = 0, len = str.length; i < len; i+=2) {
-						arr.push(parseInt(str.substr(i, 2), 16));
-					}
-				}
 
-				return { r : arr[0], g : arr[1], b : arr[2], a : 1	};
+					return { r : arr[0], g : arr[1], b : arr[2], a : arr[3]};
+				} else if (str.indexOf("#") == 0) {
+
+					str = str.replace("#", "");
+
+					var arr = [];
+					if (str.length == 3) {
+						for(var i = 0, len = str.length; i < len; i++) {
+							var char = str.substr(i, 1);
+							arr.push(parseInt(char+char, 16));
+						}
+					} else {
+						for(var i = 0, len = str.length; i < len; i+=2) {
+							arr.push(parseInt(str.substr(i, 2), 16));
+						}
+					}
+
+					return { r : arr[0], g : arr[1], b : arr[2], a : 1	};
+				}
 			}
+
+			return str;
+
 		},
 
 		HSVtoRGB : function (H, S, V) {
@@ -3927,7 +4030,15 @@ jui.define("util.color", ["jquery"], function($) {
 
 		}
 
-	}
+	};
+
+	self.map.parula = function (count) {  return self.map(['#352a87', '#0f5cdd', '#00b5a6', '#ffc337', '#fdff00'], count); }
+	self.map.jet = function (count) {  return self.map(['#00008f', '#0020ff', '#00ffff', '#51ff77', '#fdff00', '#ff0000', '#800000'], count); }
+	self.map.hsv = function (count) {  return self.map(['#ff0000', '#ffff00', '#00ff00', '#00ffff', '#0000ff', '#ff00ff', '#ff0000'], count); }
+	self.map.hot = function (count) {  return self.map(['#0b0000', '#ff0000', '#ffff00', '#ffffff'], count); }
+	self.map.pink = function (count) {  return self.map(['#1e0000', '#bd7b7b', '#e7e5b2', '#ffffff'], count); }
+	self.map.bone = function (count) {  return self.map(['#000000', '#4a4a68', '#a6c6c6', '#ffffff'], count); }
+	self.map.copper = function (count) {  return self.map(['#000000', '#3d2618', '#9d623e', '#ffa167', '#ffc77f'], count); }
 
 	return self;
 });
@@ -3952,6 +4063,7 @@ jui.define("util.svg.element", [], function() {
             this.parent = null;
             this.styles = {};
             this.attributes = {};
+            this.order = 0;
 
             // 기본 속성 설정
             this.attr(attr);
@@ -5058,9 +5170,17 @@ jui.define("util.svg",
         }
         
         function appendAll(target) {
-            var len = target.children.length;
-            for(var i = 0; i < len; i++) {
-                var child = target.children[i];
+            var childs = target.children;
+
+            // 엘리먼트 렌더링 순서 정하기
+            if(isOrderingChild(childs)) {
+                childs.sort(function (a, b) {
+                    return a.order - b.order;
+                });
+            }
+
+            for(var i = 0, len = childs.length; i < len; i++) {
+                var child = childs[i];
 
                 if(child) {
                     if(child.children.length > 0) {
@@ -5077,6 +5197,16 @@ jui.define("util.svg",
                     }
                 }
             }
+        }
+
+        function isOrderingChild(childs) { // order가 0 이상인 엘리먼트가 하나라도 있을 경우
+            for(var i = 0, len = childs.length; i < len; i++) {
+                if(childs[i].order > 0) {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         this.create = function(obj, type, attr, callback) {
@@ -5394,6 +5524,64 @@ jui.define("util.svg",
     return SVG;
 }, "util.svg.3d");
 
+jui.define("chart.vector", [], function() {
+    var Vector = function(x, y, z) {
+        this.x = x || 0;
+        this.y = y || 0;
+        this.z = z || 0;
+
+        this.add = function(numberOrVector) {
+            if(numberOrVector instanceof Vector) {
+                return new Vector(this.x + numberOrVector.x, this.y + numberOrVector.y, this.z + numberOrVector.z);
+            }
+
+            return new Vector(this.x + numberOrVector, this.y + numberOrVector, this.z + numberOrVector);
+        }
+
+        this.subtract = function(numberOrVector) {
+            if(numberOrVector instanceof Vector) {
+                return new Vector(this.x - numberOrVector.x, this.y - numberOrVector.y, this.z - numberOrVector.z);
+            }
+
+            return new Vector(this.x - numberOrVector, this.y - numberOrVector, this.z - numberOrVector);
+        }
+
+        this.multiply = function(numberOrVector) {
+            if(numberOrVector instanceof Vector) {
+                return new Vector(this.x * numberOrVector.x, this.y * numberOrVector.y, this.z * numberOrVector.z);
+            }
+
+            return new Vector(this.x * numberOrVector, this.y * numberOrVector, this.z * numberOrVector);
+        }
+
+        this.dotProduct = function(vector) {
+            var value = this.x * vector.x + this.y * vector.y + this.z * vector.z;
+            return Math.acos(value / (this.getMagnitude() * vector.getMagnitude()))
+        }
+
+        this.crossProduct = function(vector) {
+            return new Vector(
+                this.y * vector.z - this.z * vector.y,
+                this.z * vector.x - this.x * vector.z,
+                this.x * vector.y - this.y * vector.x
+            );
+        }
+
+        this.normalize = function() {
+            var mag = this.getMagnitude();
+
+            this.x /= mag;
+            this.y /= mag;
+            this.z /= mag;
+        }
+
+        this.getMagnitude = function() {
+            return Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
+        }
+    }
+
+    return Vector;
+});
 jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
     /**
      * @class chart.draw
@@ -5576,13 +5764,19 @@ jui.define("chart.draw", [ "jquery", "util.base" ], function($, _) {
                 h = this.axis.area("height"),
                 d = this.axis.depth,
                 r = this.axis.degree,
+                p = this.axis.perspective,
                 list = arguments;
 
             if(_.typeCheck("integer", r)) {
                 r = { x: r, y: r, z: r };
+            } else if(_.typeCheck("object", r)) {
+                if(!_.typeCheck("integer", r.x)) r.x = 0;
+                if(!_.typeCheck("integer", r.y)) r.y = 0;
+                if(!_.typeCheck("integer", r.z)) r.z = 0;
             }
 
-            for (var i = 0; i < list.length; i++) {
+            for(var i = 0; i < list.length; i++) {
+                list[i].perspective = p;
                 list[i].rotate(w, h, d, r);
             }
         }
@@ -5683,6 +5877,7 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             obj.chart = chart;
             obj.axis = axis;
             obj.grid = axis[k];
+            obj.svg = chart.svg;
 
             var elem = obj.render();
 
@@ -5727,6 +5922,7 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             map.chart = chart;
             map.axis = axis;
             map.map = axis[k];
+            map.svg = chart.svg;
 
             // 그리드 별 위치 선정하기
             var elem = map.render();
@@ -5897,7 +6093,8 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
                 end : cloneAxis.end,
 
                 degree : cloneAxis.degree,
-                depth : cloneAxis.depth
+                depth : cloneAxis.depth,
+                perspective : cloneAxis.perspective
             });
 
             // 원본 데이터 설정
@@ -6197,7 +6394,9 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             /** @cfg {Number} [degree=0]  Set degree of 3d chart */
             degree: 0,
             /** @cfg {Number} [depth=0]  Set depth of 3d chart  */
-            depth: 0
+            depth: 0,
+            /** @cfg {Number} [perspective=0.9]  Set perspective values in the 3d chart  */
+            perspective: 0.9
         }
     }
 
@@ -6685,7 +6884,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
         var _padding, _area,  _theme, _hash = {};
         var _initialize = false, _options = null, _handler = { render: [], renderAll: [] }; // 리셋 대상 커스텀 이벤트 핸들러
         var _scale = 1, _xbox = 0, _ybox = 0; // 줌인/아웃, 뷰박스X/Y 관련 변수
-        var _isDelay = false; // 렌더링 딜레이
 
         function calculate(self) {
             var max = self.svg.size();
@@ -6772,6 +6970,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                     draw.chart = self;
                     draw.axis = axis;
                     draw.brush = draws[i];
+                    draw.svg = self.svg;
 
                     // 브러쉬 렌더링
                     draw.render();
@@ -6797,6 +6996,7 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
                     draw.chart = self;
                     draw.axis = _axis[0];
                     draw.widget = draws[i];
+                    draw.svg = self.svg;
 
                     // 위젯은 렌더 옵션이 false일 때, 최초 한번만 로드함 (연산 + 드로잉)
                     // 하지만 isAll이 true이면, 강제로 연산 및 드로잉을 함 (테마 변경 및 리사이징 시)
@@ -7476,8 +7676,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
          * @param {Boolean} isAll
          */
         this.render = function(isAll) {
-            if(_isDelay) return;
-
             // SVG 메인 리셋
             this.svg.reset(isAll);
 
@@ -7507,15 +7705,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
 
             // 초기화 및 렌더링 체크 설정
             _initialize = true;
-
-            // 렌더링 딜레이 설정
-            if(_options.delay > 0) {
-                _isDelay = true;
-
-                setTimeout(function () {
-                    _isDelay = false;
-                }, _options.delay);
-            }
         }
 
         /**
@@ -7692,8 +7881,6 @@ jui.defineUI("chart.builder", [ "jquery", "util.base", "util.svg", "util.color",
             format: null,
             /** @cfg {Boolean} [render=true] Does not render a chart when a rendering-related method is called with false (although the render method is not included). */
             render: true,
-            /** @cfg {Integer} [delay=0] The minimum delay of the chart rendering. */
-            delay: 0,
 
             /**
              * @cfg {Object} icon Icon-related settings available in the chart.
@@ -8026,7 +8213,9 @@ jui.define("chart.theme.jennifer", [], function() {
         polygonColumnBackgroundOpacity: 0.6,
         polygonColumnBorderOpacity: 0.5,
         polygonScatterRadialOpacity: 0.7,
-        polygonScatterBackgroundOpacity: 0.8
+        polygonScatterBackgroundOpacity: 0.8,
+        polygonLineBackgroundOpacity: 0.6,
+        polygonLineBorderOpacity: 0.7
     }
 });
 jui.define("chart.theme.gradient", [], function() {
@@ -8257,7 +8446,9 @@ jui.define("chart.theme.gradient", [], function() {
         polygonColumnBackgroundOpacity: 0.6,
         polygonColumnBorderOpacity: 0.5,
         polygonScatterRadialOpacity: 0.7,
-        polygonScatterBackgroundOpacity: 0.8
+        polygonScatterBackgroundOpacity: 0.8,
+        polygonLineBackgroundOpacity: 0.6,
+        polygonLineBorderOpacity: 0.7
     }
 });
 jui.define("chart.theme.dark", [], function() {
@@ -8486,7 +8677,9 @@ jui.define("chart.theme.dark", [], function() {
         polygonColumnBackgroundOpacity: 0.6,
         polygonColumnBorderOpacity: 0.5,
         polygonScatterRadialOpacity: 0.7,
-        polygonScatterBackgroundOpacity: 0.8
+        polygonScatterBackgroundOpacity: 0.8,
+        polygonLineBackgroundOpacity: 0.6,
+        polygonLineBorderOpacity: 0.7
     }
 });
 jui.define("chart.theme.pastel", [], function() {
@@ -8712,7 +8905,9 @@ jui.define("chart.theme.pastel", [], function() {
 		polygonColumnBackgroundOpacity: 0.6,
 		polygonColumnBorderOpacity: 0.5,
 		polygonScatterRadialOpacity: 0.7,
-		polygonScatterBackgroundOpacity: 0.8
+		polygonScatterBackgroundOpacity: 0.8,
+		polygonLineBackgroundOpacity: 0.6,
+		polygonLineBorderOpacity: 0.7
 	}
 }); 
 jui.define("chart.theme.pattern", [], function() {
@@ -8938,7 +9133,9 @@ jui.define("chart.theme.pattern", [], function() {
         polygonColumnBackgroundOpacity: 0.6,
         polygonColumnBorderOpacity: 0.5,
         polygonScatterRadialOpacity: 0.7,
-        polygonScatterBackgroundOpacity: 0.8
+        polygonScatterBackgroundOpacity: 0.8,
+        polygonLineBackgroundOpacity: 0.6,
+        polygonLineBorderOpacity: 0.7
     }
 });
 jui.define("chart.pattern.jennifer", [], function() {
@@ -9175,7 +9372,7 @@ jui.define("chart.pattern.jennifer", [], function() {
 });
 jui.define("chart.icon.jennifer", [], function() {
 	return {
-		"pin" : "\ue945",
+		"lock" : "\ue971",
 		"add-dir" : "\ue900",
 		"add-dir2" : "\ue901",
 		"align-center" : "\ue902",
@@ -9183,155 +9380,168 @@ jui.define("chart.icon.jennifer", [], function() {
 		"align-right" : "\ue904",
 		"analysis" : "\ue905",
 		"analysis2" : "\ue906",
-		"arrow1" : "\ue907",
-		"arrow2" : "\ue908",
-		"arrow3" : "\ue909",
-		"bell" : "\ue90a",
-		"blogger" : "\ue90b",
-		"bold" : "\ue90c",
-		"calendar" : "\ue90d",
-		"caution" : "\ue90e",
-		"caution2" : "\ue90f",
-		"chart-area" : "\ue910",
-		"chart-bar" : "\ue911",
-		"chart-candle" : "\ue912",
-		"chart-column" : "\ue913",
-		"chart-gauge" : "\ue914",
-		"chart-line" : "\ue915",
-		"chart-radar" : "\ue916",
-		"chart-scatter" : "\ue917",
-		"chart" : "\ue918",
-		"check" : "\ue919",
-		"checkmark" : "\ue91a",
-		"chevron-left" : "\ue91b",
-		"chevron-right" : "\ue91c",
-		"close" : "\ue91d",
-		"connection" : "\ue91e",
-		"dashboard" : "\ue91f",
-		"dashboardlist" : "\ue920",
-		"db" : "\ue921",
-		"device" : "\ue922",
-		"document" : "\ue923",
-		"download" : "\ue924",
-		"edit" : "\ue925",
-		"etc" : "\ue926",
-		"exit" : "\ue927",
-		"facebook" : "\ue928",
-		"gear" : "\ue929",
-		"github" : "\ue92a",
-		"googleplus" : "\ue92b",
-		"help" : "\ue92c",
-		"hide" : "\ue92d",
-		"home" : "\ue92e",
-		"html" : "\ue92f",
-		"image" : "\ue930",
-		"indent" : "\ue931",
-		"info-message" : "\ue932",
-		"info" : "\ue933",
-		"italic" : "\ue934",
-		"jennifer-server" : "\ue935",
-		"label" : "\ue936",
-		"left" : "\ue937",
-		"like" : "\ue938",
-		"line-height" : "\ue939",
-		"link" : "\ue93a",
-		"loading" : "\ue93b",
-		"menu" : "\ue93c",
-		"message" : "\ue93d",
-		"minus" : "\ue93e",
-		"monitoring" : "\ue93f",
-		"more" : "\ue940",
-		"new-window" : "\ue941",
-		"orderedlist" : "\ue942",
-		"outdent" : "\ue943",
-		"pause" : "\ue944",
-		"play" : "\ue946",
-		"plus" : "\ue947",
-		"preview" : "\ue948",
-		"printer" : "\ue949",
-		"profile" : "\ue94a",
-		"realtime" : "\ue94b",
-		"refresh" : "\ue94c",
-		"refresh2" : "\ue94d",
-		"report-build" : "\ue94e",
-		"report-link" : "\ue94f",
-		"report" : "\ue950",
-		"report2" : "\ue951",
-		"resize" : "\ue952",
-		"return" : "\ue953",
-		"right" : "\ue954",
-		"rule" : "\ue955",
-		"save" : "\ue956",
-		"search" : "\ue957",
-		"server" : "\ue958",
-		"share" : "\ue959",
-		"statistics" : "\ue95a",
-		"stop" : "\ue95b",
-		"stoppage" : "\ue95c",
-		"table" : "\ue95d",
-		"template" : "\ue95e",
-		"text" : "\ue95f",
-		"textcolor" : "\ue960",
-		"tool" : "\ue961",
-		"trashcan" : "\ue962",
-		"twitter" : "\ue963",
-		"underline" : "\ue964",
-		"unorderedlist" : "\ue965",
-		"upload" : "\ue966",
-		"user" : "\ue967",
-		"was" : "\ue968",
-		"ws" : "\ue969"
+		"arrow4" : "\ue907",
+		"arrow1" : "\ue908",
+		"arrow2" : "\ue909",
+		"arrow3" : "\ue90a",
+		"bell" : "\ue90b",
+		"blogger" : "\ue90c",
+		"bold" : "\ue90d",
+		"build" : "\ue90e",
+		"business" : "\ue90f",
+		"calendar" : "\ue910",
+		"caution" : "\ue911",
+		"caution2" : "\ue912",
+		"chart-area" : "\ue913",
+		"chart-bar" : "\ue914",
+		"chart-candle" : "\ue915",
+		"chart-column" : "\ue916",
+		"chart-gauge" : "\ue917",
+		"chart-line" : "\ue918",
+		"chart-radar" : "\ue919",
+		"chart-scatter" : "\ue91a",
+		"chart" : "\ue91b",
+		"check" : "\ue91c",
+		"checkmark" : "\ue91d",
+		"chevron-left" : "\ue91e",
+		"chevron-right" : "\ue91f",
+		"close" : "\ue920",
+		"connection" : "\ue921",
+		"dashboard" : "\ue922",
+		"dashboardlist" : "\ue923",
+		"db" : "\ue924",
+		"device" : "\ue925",
+		"document" : "\ue926",
+		"domain" : "\ue927",
+		"download" : "\ue928",
+		"edit" : "\ue929",
+		"etc" : "\ue92a",
+		"exit" : "\ue92b",
+		"facebook" : "\ue92c",
+		"gear" : "\ue92d",
+		"github" : "\ue92e",
+		"googleplus" : "\ue92f",
+		"help" : "\ue930",
+		"hide" : "\ue931",
+		"home" : "\ue932",
+		"html" : "\ue933",
+		"image" : "\ue934",
+		"indent" : "\ue935",
+		"info-message" : "\ue936",
+		"info" : "\ue937",
+		"italic" : "\ue938",
+		"jennifer-server" : "\ue939",
+		"label" : "\ue93a",
+		"left" : "\ue93b",
+		"like" : "\ue93c",
+		"line-height" : "\ue93d",
+		"link" : "\ue93e",
+		"loading" : "\ue93f",
+		"menu" : "\ue940",
+		"message" : "\ue941",
+		"minus" : "\ue942",
+		"monitoring" : "\ue943",
+		"more" : "\ue944",
+		"new-window" : "\ue945",
+		"orderedlist" : "\ue946",
+		"outdent" : "\ue947",
+		"pause" : "\ue948",
+		"pin" : "\ue949",
+		"play" : "\ue94a",
+		"plus" : "\ue94b",
+		"preview" : "\ue94c",
+		"printer" : "\ue94d",
+		"profile" : "\ue94e",
+		"realtime" : "\ue94f",
+		"refresh" : "\ue950",
+		"refresh2" : "\ue951",
+		"report-build" : "\ue952",
+		"report-link" : "\ue953",
+		"report" : "\ue954",
+		"report2" : "\ue955",
+		"resize" : "\ue956",
+		"return" : "\ue957",
+		"right" : "\ue958",
+		"rule" : "\ue959",
+		"save" : "\ue95a",
+		"script" : "\ue95b",
+		"search" : "\ue95c",
+		"server" : "\ue95d",
+		"share" : "\ue95e",
+		"statistics" : "\ue95f",
+		"stop" : "\ue960",
+		"stoppage" : "\ue961",
+		"table" : "\ue962",
+		"template" : "\ue963",
+		"text" : "\ue964",
+		"textcolor" : "\ue965",
+		"themes" : "\ue966",
+		"themes2" : "\ue967",
+		"tool" : "\ue968",
+		"trashcan" : "\ue969",
+		"twitter" : "\ue96a",
+		"underline" : "\ue96b",
+		"unorderedlist" : "\ue96c",
+		"upload" : "\ue96d",
+		"user" : "\ue96e",
+		"was" : "\ue96f",
+		"ws" : "\ue970"
 	}
 });
-jui.define("chart.polygon.core", [ "util.transform", "util.math" ], function(Transform, math) {
+jui.define("chart.polygon.core", [ "chart.vector", "util.transform", "util.math", "util.base" ],
+    function(Vector, Transform, math, _) {
+
     var PolygonCore = function() {
         this.perspective = 0.9;
-        this.vertices = [];
-        this.faces = [];
-        this.edges = [];
-
-        this.normalize = function() {
-            for(var i = 0; i < this.vertices.length; i++) {
-                var x = this.vertices[i][0],
-                    y = this.vertices[i][1],
-                    z = this.vertices[i][2],
-                    u = Math.sqrt(x*x + y*y + z*z);
-
-                this.vertices[i][0] /= u;
-                this.vertices[i][1] /= u;
-                this.vertices[i][2] /= u;
-            }
-        }
 
         this.rotate = function(width, height, depth, degree) {
-            var t = new Transform(this.vertices),
-                p = this.perspective,
+            var p = this.perspective,
                 cx = width / 2,
                 cy = height / 2,
-                cz = depth / 2;
+                cz = depth / 2,
+                maxDepth = Math.max(width, height, depth),
+                t = new Transform(this.vertices),
+                m = t.matrix("move3d", cx, cy, cz);
 
-            t.merge2(function(x, y, z, w) {
-                var s = math.scaleValue(z, 0, depth, 1, p);
+            // 폴리곤 이동 및 각도 변경
+            m = math.matrix3d(m, t.matrix("rotate3dx", degree.x));
+            m = math.matrix3d(m, t.matrix("rotate3dy", degree.y));
+            m = math.matrix3d(m, t.matrix("rotate3dz", degree.z));
+            m = math.matrix3d(m, t.matrix("move3d", -cx, -cy, -cz));
+            this.vertices = t.custom(m);
 
-                return [
-                    [ "move3d", cx, cy, cz ],
-                    [ "rotate3dx", degree.x ],
-                    [ "rotate3dy", degree.y ],
-                    [ "rotate3dz", degree.z ],
-                    [ "scale3d", s, s, 1 ],
-                    [ "move3d", -cx, -cy, -cz ]
-                ]
-            });
+            for (var i = 0, count = this.vertices.length; i < count; i++) {
+                var far = Math.abs(this.vertices[i][2] - maxDepth),
+                    s = math.scaleValue(far, 0, maxDepth, p, 1),
+                    t2 = new Transform(),
+                    m2 = t2.matrix("move3d", cx, cy, maxDepth/2);
+
+                // 폴리곤 스케일 변경
+                m2 = math.matrix3d(m2, t2.matrix("scale3d", s, s, s));
+                m2 = math.matrix3d(m2, t2.matrix("move3d", -cx, -cy, -maxDepth/2));
+                this.vertices[i] = math.matrix3d(m2, this.vertices[i]);
+
+                // 벡터 객체 생성 및 갱신
+                if(_.typeCheck("array", this.vectors)) {
+                    if(this.vectors[i] == null) {
+                        this.vectors[i] = new Vector(this.vertices[i][0], this.vertices[i][1], this.vertices[i][2]);
+                    } else {
+                        this.vectors[i].x = this.vertices[i][0];
+                        this.vectors[i].y = this.vertices[i][1];
+                        this.vectors[i].z = this.vertices[i][2];
+                    }
+                }
+            }
         }
 
         this.min = function() {
             var obj = {
-                x: Number.MAX_VALUE,
-                y: Number.MAX_VALUE,
-                z: Number.MAX_VALUE
+                x: this.vertices[0][0],
+                y: this.vertices[0][1],
+                z: this.vertices[0][2]
             };
 
-            for(var i = 0, len = this.vertices.length; i < len; i++) {
+            for(var i = 1, len = this.vertices.length; i < len; i++) {
                 obj.x = Math.min(obj.x, this.vertices[i][0]);
                 obj.y = Math.min(obj.y, this.vertices[i][1]);
                 obj.z = Math.min(obj.z, this.vertices[i][2]);
@@ -9342,12 +9552,12 @@ jui.define("chart.polygon.core", [ "util.transform", "util.math" ], function(Tra
 
         this.max = function() {
             var obj = {
-                x: Number.MIN_VALUE,
-                y: Number.MIN_VALUE,
-                z: Number.MIN_VALUE
+                x: this.vertices[0][0],
+                y: this.vertices[0][1],
+                z: this.vertices[0][2]
             };
 
-            for(var i = 0, len = this.vertices.length; i < len; i++) {
+            for(var i = 1, len = this.vertices.length; i < len; i++) {
                 obj.x = Math.max(obj.x, this.vertices[i][0]);
                 obj.y = Math.max(obj.y, this.vertices[i][1]);
                 obj.z = Math.max(obj.z, this.vertices[i][2]);
@@ -9359,8 +9569,8 @@ jui.define("chart.polygon.core", [ "util.transform", "util.math" ], function(Tra
 
     return PolygonCore;
 });
-jui.define("chart.polygon.face", [], function() {
-    var FacePolygon = function(type, width, height, depth) {
+jui.define("chart.polygon.grid", [], function() {
+    var GridPolygon = function(type, width, height, depth) {
         var matrix = {
             center: [
                 new Float32Array([ 0, 0, depth, 1 ]),
@@ -9383,16 +9593,20 @@ jui.define("chart.polygon.face", [], function() {
         };
 
         this.vertices = matrix[type];
+
+        this.vectors = [];
     }
 
-    return FacePolygon;
+    return GridPolygon;
 }, "chart.polygon.core");
 jui.define("chart.polygon.line", [], function() {
     var LinePolygon = function(x1, y1, d1, x2, y2, d2) {
         this.vertices = [
             new Float32Array([ x1, y1, d1, 1 ]),
             new Float32Array([ x2, y2, d2, 1 ])
-        ]
+        ];
+
+        this.vectors = [];
     }
 
     return LinePolygon;
@@ -9401,7 +9615,9 @@ jui.define("chart.polygon.point", [], function() {
     var PointPolygon = function(x, y, d) {
         this.vertices = [
             new Float32Array([ x, y, d, 1 ])
-        ]
+        ];
+
+        this.vectors = [];
     }
 
     return PointPolygon;
@@ -9421,13 +9637,15 @@ jui.define("chart.polygon.cube", [], function() {
         ];
 
         this.faces = [
-            new Float32Array([ 0, 1, 2, 3 ]),
-            new Float32Array([ 3, 2, 6, 7 ]),
-            new Float32Array([ 0, 3, 7, 4 ]),
-            new Float32Array([ 1, 2, 6, 5 ]),
-            new Float32Array([ 0, 1, 5, 4 ]),
-            new Float32Array([ 4, 5, 6, 7 ])
+            [ 0, 1, 2, 3 ],
+            [ 3, 2, 6, 7 ],
+            [ 0, 3, 7, 4 ],
+            [ 1, 2, 6, 5 ],
+            [ 0, 1, 5, 4 ],
+            [ 4, 5, 6, 7 ]
         ];
+
+        this.vectors = [];
     }
 
     return CubePolygon;
@@ -9678,8 +9896,8 @@ jui.define("chart.grid.draw2d", [ "util.base", "util.math" ], function(_, math) 
 
     return Draw2DGrid;
 }, "chart.draw");
-jui.define("chart.grid.draw3d", [ "util.base", "chart.polygon.face", "chart.polygon.line", "chart.polygon.point" ],
-    function(_, FacePolygon, LinePolygon, PointPolygon) {
+jui.define("chart.grid.draw3d", [ "util.base", "chart.polygon.grid", "chart.polygon.line", "chart.polygon.point" ],
+    function(_, GridPolygon, LinePolygon, PointPolygon) {
 
     /**
      * @class chart.grid.draw3d
@@ -9770,21 +9988,21 @@ jui.define("chart.grid.draw3d", [ "util.base", "chart.polygon.face", "chart.poly
                 d = this.axis.depth;
 
             if(position == "center") {
-                p = new FacePolygon("center", w, h, d);
+                p = new GridPolygon("center", w, h, d);
             } else {
                 if(isTopOrBottom) {
                     h = (position == "bottom") ? h : 0;
-                    p = new FacePolygon("horizontal", w, h, d);
+                    p = new GridPolygon("horizontal", w, h, d);
                 } else {
                     w = (position == "right") ? w : 0;
-                    p = new FacePolygon("vertical", w, h, d);
+                    p = new GridPolygon("vertical", w, h, d);
                 }
             }
 
             // 사각면 위치 계산 및 추가
             this.calculate3d(p);
-            for(var i = 0; i < p.vertices.length; i++) {
-                face.point(p.vertices[i][0], p.vertices[i][1]);
+            for(var i = 0; i < p.vectors.length; i++) {
+                face.point(p.vectors[i].x, p.vectors[i].y);
             }
 
             axis.append(face);
@@ -9823,19 +10041,19 @@ jui.define("chart.grid.draw3d", [ "util.base", "chart.polygon.face", "chart.poly
                 var lo1 = this.line({
                     stroke: this.chart.theme("gridBorderColor"),
                     "stroke-width": this.chart.theme("gridBorderWidth"),
-                    x1: l1.vertices[0][0],
-                    y1: l1.vertices[0][1],
-                    x2: l1.vertices[1][0],
-                    y2: l1.vertices[1][1]
+                    x1: l1.vectors[0].x,
+                    y1: l1.vectors[0].y,
+                    x2: l1.vectors[1].x,
+                    y2: l1.vectors[1].y
                 });
 
                 var lo2 = this.line({
                     stroke: this.chart.theme("gridBorderColor"),
                     "stroke-width": this.chart.theme("gridBorderWidth"),
-                    x1: l2.vertices[0][0],
-                    y1: l2.vertices[0][1],
-                    x2: l2.vertices[1][0],
-                    y2: l2.vertices[1][1]
+                    x1: l2.vectors[0].x,
+                    y1: l2.vectors[0].y,
+                    x2: l2.vectors[1].x,
+                    y2: l2.vectors[1].y
                 });
 
                 if (line.type.indexOf("dashed") > -1) {
@@ -9867,19 +10085,19 @@ jui.define("chart.grid.draw3d", [ "util.base", "chart.polygon.face", "chart.poly
                 axis.append(this.line({
                     stroke: this.chart.theme("gridBorderColor"),
                     "stroke-width": this.chart.theme("gridBorderWidth"),
-                    x1: p1.vertices[0][0],
-                    y1: p1.vertices[0][1],
-                    x2: p1.vertices[1][0],
-                    y2: p1.vertices[1][1]
+                    x1: p1.vectors[0].x,
+                    y1: p1.vectors[0].y,
+                    x2: p1.vectors[1].x,
+                    y2: p1.vectors[1].y
                 }));
 
                 axis.append(this.line({
                     stroke: this.chart.theme("gridBorderColor"),
                     "stroke-width": this.chart.theme("gridBorderWidth"),
-                    x1: p2.vertices[0][0],
-                    y1: p2.vertices[0][1],
-                    x2: p2.vertices[1][0],
-                    y2: p2.vertices[1][1]
+                    x1: p2.vectors[0].x,
+                    y1: p2.vectors[0].y,
+                    x2: p2.vectors[1].x,
+                    y2: p2.vectors[1].y
                 }));
             }
         }
@@ -9914,8 +10132,8 @@ jui.define("chart.grid.draw3d", [ "util.base", "chart.polygon.face", "chart.poly
             this.calculate3d(p);
 
             axis.append(this.getTextRotate(this.chart.text({
-                x: p.vertices[0][0],
-                y: p.vertices[0][1],
+                x: p.vectors[0].x,
+                y: p.vectors[0].y,
                 dx: !isVertical ? this.chart.theme("gridXFontSize") / 3 : 0,
                 dy: isVertical ? this.chart.theme("gridYFontSize") / 3 : 0,
                 fill: this.chart.theme(isVertical ? "gridYFontColor" : "gridXFontColor"),
@@ -9945,8 +10163,8 @@ jui.define("chart.grid.draw3d", [ "util.base", "chart.polygon.face", "chart.poly
                 this.calculate3d(p);
 
                 axis.append(this.getTextRotate(this.chart.text({
-                    x: p.vertices[0][0],
-                    y: p.vertices[0][1],
+                    x: p.vectors[0].x,
+                    y: p.vectors[0].y,
                     fill: this.chart.theme("gridZFontColor"),
                     "text-anchor": (isLeft) ? "start" : "end",
                     "font-size": this.chart.theme("gridZFontSize"),
@@ -10470,6 +10688,18 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 
 		}
 
+		this.wrapper = function(scale, key) {
+			var old_scale = scale;
+			var self = this;
+			var len = self.domain.length;
+
+			function new_scale(i) {
+				return old_scale(len - i - 1);
+			}
+
+			return (this.grid.reverse) ? $.extend(new_scale, old_scale) : old_scale;
+		}
+
 		this.drawBefore = function() {
 			var domain = this.initDomain(),
 				obj = this.getGridSize(),
@@ -10504,7 +10734,9 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 			/** @cfg {Boolean} [reverse=false] Reverses the value on domain values*/
 			reverse: false,
 			/** @cfg {Number} [max=10] Sets the maximum value of a grid. */
-			max: 10
+			max: 10,
+			/** @cfg {Boolean} [hideText=false] Determines whether to show text across the grid. */
+			hideText: false
 		};
 	}
 
@@ -10676,7 +10908,9 @@ jui.define("chart.grid.date", [ "util.time", "util.scale", "util.base" ], functi
 			/** @cfg {String} [key=null] Sets the value on the grid to the value for the specified key. */
 			key: null,
 			/** @cfg {"years"/"months"/"days"/"hours"/"minutes"/"seconds"/"milliseconds"} [realtime=""] Determines whether to use as a real-time grid. */
-			realtime: null
+			realtime: null,
+			/** @cfg {Boolean} [hideText=false] Determines whether to show text across the grid. */
+			hideText: false
 		};
 	}
 
@@ -10908,7 +11142,9 @@ jui.define("chart.grid.fullblock", [ "util.scale", "util.base" ], function(UtilS
             /** @cfg {Boolean} [reverse=false] Reverses the value on domain values*/
             reverse: false,
             /** @cfg {Number} [max=10] Sets the maximum value of a grid. */
-            max: 10
+            max: 10,
+            /** @cfg {Boolean} [hideText=false] Determines whether to show text across the grid. */
+            hideText: false
         };
     }
 
@@ -11522,7 +11758,9 @@ jui.define("chart.grid.log", [ "util.scale", "util.base" ], function(UtilScale, 
 			/** @cfg {Number} [base=10] log's base */
 			base : 10,
 			step : 4,
-			nice : false
+			nice : false,
+			/** @cfg {Boolean} [hideText=false] Determines whether to show text across the grid. */
+			hideText: false
 		};
 	}
 
@@ -18909,69 +19147,21 @@ jui.define("chart.brush.map.weather", [ "util.base" ], function(_) {
 
 jui.define("chart.brush.polygon.core", [], function() {
     var PolygonCoreBrush = function() {
-        this.load = function(id) {
-            var Polygon = jui.include("chart.polygon." + id),
-                obj = new Polygon();
+        this.drawPolygon = function(polygon, callback) {
+            this.calculate3d(polygon);
 
-            // 차트 전체 연산
-            this.calculate3d(obj);
-
-            return obj;
-        }
-
-        this.draw = function() {
-            var polygon = this.load(this.brush.id),
-                g = this.chart.svg.group(),
-                path = this.chart.svg.path({
-                    stroke: this.color(0),
-                    "stroke-width": 0.5,
-                    fill: this.color(0),
-                    "fill-opacity": 0.5
-                }),
-                cache = [];
-
-            for(var i = 0, len = polygon.vertices.length; i < len; i++) {
-                var vertex = polygon.vertices[i];
-                cache.push(new Float32Array([ this.axis.x(vertex[0]), this.axis.y(vertex[1]) ]));
+            var element = callback.call(this, polygon);
+            if(element) {
+                element.order = this.axis.depth - polygon.max().z;
+                return element;
             }
-
-            for(var i = 0, len = polygon.faces.length; i < len; i++) {
-                var face = polygon.faces[i]
-
-                for (var j = 0, len2 = face.length; j < len2; j++) {
-                    var targetPoint = cache[face[j]];
-
-                    if (targetPoint) {
-                        var x = targetPoint[0],
-                            y = targetPoint[1];
-
-                        if (j == 0) {
-                            path.MoveTo(x, y);
-                        } else {
-                            if(j == face.length - 1) {
-                                var firstPoint = cache[face[0]],
-                                    x = firstPoint[0],
-                                    y = firstPoint[1];
-
-                                path.LineTo(x, y);
-                            } else {
-                                path.LineTo(x, y);
-                            }
-                        }
-                    }
-                }
-            }
-
-            g.append(path);
-
-            return g;
         }
     }
 
     PolygonCoreBrush.setup = function() {
         return {
             id: null,
-            degree: null
+            clip: false
         }
     }
 
@@ -19010,18 +19200,21 @@ jui.define("chart.brush.polygon.scatter",
 				);
 			}
 
-			var p = new PointPolygon(x, y, z);
-			this.calculate3d(p);
+			return this.drawPolygon(new PointPolygon(x, y, z), function(p) {
+				var elem = this.chart.svg.circle({
+					r: r * MathUtil.scaleValue(z, 0, this.axis.depth, 1, p.perspective),
+					fill: color,
+					"fill-opacity": this.chart.theme("polygonScatterBackgroundOpacity"),
+					cx: p.vectors[0].x,
+					cy: p.vectors[0].y
+				});
 
-			var elem = this.chart.svg.circle({
-				r: r * MathUtil.scaleValue(z, 0, this.axis.depth, 1, p.perspective),
-				fill: color,
-				"fill-opacity": this.chart.theme("polygonScatterBackgroundOpacity"),
-				cx: p.vertices[0][0],
-				cy: p.vertices[0][1]
+				if(data[target] != 0) {
+					this.addEvent(elem, dataIndex, targetIndex);
+				}
+
+				return elem;
 			});
-
-			return elem;
 		}
 
 		this.draw = function() {
@@ -19031,10 +19224,7 @@ jui.define("chart.brush.polygon.scatter",
 
 			for(var i = 0; i < datas.length; i++) {
 				for(var j = 0; j < targets.length; j++) {
-					var p = this.createScatter(datas[i], targets[j], i, j);
-
-					this.addEvent(p, i, j);
-					g.append(p);
+					g.append(this.createScatter(datas[i], targets[j], i, j));
 				}
 			}
 
@@ -19068,38 +19258,41 @@ jui.define("chart.brush.polygon.column",
 		var col_width, col_height;
 
 		this.createColumn = function(data, target, dataIndex, targetIndex) {
-			var g = this.chart.svg.group(),
-				w = col_width,
+			var w = col_width,
 				h = col_height,
 				x = this.axis.x(dataIndex) - w/2,
 				y = this.axis.y(data[target]),
 				yy = this.axis.y(0),
 				z = this.axis.z(targetIndex) - h/2,
-				p = new CubePolygon(x, yy, z, w, y - yy, h),
 				color = this.color(targetIndex);
 
-			// 3D 좌표 계산
-			this.calculate3d(p);
+			return this.drawPolygon(new CubePolygon(x, yy, z, w, y - yy, h), function(p) {
+				var g = this.svg.group();
 
-			for(var i = 0; i < p.faces.length; i++) {
-				var key = p.faces[i];
+				for(var i = 0; i < p.faces.length; i++) {
+					var key = p.faces[i];
 
-				var face = this.chart.svg.polygon({
-					fill: color,
-					"fill-opacity": this.chart.theme("polygonColumnBackgroundOpacity"),
-					stroke: ColorUtil.darken(color, this.chart.theme("polygonColumnBorderOpacity")),
-					"stroke-opacity": this.chart.theme("polygonColumnBorderOpacity")
-				});
+					var face = this.svg.polygon({
+						fill: color,
+						"fill-opacity": this.chart.theme("polygonColumnBackgroundOpacity"),
+						stroke: ColorUtil.darken(color, this.chart.theme("polygonColumnBorderOpacity")),
+						"stroke-opacity": this.chart.theme("polygonColumnBorderOpacity")
+					});
 
-				for(var j = 0; j < key.length; j++) {
-					var value = p.vertices[key[j]];
-					face.point(value[0], value[1]);
+					for (var j = 0; j < key.length; j++) {
+						var vector = p.vectors[key[j]];
+						face.point(vector.x, vector.y);
+					}
+
+					g.append(face);
 				}
 
-				g.append(face);
-			}
+				if(data[target] != 0) {
+					this.addEvent(g, dataIndex, targetIndex);
+				}
 
-			return g;
+				return g;
+			});
 		}
 
 		this.drawBefore = function() {
@@ -19114,23 +19307,11 @@ jui.define("chart.brush.polygon.column",
 		this.draw = function() {
 			var g = this.chart.svg.group(),
 				datas = this.listData(),
-				targets = this.brush.target,
-				groups = [];
+				targets = this.brush.target;
 
 			for(var i = 0; i < datas.length; i++) {
 				for(var j = 0; j < targets.length; j++) {
-					var p = this.createColumn(datas[i], targets[j], i, j);
-
-					this.addEvent(p, i, j);
-
-					if(!groups[j]) groups[j] = [];
-					groups[j].push(p);
-				}
-			}
-
-			for(var i = groups.length - 1; i >= 0; i--) {
-				for(var j = 0; j < groups[i].length; j++) {
-					g.append(groups[i][j]);
+					g.append(this.createColumn(datas[i], targets[j], i, j));
 				}
 			}
 
@@ -19152,6 +19333,88 @@ jui.define("chart.brush.polygon.column",
 	}
 
 	return PolygonColumnBrush;
+}, "chart.brush.polygon.core");
+
+jui.define("chart.brush.polygon.line",
+	[ "util.base", "util.color", "util.math", "chart.polygon.point" ],
+	function(_, ColorUtil, MathUtil, PointPolygon) {
+
+	/**
+	 * @class chart.brush.polygon.line
+	 * @extends chart.brush.polygon.core
+	 */
+	var PolygonLineBrush = function() {
+		this.createLine = function(datas, target, dataIndex, targetIndex) {
+			var color = this.color(dataIndex, targetIndex),
+				d = this.axis.z.rangeBand() - this.brush.padding * 2,
+				x1 = this.axis.x(dataIndex),
+				y1 = this.axis.y(datas[dataIndex][target]),
+				z1 = this.axis.z(targetIndex) - d / 2,
+				x2 = this.axis.x(dataIndex + 1),
+				y2 = this.axis.y(datas[dataIndex + 1][target]),
+				z2 = this.axis.z(targetIndex) + d / 2,
+				maxPoint = null;
+
+			var elem = this.chart.svg.polygon({
+				fill: color,
+				"fill-opacity": this.chart.theme("polygonLineBackgroundOpacity"),
+				stroke: ColorUtil.darken(color, this.chart.theme("polygonLineBorderOpacity")),
+				"stroke-opacity": this.chart.theme("polygonLineBorderOpacity")
+			});
+
+			var points = [
+				new PointPolygon(x1, y1, z1),
+				new PointPolygon(x1, y1, z2),
+				new PointPolygon(x2, y2, z2),
+				new PointPolygon(x2, y2, z1)
+			];
+
+			for(var i = 0; i < points.length; i++) {
+				this.drawPolygon(points[i], function(p) {
+					var vector = p.vectors[0];
+					elem.point(vector.x, vector.y);
+
+					if(maxPoint == null) {
+						maxPoint = p;
+					} else {
+						if(vector.z > maxPoint.vectors[0].z) {
+							maxPoint = p;
+						}
+					}
+				});
+			}
+
+			// 별도로 우선순위 설정
+			elem.order = this.axis.depth - maxPoint.max().z;
+
+			return elem;
+		}
+
+		this.draw = function() {
+			var g = this.chart.svg.group(),
+				datas = this.listData(),
+				targets = this.brush.target;
+
+			for(var i = 0; i < datas.length - 1; i++) {
+				for(var j = 0; j < targets.length; j++) {
+					g.append(this.createLine(datas, targets[j], i, j));
+				}
+			}
+
+			return g;
+		}
+	}
+
+	PolygonLineBrush.setup = function() {
+		return {
+			/** @cfg {Number} [padding=20] Determines the outer margin of a bar.  */
+			padding: 10,
+			/** @cfg {Boolean} [clip=false] If the brush is drawn outside of the chart, cut the area. */
+			clip: false
+		};
+	}
+
+	return PolygonLineBrush;
 }, "chart.brush.polygon.core");
 
 jui.define("chart.widget.core", [ "jquery", "util.base" ], function($, _) {
@@ -21540,7 +21803,10 @@ jui.define("chart.widget.polygon.rotate", [ "util.base" ], function (_) {
                 mouseStartX = 0;
                 mouseStartY = 0,
                 sdx = 0,
-                sdy = 0;
+                sdy = 0,
+                cacheXY = null,
+                unit = self.widget.unit,
+                degree = self.axis.degree;
 
             self.on("bg.mousedown", mousedown);
             self.on("chart.mousedown", mousedown);
@@ -21567,9 +21833,18 @@ jui.define("chart.widget.polygon.rotate", [ "util.base" ], function (_) {
                     dx = Math.floor((gapY / h) * DEGREE_LIMIT),
                     dy = Math.floor((gapX / w) * DEGREE_LIMIT);
 
-                self.axis.degree.x = sdx + dx;
-                self.axis.degree.y = sdy - dy;
+                degree.x = sdx + dx;
+                degree.y = sdy - dy;
+
+                // 각도 Interval이 맞을 경우, 렌더링하지 않음
+                if(degree.x % unit != 0 && degree.y % unit != 0) return;
+
+                // 이전 각도와 동일할 경우, 렌더링하지 않음
+                var newCacheXY = degree.x + ":" + degree.y;
+                if(cacheXY == newCacheXY) return;
+
                 chart.render();
+                cacheXY = newCacheXY;
             }
 
             function mouseup(e) {
@@ -21591,6 +21866,12 @@ jui.define("chart.widget.polygon.rotate", [ "util.base" ], function (_) {
             setScrollEvent(this.axis.area("width"), this.axis.area("height"));
 
             return chart.svg.group();
+        }
+    }
+
+    PolygonRotateWdiget.setup = function() {
+        return {
+            unit: 5 // 회전 최소 각도
         }
     }
 

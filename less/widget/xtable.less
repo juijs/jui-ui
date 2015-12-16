@@ -1,19 +1,28 @@
 .xtable {
+  position: relative;
+
+  > .head {
+    overflow: hidden !important;
+
+    > table {
+      margin: 0px !important;
+      border-bottom-width: 0px !important;
+    }
+  }
+
   > .body {
-    //.border-radius(5px);
+    overflow-x: auto !important;
 
-    // 클래식 테이블일 경우, RADIUS 처리
-    > .table.classic, .table.expand {
-      .border-bottom-radius(0px);
+    > table {
+      margin: 0px !important;
 
-      > tbody {
-        > tr:last-child > td {
-          &:first-child {
-            .border-bottom-left-radius(0px);
-          }
-
-          &:last-child {
-            .border-bottom-right-radius(0px);
+      > thead {
+        > tr {
+          > th {
+            border-top-width: 0px !important;
+            border-bottom-width: 0px !important;
+            padding-top: 0px !important;
+            padding-bottom: 0px !important;
           }
         }
       }
@@ -29,7 +38,60 @@
 }
 
 
-// xTable NoWrap
+// X-Table Scroll
+// --------------------------------------------------
+.xtable.scroll {
+  > .head {
+    > .table.classic, .table.expand { // 클래식 테이블일 경우
+      .border-top-radius(0px);
+
+      > thead {
+        > tr:first-child > th {
+          &:first-child {
+            .border-top-left-radius(0px);
+          }
+
+          &:last-child {
+            .border-top-right-radius(0px);
+          }
+        }
+      }
+    }
+  }
+
+  > .body {
+    > .table.classic, .table.expand { // 클래식 테이블일 경우
+      .border-bottom-radius(0px);
+
+      > tbody {
+        > tr {
+          > td {
+            &:first-child {
+              border-left-width: 0px;
+            }
+
+            &:last-child {
+              border-right-width: 0px;
+            }
+          }
+
+          &:last-child > td {
+            &:first-child {
+              .border-bottom-left-radius(0px);
+            }
+
+            &:last-child {
+              .border-bottom-right-radius(0px);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+
+// X-Table NoWrap
 // --------------------------------------------------
 .xtable.nowrap {
   > .body > table > tbody td {

@@ -15,7 +15,10 @@ jui.define("chart.widget.polygon.rotate", [ "util.base" ], function (_) {
                 mouseStartX = 0;
                 mouseStartY = 0,
                 sdx = 0,
-                sdy = 0;
+                sdy = 0,
+                cacheXY = null,
+                unit = self.widget.unit,
+                degree = self.axis.degree;
 
             self.on("bg.mousedown", mousedown);
             self.on("chart.mousedown", mousedown);
@@ -42,9 +45,18 @@ jui.define("chart.widget.polygon.rotate", [ "util.base" ], function (_) {
                     dx = Math.floor((gapY / h) * DEGREE_LIMIT),
                     dy = Math.floor((gapX / w) * DEGREE_LIMIT);
 
-                self.axis.degree.x = sdx + dx;
-                self.axis.degree.y = sdy - dy;
+                degree.x = sdx + dx;
+                degree.y = sdy - dy;
+
+                // 각도 Interval이 맞을 경우, 렌더링하지 않음
+                if(degree.x % unit != 0 && degree.y % unit != 0) return;
+
+                // 이전 각도와 동일할 경우, 렌더링하지 않음
+                var newCacheXY = degree.x + ":" + degree.y;
+                if(cacheXY == newCacheXY) return;
+
                 chart.render();
+                cacheXY = newCacheXY;
             }
 
             function mouseup(e) {
@@ -66,6 +78,12 @@ jui.define("chart.widget.polygon.rotate", [ "util.base" ], function (_) {
             setScrollEvent(this.axis.area("width"), this.axis.area("height"));
 
             return chart.svg.group();
+        }
+    }
+
+    PolygonRotateWdiget.setup = function() {
+        return {
+            unit: 5 // 회전 최소 각도
         }
     }
 

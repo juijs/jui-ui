@@ -79,6 +79,18 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 
 		}
 
+		this.wrapper = function(scale, key) {
+			var old_scale = scale;
+			var self = this;
+			var len = self.domain.length;
+
+			function new_scale(i) {
+				return old_scale(len - i - 1);
+			}
+
+			return (this.grid.reverse) ? $.extend(new_scale, old_scale) : old_scale;
+		}
+
 		this.drawBefore = function() {
 			var domain = this.initDomain(),
 				obj = this.getGridSize(),
@@ -113,7 +125,9 @@ jui.define("chart.grid.block", [ "util.scale", "util.base" ], function(UtilScale
 			/** @cfg {Boolean} [reverse=false] Reverses the value on domain values*/
 			reverse: false,
 			/** @cfg {Number} [max=10] Sets the maximum value of a grid. */
-			max: 10
+			max: 10,
+			/** @cfg {Boolean} [hideText=false] Determines whether to show text across the grid. */
+			hideText: false
 		};
 	}
 

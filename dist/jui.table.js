@@ -2343,6 +2343,99 @@ jui.define("core", [ "jquery", "util.base" ], function($, _) {
 });
 jui.define("util.math", [ "util.base" ], function(_) {
 
+	// 2x1 or 3x1 or ?x1 형태의 매트릭스 연산
+	function matrix(a, b) {
+		var m = [];
+
+		for(var i = 0, len = a.length; i < len; i++) {
+			var sum = 0;
+
+			for(var j = 0, len2 = a[i].length; j < len2; j++) {
+				sum += a[i][j] * b[j];
+			}
+
+			m.push(sum);
+		}
+
+		return m;
+	}
+
+	// 2x2 or 3x3 or ?x? 형태의 매트릭스 연산
+	function deepMatrix(a, b) {
+		var m = [], nm = [];
+
+		for(var i = 0, len = b.length; i < len; i++) {
+			m[i] = [];
+			nm[i] = [];
+		}
+
+		for(var i = 0, len = b.length; i < len; i++) {
+			for(var j = 0, len2 = b[i].length; j < len2; j++) {
+				m[j].push(b[i][j]);
+			}
+		}
+
+		for(var i = 0, len = m.length; i < len; i++) {
+			var mm = matrix(a, m[i]);
+
+			for(var j = 0, len2 = mm.length; j < len2; j++) {
+				nm[j].push(mm[j]);
+			}
+		}
+
+		return nm;
+	}
+
+	function matrix3d(a, b) {
+		var m = new Float32Array(4);
+
+		m[0] = a[0][0] * b[0] + a[0][1] * b[1] + a[0][2] * b[2]  + a[0][3] * b[3];
+		m[1] = a[1][0] * b[0] + a[1][1] * b[1] + a[1][2] * b[2]  + a[1][3] * b[3];
+		m[2] = a[2][0] * b[0] + a[2][1] * b[1] + a[2][2] * b[2]  + a[2][3] * b[3];
+		m[3] = a[3][0] * b[0] + a[3][1] * b[1] + a[3][2] * b[2]  + a[3][3] * b[3];
+
+		return m;
+	}
+
+	function deepMatrix3d(a, b) {
+		var nm = [
+			new Float32Array(4),
+			new Float32Array(4),
+			new Float32Array(4),
+			new Float32Array(4)
+		];
+
+		var m = [
+			new Float32Array([b[0][0],b[1][0],b[2][0],b[3][0]]),
+			new Float32Array([b[0][1],b[1][1],b[2][1],b[3][1]]),
+			new Float32Array([b[0][2],b[1][2],b[2][2],b[3][2]]),
+			new Float32Array([b[0][3],b[1][3],b[2][3],b[3][3]])
+		];
+
+		nm[0][0] = a[0][0] * m[0][0] + a[0][1] * m[0][1] + a[0][2] * m[0][2]  + a[0][3] * m[0][3];
+		nm[1][0] = a[1][0] * m[0][0] + a[1][1] * m[0][1] + a[1][2] * m[0][2]  + a[1][3] * m[0][3];
+		nm[2][0] = a[2][0] * m[0][0] + a[2][1] * m[0][1] + a[2][2] * m[0][2]  + a[2][3] * m[0][3];
+		nm[3][0] = a[3][0] * m[0][0] + a[3][1] * m[0][1] + a[3][2] * m[0][2]  + a[3][3] * m[0][3];
+
+		nm[0][1] = a[0][0] * m[1][0] + a[0][1] * m[1][1] + a[0][2] * m[1][2]  + a[0][3] * m[1][3];
+		nm[1][1] = a[1][0] * m[1][0] + a[1][1] * m[1][1] + a[1][2] * m[1][2]  + a[1][3] * m[1][3];
+		nm[2][1] = a[2][0] * m[1][0] + a[2][1] * m[1][1] + a[2][2] * m[1][2]  + a[2][3] * m[1][3];
+		nm[3][1] = a[3][0] * m[1][0] + a[3][1] * m[1][1] + a[3][2] * m[1][2]  + a[3][3] * m[1][3];
+
+		nm[0][2] = a[0][0] * m[2][0] + a[0][1] * m[2][1] + a[0][2] * m[2][2]  + a[0][3] * m[2][3];
+		nm[1][2] = a[1][0] * m[2][0] + a[1][1] * m[2][1] + a[1][2] * m[2][2]  + a[1][3] * m[2][3];
+		nm[2][2] = a[2][0] * m[2][0] + a[2][1] * m[2][1] + a[2][2] * m[2][2]  + a[2][3] * m[2][3];
+		nm[3][2] = a[3][0] * m[2][0] + a[3][1] * m[2][1] + a[3][2] * m[2][2]  + a[3][3] * m[2][3];
+
+		nm[0][3] = a[0][0] * m[3][0] + a[0][1] * m[3][1] + a[0][2] * m[3][2]  + a[0][3] * m[3][3];
+		nm[1][3] = a[1][0] * m[3][0] + a[1][1] * m[3][1] + a[1][2] * m[3][2]  + a[1][3] * m[3][3];
+		nm[2][3] = a[2][0] * m[3][0] + a[2][1] * m[3][1] + a[2][2] * m[3][2]  + a[2][3] * m[3][3];
+		nm[3][3] = a[3][0] * m[3][0] + a[3][1] * m[3][1] + a[3][2] * m[3][2]  + a[3][3] * m[3][3];
+
+		return nm;
+	}
+
+
 	/**
 	 * @class util.math
 	 *
@@ -2472,11 +2565,13 @@ jui.define("util.math", [ "util.base" ], function(_) {
 			};
 
 			func.multi = function (a, b) {
-				return Math.round((a * pow) * (b * pow)) / pow;
+				return Math.round((a * pow) * (b * pow)) / (pow*pow);
 			};
 
 			func.div = function (a, b) {
-				return Math.round((a * pow) / (b * pow)) / pow;
+				var result = (a * pow) / (b * pow);
+				var pow2 = Math.pow(10, this.getFixed(result, 0));
+				return Math.round(result*pow2) / pow2;
 			};
 
 			func.remain = function (a, b) {
@@ -2505,12 +2600,15 @@ jui.define("util.math", [ "util.base" ], function(_) {
 
 		multi : function (a, b) {
 			var pow = Math.pow(10, this.getFixed(a, b));
-			return Math.round((a * pow) * (b * pow)) / pow;
+			return Math.round((a * pow) * (b * pow)) / (pow*pow);
 		},
 
 		div : function (a, b) {
 			var pow = Math.pow(10, this.getFixed(a, b));
-			return Math.round((a * pow) / (b * pow));
+
+			var result = (a * pow) / (b * pow);
+			var pow2 = Math.pow(10, this.getFixed(result, 0));
+			return Math.round(result*pow2) / pow2;
 		},
 
 		remain : function (a, b) {
@@ -2593,55 +2691,19 @@ jui.define("util.math", [ "util.base" ], function(_) {
 		},
 
 		matrix: function(a, b) {
-			// 2x1 or 3x1 or ?x1 형태의 매트릭스 연산
-			function matrix(a, b) {
-				var m = [];
-
-				for(var i = 0, len = a.length; i < len; i++) {
-					var sum = 0;
-
-					for(var j = 0, len2 = a[i].length; j < len2; j++) {
-						sum += a[i][j] * b[j];
-					}
-
-					m.push(sum);
-				}
-
-				return m;
-			}
-
-
-			// 2x2 or 3x3 형태의 매트릭스 연산
-			function deepMatrix(a, b) {
-				var m = [], nm = [];
-
-				for(var i = 0, len = b.length; i < len; i++) {
-					m[i] = [];
-					nm[i] = [];
-				}
-
-				for(var i = 0, len = b.length; i < len; i++) {
-					for(var j = 0, len2 = b[i].length; j < len2; j++) {
-						m[j].push(b[i][j]);
-					}
-				}
-
-				for(var i = 0, len = m.length; i < len; i++) {
-					var mm = matrix(a, m[i]);
-
-					for(var j = 0, len2 = mm.length; j < len2; j++) {
-						nm[j].push(mm[j]);
-					}
-				}
-
-				return nm;
-			}
-
 			if(_.typeCheck("array", b[0])) {
 				return deepMatrix(a, b);
 			}
 
 			return matrix(a, b);
+		},
+
+		matrix3d: function(a, b) {
+			if(b[0] instanceof Array || b[0] instanceof Float32Array) {
+				return deepMatrix3d(a, b);
+			}
+
+			return matrix3d(a, b);
 		},
 
 		scaleValue: function(value, minValue, maxValue, minScale, maxScale) {
@@ -2681,58 +2743,60 @@ jui.define("util.transform", [ "util.math" ], function(math) {
             var a = arguments,
                 type = a[0];
 
-            var map = {
-                // 2D 행렬, 3x3
-                move: [
-                    [ 1, 0, a[1] ],
-                    [ 0, 1, a[2] ],
-                    [ 0, 0, 1 ]
-                ],
-                scale: [
-                    [ a[1], 0, 0 ],
-                    [ 0, a[2], 0 ],
-                    [ 0, 0, 1 ]
-                ],
-                rotate: [
-                    [ Math.cos(math.radian(a[1])), -Math.sin(math.radian(a[1])), 0 ],
-                    [ Math.sin(math.radian(a[1])), Math.cos(math.radian(a[1])), 0 ],
-                    [ 0, 0, 1 ]
-                ],
-
-                // 3D 행렬, 4x4
-                move3d: [
-                    [ 1, 0, 0, a[1] ],
-                    [ 0, 1, 0, a[2] ],
-                    [ 0, 0, 1, a[3] ],
-                    [ 0, 0, 0, 1 ]
-                ],
-                scale3d: [
-                    [ a[1], 0, 0, 0 ],
-                    [ 0, a[2], 0, 0 ],
-                    [ 0, 0, a[3], 0 ],
-                    [ 0, 0, 0, 1 ]
-                ],
-                rotate3dz: [
-                    [ Math.cos(math.radian(a[1])), -Math.sin(math.radian(a[1])), 0, 0 ],
-                    [ Math.sin(math.radian(a[1])), Math.cos(math.radian(a[1])), 0, 0 ],
-                    [ 0, 0, 1, 0 ],
-                    [ 0, 0, 0, 1 ]
-                ],
-                rotate3dx: [
-                    [ 1, 0, 0, 0 ],
-                    [ 0, Math.cos(math.radian(a[1])), -Math.sin(math.radian(a[1])), 0 ],
-                    [ 0, Math.sin(math.radian(a[1])), Math.cos(math.radian(a[1])), 0 ],
-                    [ 0, 0, 0, 1 ]
-                ],
-                rotate3dy: [
-                    [ Math.cos(math.radian(a[1])), 0, Math.sin(math.radian(a[1])), 0 ],
-                    [ 0, 1, 0, 0 ],
-                    [ -Math.sin(math.radian(a[1])), 0, Math.cos(math.radian(a[1])), 0 ],
-                    [ 0, 0, 0, 1 ]
-                ]
+            if(type == "move") {
+                return [
+                    new Float32Array([1, 0, a[1]]),
+                    new Float32Array([0, 1, a[2]]),
+                    new Float32Array([0, 0, 1])
+                ];
+            } else if(type == "scale") {
+                return [
+                    new Float32Array([ a[1], 0, 0 ]),
+                    new Float32Array([ 0, a[2], 0 ]),
+                    new Float32Array([ 0, 0, 1 ])
+                ];
+            } else if(type == "rotate") {
+                return [
+                    new Float32Array([ Math.cos(math.radian(a[1])), -Math.sin(math.radian(a[1])), 0 ]),
+                    new Float32Array([ Math.sin(math.radian(a[1])), Math.cos(math.radian(a[1])), 0 ]),
+                    new Float32Array([ 0, 0, 1 ])
+                ];
+            } else if(type == "move3d") {
+                return [
+                    new Float32Array([ 1, 0, 0, a[1] ]),
+                    new Float32Array([ 0, 1, 0, a[2] ]),
+                    new Float32Array([ 0, 0, 1, a[3] ]),
+                    new Float32Array([ 0, 0, 0, 1 ])
+                ];
+            } else if(type == "scale3d") {
+                return [
+                    new Float32Array([ a[1], 0, 0, 0 ]),
+                    new Float32Array([ 0, a[2], 0, 0 ]),
+                    new Float32Array([ 0, 0, a[3], 0 ]),
+                    new Float32Array([ 0, 0, 0, 1 ])
+                ];
+            } else if(type == "rotate3dz") {
+                return [
+                    new Float32Array([ Math.cos(math.radian(a[1])), -Math.sin(math.radian(a[1])), 0, 0 ]),
+                    new Float32Array([ Math.sin(math.radian(a[1])), Math.cos(math.radian(a[1])), 0, 0 ]),
+                    new Float32Array([ 0, 0, 1, 0 ]),
+                    new Float32Array([ 0, 0, 0, 1 ])
+                ];
+            } else if(type == "rotate3dx") {
+                return [
+                    new Float32Array([ 1, 0, 0, 0 ]),
+                    new Float32Array([ 0, Math.cos(math.radian(a[1])), -Math.sin(math.radian(a[1])), 0 ]),
+                    new Float32Array([ 0, Math.sin(math.radian(a[1])), Math.cos(math.radian(a[1])), 0 ]),
+                    new Float32Array([ 0, 0, 0, 1 ])
+                ];
+            } else if(type == "rotate3dy") {
+                return [
+                    new Float32Array([ Math.cos(math.radian(a[1])), 0, Math.sin(math.radian(a[1])), 0 ]),
+                    new Float32Array([ 0, 1, 0, 0 ]),
+                    new Float32Array([ -Math.sin(math.radian(a[1])), 0, Math.cos(math.radian(a[1])), 0 ]),
+                    new Float32Array([ 0, 0, 0, 1 ])
+                ];
             }
-
-            return map[type];
         }
 
         // 2차원 이동
@@ -3590,7 +3654,7 @@ jui.define("util.scale", [ "util.math", "util.time" ], function(math, _time) {
 	return self;
 });
 
-jui.define("util.color", ["jquery"], function($) {
+jui.define("util.color", ["jquery", "util.math"], function($, math) {
 
 	/**
 	 *  @class util.color
@@ -3604,13 +3668,13 @@ jui.define("util.color", ["jquery"], function($) {
 		format : function(obj, type) {
 			if (type == 'hex') {
 				var r = obj.r.toString(16);
-				if (r < 10) r = "0" + r;
+				if (obj.r < 16) r = "0" + r;
 
 				var g = obj.g.toString(16);
-				if (g < 10) g = "0" + g;
+				if (obj.g < 16) g = "0" + g;
 
 				var b = obj.b.toString(16);
-				if (b < 10) b = "0" + b;
+				if (obj.b < 16) b = "0" + b;
 
 				return "#" + [r,g,b].join("").toUpperCase();
 			} else if (type == 'rgb') {
@@ -3645,49 +3709,88 @@ jui.define("util.color", ["jquery"], function($) {
 				return func;
 			}
 
+			func.ticks = function (n) {
+				var unit = (1/n);
+
+				var start = 0;
+				var colors = [];
+				while(start <= 1) {
+					var c = func(start, 'hex');
+					colors.push(c);
+					start = math.plus(start, unit);
+				}
+
+				return colors;
+
+			}
+
 			return func;
 		},
 
-		rgb : function (str) {
-			if (str.indexOf("rgb(") > -1) {
-				var arr = str.replace("rgb(", "").replace(")","").split(",");
+		map : function (color_list, count) {
 
-				for(var i = 0, len = arr.length; i < len; i++) {
-					arr[i] = parseInt($.trim(arr[i]), 10);
+			var colors = [];
+			count = count || 5;
+			var scale = self.scale();
+			for(var i = 0, len = color_list.length-1; i < len; i++) {
+				if (i == 0) {
+					colors = scale.domain(color_list[i], color_list[i + 1]).ticks(count);
+				} else {
+					var colors2 = scale.domain(color_list[i], color_list[i + 1]).ticks(count);
+					colors2.shift();
+					colors = colors.concat(colors2);
 				}
+			}
 
-				return { r : arr[0], g : arr[1], b : arr[2], a : 1	};
-			} else if (str.indexOf("rgba(") > -1) {
-				var arr = str.replace("rgba(", "").replace(")","").split(",");
+			return colors;
+		},
 
-				for(var i = 0, len = arr.length; i < len; i++) {
+		rgb : function (str) {
 
-					if (len - 1 == i) {
-						arr[i] = parseFloat($.trim(arr[i]));
-					} else {
+			if (typeof str == 'string') {
+				if (str.indexOf("rgb(") > -1) {
+					var arr = str.replace("rgb(", "").replace(")","").split(",");
+
+					for(var i = 0, len = arr.length; i < len; i++) {
 						arr[i] = parseInt($.trim(arr[i]), 10);
 					}
-				}
 
-				return { r : arr[0], g : arr[1], b : arr[2], a : arr[3]};
-			} else if (str.indexOf("#") == 0) {
+					return { r : arr[0], g : arr[1], b : arr[2], a : 1	};
+				} else if (str.indexOf("rgba(") > -1) {
+					var arr = str.replace("rgba(", "").replace(")","").split(",");
 
-				str = str.replace("#", "");
+					for(var i = 0, len = arr.length; i < len; i++) {
 
-				var arr = [];
-				if (str.length == 3) {
-					for(var i = 0, len = str.length; i < len; i++) {
-						var char = str.substr(i, 1);
-						arr.push(parseInt(char+char, 16));
+						if (len - 1 == i) {
+							arr[i] = parseFloat($.trim(arr[i]));
+						} else {
+							arr[i] = parseInt($.trim(arr[i]), 10);
+						}
 					}
-				} else {
-					for(var i = 0, len = str.length; i < len; i+=2) {
-						arr.push(parseInt(str.substr(i, 2), 16));
-					}
-				}
 
-				return { r : arr[0], g : arr[1], b : arr[2], a : 1	};
+					return { r : arr[0], g : arr[1], b : arr[2], a : arr[3]};
+				} else if (str.indexOf("#") == 0) {
+
+					str = str.replace("#", "");
+
+					var arr = [];
+					if (str.length == 3) {
+						for(var i = 0, len = str.length; i < len; i++) {
+							var char = str.substr(i, 1);
+							arr.push(parseInt(char+char, 16));
+						}
+					} else {
+						for(var i = 0, len = str.length; i < len; i+=2) {
+							arr.push(parseInt(str.substr(i, 2), 16));
+						}
+					}
+
+					return { r : arr[0], g : arr[1], b : arr[2], a : 1	};
+				}
 			}
+
+			return str;
+
 		},
 
 		HSVtoRGB : function (H, S, V) {
@@ -3927,7 +4030,15 @@ jui.define("util.color", ["jquery"], function($) {
 
 		}
 
-	}
+	};
+
+	self.map.parula = function (count) {  return self.map(['#352a87', '#0f5cdd', '#00b5a6', '#ffc337', '#fdff00'], count); }
+	self.map.jet = function (count) {  return self.map(['#00008f', '#0020ff', '#00ffff', '#51ff77', '#fdff00', '#ff0000', '#800000'], count); }
+	self.map.hsv = function (count) {  return self.map(['#ff0000', '#ffff00', '#00ff00', '#00ffff', '#0000ff', '#ff00ff', '#ff0000'], count); }
+	self.map.hot = function (count) {  return self.map(['#0b0000', '#ff0000', '#ffff00', '#ffffff'], count); }
+	self.map.pink = function (count) {  return self.map(['#1e0000', '#bd7b7b', '#e7e5b2', '#ffffff'], count); }
+	self.map.bone = function (count) {  return self.map(['#000000', '#4a4a68', '#a6c6c6', '#ffffff'], count); }
+	self.map.copper = function (count) {  return self.map(['#000000', '#3d2618', '#9d623e', '#ffa167', '#ffc77f'], count); }
 
 	return self;
 });
@@ -3952,6 +4063,7 @@ jui.define("util.svg.element", [], function() {
             this.parent = null;
             this.styles = {};
             this.attributes = {};
+            this.order = 0;
 
             // 기본 속성 설정
             this.attr(attr);
@@ -5058,9 +5170,17 @@ jui.define("util.svg",
         }
         
         function appendAll(target) {
-            var len = target.children.length;
-            for(var i = 0; i < len; i++) {
-                var child = target.children[i];
+            var childs = target.children;
+
+            // 엘리먼트 렌더링 순서 정하기
+            if(isOrderingChild(childs)) {
+                childs.sort(function (a, b) {
+                    return a.order - b.order;
+                });
+            }
+
+            for(var i = 0, len = childs.length; i < len; i++) {
+                var child = childs[i];
 
                 if(child) {
                     if(child.children.length > 0) {
@@ -5077,6 +5197,16 @@ jui.define("util.svg",
                     }
                 }
             }
+        }
+
+        function isOrderingChild(childs) { // order가 0 이상인 엘리먼트가 하나라도 있을 경우
+            for(var i = 0, len = childs.length; i < len; i++) {
+                if(childs[i].order > 0) {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         this.create = function(obj, type, attr, callback) {
@@ -5787,9 +5917,9 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
      *
      */
 	var UI = function() {
-		var $modal = null, $clone = null;
+		var $modal = {}, $clone = null;
 		var uiObj = null, uiTarget = null;
-		var x = 0, y = 0, z_index = 5000;
+		var z_index = 5000;
 		
 		function setPrevStatus(self) {
 			uiObj = { 
@@ -5804,12 +5934,24 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 				"position": $(self.options.target).css("position")
 			};
 		}
+
+		function getInnerModalPosition(target) {
+			if(target == "body") {
+				return null;
+			} else {
+				if($(target).hasClass("msgbox") || $(target).hasClass("window")) {
+					return "absolute";
+				} else {
+					return "relative";
+				}
+			}
+		}
 		
 		function getModalInfo(self) {
 			var target = self.options.target,
 				hTarget = (target == "body") ? window : target,
 				pos = (target == "body") ? "fixed" : "absolute",
-				tPos = (target == "body") ? null : "relative",
+				tPos = getInnerModalPosition(target),
                 sLeft = $(target).scrollLeft();
 			
 			var x = (($(hTarget).width() / 2) - ($(self.root).width() / 2)) + $(target).scrollLeft(),
@@ -5838,9 +5980,11 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 		}
 		
 		function createModal(self, w, h) {
-			if($modal != null) return;
+			var mi = self.timestamp;
 			
-			$modal = $("<div id='MODAL_" + self.timestamp + "'></div>").css({ 
+			if( $modal[mi] != null) return;
+			
+			$modal[mi] = $("<div id='MODAL_" + self.timestamp + "'></div>").css({ 
 				position: "absolute",
 				width: w,
 				height: h,
@@ -5852,13 +5996,13 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 			});
 		
 			// 모달 추가
-			$(self.options.target).append($modal);
+			$(self.options.target).append($modal[mi]);
 			
 			// 루트 모달 옆으로 이동
-			$(self.root).insertAfter($modal);
+			$(self.root).insertAfter($modal[mi]);
 
 			// 모달 닫기 이벤트 걸기
-			self.addEvent($modal, "click", function(e) {
+			self.addEvent($modal[mi], "click", function(e) {
 				if(self.options.autoHide) {
 					self.hide();
 				}
@@ -5884,7 +6028,8 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
          * Hides a modal
          */
 		this.hide = function() {
-			var opts = this.options;
+			var opts = this.options,
+				mi = this.timestamp;
 
 			// 모달 대상 객체가 숨겨진 상태가 아닐 경우..
 			if(opts.clone) {
@@ -5895,9 +6040,9 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 			$(opts.target).css("position", uiTarget.position);
 			$(this.root).css(uiObj);
 			
-			if($modal) {
-				$modal.remove();
-				$modal = null;
+			if($modal[mi]) {
+				$modal[mi].remove();
+				delete $modal[mi]; 
 			}
 			
 			this.type = "hide";
@@ -5918,6 +6063,7 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 			}
 
             // 위치 재조정
+			$(this.root).appendTo(opts.target);
             this.resize();
 
 			$(opts.target).css("position", info.tPos);
@@ -5932,7 +6078,8 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
          * Re-adjust the location of a modal
          */
         this.resize = function() {
-            var info = getModalInfo(this);
+            var info = getModalInfo(this),
+            	mi = this.timestamp;
 
             $(this.root).css({
                 "position": info.pos,
@@ -5941,8 +6088,8 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
                 "z-index": (z_index + this.options.index)
             });
 
-            if($modal != null) {
-                $modal.height(info.h);
+            if($modal[mi] != null) {
+            	$modal[mi].height(info.h);
             }
         }
 	}
@@ -5989,6 +6136,7 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 	
 	return UI;
 });
+
 jui.define("uix.table.column", [ "jquery" ], function($) {
 
     /**
@@ -6809,8 +6957,8 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
      */
     var UI = function() {
         var $obj = null, ddUi = null; // table/thead/tbody 구성요소, 컬럼 설정 UI (Dropdown)
-        var rowIndex = null, checkedList = {};
-        var is_resize = false, is_edit = false;
+        var selectedIndex = null, expandedIndex = null, editableIndex = null, checkedIndexes = {};
+        var is_resize = false;
 
 
         function getExpandHtml(self) {
@@ -6855,7 +7003,6 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
         }
 
         function setColumnMenu(self) {
-            var $ddObj = null;
             var columns = self.listColumn(),
                 columnNames = [];
 
@@ -6863,7 +7010,7 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
                 columnNames.push($(columns[i].element).text());
             }
 
-            $ddObj = $(self.tpl.menu({ columns: columnNames }));
+            var $ddObj = $(self.tpl.menu({ columns: columnNames }));
 
             $("body").append($ddObj);
             ddUi = dropdown($ddObj, { close: false });
@@ -6971,10 +7118,10 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
                 if(self.options.expand) {
                     if(self.options.expandEvent === false) return;
 
-                    if(rowIndex === row.index) {
+                    if(expandedIndex === row.index) {
                         self.hideExpand(e);
                     } else {
-                        if(rowIndex != null) {
+                        if(expandedIndex != null) {
                             self.hideExpand(e);
                         }
 
@@ -6992,30 +7139,7 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
                 return false;
             });
 
-            if(self.options.fields && self.options.editCell) {
-                if(self.options.editEvent === false) return;
-
-                $(row.element).find("td").each(function(i) {
-                    var cell = this;
-
-                    (function(colIndex) {
-                        self.addEvent(cell, "dblclick", function(e) {
-                            if(is_edit) return;
-                            is_edit = true;
-
-                            if(e.target.tagName == "TD") {
-                                setEventEditCell(self, e.currentTarget, row, colIndex);
-                            }
-
-                            self.emit("editstart", [ row, e ]);
-                        });
-                    })(i);
-                });
-            }
-
-            if(self.options.fields && self.options.editRow) {
-                if(self.options.editEvent === false) return;
-
+            if(self.options.editRow && self.options.editEvent) {
                 self.addEvent(row.element, "dblclick", function(e) {
                     if(e.target.tagName == "TD" || e.target.tagName == "TR") {
                         self.showEditRow(row.index, e);
@@ -7026,15 +7150,17 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
 
         function setEventEditCell(self, elem, row, colIndex, event, callback) {
             var column = self.getColumn(colIndex),
-                data = (column.name) ? column.data[row.index] : $(elem).html(),
-                colkeys = (!callback) ? self.options.editCell : self.options.editRow;
-
-            var $input = $("<input type='text' class='edit' />").val(data).css("width", "100%");
-            $(elem).html($input);
+                colkeys = self.options.editRow,
+                $input = null;
 
             if(!column.name || (colkeys !== true && $.inArray(colIndex, getColumnIndexes(self, colkeys)) == -1)) {
+                $input = $("<div class='edit'></div>").html($(elem).html() || "&nbsp;");
                 $input.attr("disabled", true);
+            } else {
+                $input = $("<input type='text' class='edit' />").val((column.name) ? column.data[row.index] : "");
             }
+
+            $(elem).html($input.css("width", "100%"));
 
             // 클릭 엘리먼트에 포커스 맞추기
             if(event && event.target == elem) $input.focus();
@@ -7042,35 +7168,20 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
             // 엔터 키 이벤트 발생시 업데이트
             self.addEvent($input, "keypress", function(e) {
                 if(e.which == 13) {
-                    update(e);
+                    update();
                 }
             });
 
             // 포커스가 바뀌었을 경우 업데이트
-            self.addEvent($obj.tbody.find("tr"), "click", function(e) {
+            self.addEvent($obj.tbody, "mousedown", function(e) {
                 if(e.target.tagName == "TD" || e.target.tagName == "TR") {
-                    update(e);
+                    update();
                 }
             });
 
-            function update(e) {
-                if(!is_edit) return;
-
-                if(typeof(callback) == "function") { // editRow일 경우
+            function update() {
+                if(editableIndex != null) {
                     callback();
-                    is_edit = false;
-                } else {
-                    var data = {};
-                    data[column.name] = $input.val();
-
-                    var res = self.emit("editend", [ data ]);
-
-                    // 이벤트 리턴 값이 false가 아닐 경우에만 업데이트
-                    if(res !== false) {
-                        self.update(row.index, data);
-                        $input.remove();
-                        is_edit = false;
-                    }
                 }
             }
         }
@@ -7162,8 +7273,8 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
                         // 컬럼 객체 가져오기
                         col = self.getColumn(index);
                         colNext = getNextColumn(index);
-                        colWidth = $(col.element).outerWidth(),
-                            colNextWidth = $(colNext.element).outerWidth();
+                        colWidth = $(col.element).outerWidth();
+                        colNextWidth = $(colNext.element).outerWidth();
                         colResize = this;
                         is_resize = true;
 
@@ -7172,22 +7283,26 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
                 })(i);
             }
 
-            self.addEvent("body", "mousemove", function(e) {
+            self.addEvent(document, "mousemove", function(e) {
                 if(resizeX > 0) {
                     colResizeWidth(self, e.pageX - resizeX);
                 }
             });
 
-            self.addEvent("body", "mouseup", function(e) {
+            self.addEvent(document, "mouseup", function(e) {
                 if(resizeX > 0) {
                     resizeX = 0;
-                    is_resize = false;
 
                     // 리사이징 바, 위치 이동
                     var left = $(col.element).offset().left - tablePos.left;
                     $(colResize).css("left", $(col.element).outerWidth() + left - 1);
 
                     self.emit("colresize", [ col, e ]);
+
+                    // 리사이징 상태 변경 (delay)
+                    setTimeout(function() {
+                        is_resize = false;
+                    }, 100);
 
                     return false;
                 }
@@ -7223,6 +7338,15 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
             }
         }
 
+        function resetRowStatus(self, isChecked) {
+            self.hideExpand();
+            self.hideEditRow();
+            self.unselect();
+
+            if(!isChecked) {
+                self.uncheckAll();
+            }
+        }
 
         this.init = function() {
             var opts = this.options;
@@ -7269,7 +7393,7 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
             }
 
             if(!opts.fields) {
-                if(opts.sort || opts.colshow || opts.editCell || opts.editRow) {
+                if(opts.sort || opts.colshow || opts.editRow) {
                     throw new Error("JUI_CRITICAL_ERR: 'fields' option is required");
                 }
             }
@@ -7390,17 +7514,15 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
          * @return {RowObject} row
          */
         this.select = function(index) {
-            var row = this.get(index);
+            // 모든 로우 상태 초기화
+            resetRowStatus(this);
 
-            // 초기화
-            this.hideExpand();
-            this.hideEditRow();
-            this.uncheckAll();
+            var row = this.get(index);
 
             $(row.element).parent().find(".selected").removeClass("selected");
             $(row.element).addClass("selected");
 
-            rowIndex = index;
+            selectedIndex = index;
             return row;
         }
 
@@ -7411,11 +7533,11 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
          * @return {RowObject} row
          */
         this.unselect = function() {
-            if(rowIndex == null) return;
-            var row = this.get(rowIndex);
+            if(selectedIndex == null) return;
+            var row = this.get(selectedIndex);
 
             $(row.element).removeClass("selected");
-            rowIndex = null;
+            selectedIndex = null;
 
             return row;
         }
@@ -7427,6 +7549,9 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
          * @param {Integer} index
          */
         this.check = function(index) {
+            // 모든 로우 상태 초기화 (체크만 제외 )
+            resetRowStatus(this, true);
+
             var row = this.get(index);
 
             // 초기화
@@ -7434,7 +7559,7 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
             this.hideEditRow();
             this.unselect();
 
-            checkedList[index] = row;
+            checkedIndexes[index] = row;
             $(row.element).addClass("checked");
         }
 
@@ -7445,9 +7570,10 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
          * @param {Integer} index
          */
         this.uncheck = function(index) {
+            if(checkedIndexes[index] == null) return;
             var row = this.get(index);
 
-            checkedList[index] = null;
+            checkedIndexes[index] = null;
             $(row.element).removeClass("checked");
         }
 
@@ -7456,7 +7582,7 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
          * Removes checked classes from all rows.
          */
         this.uncheckAll = function() {
-            checkedList = {};
+            checkedIndexes = {};
             $obj.tbody.find(".checked").removeClass("checked");
         }
 
@@ -7700,9 +7826,9 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
         this.listChecked = function() {
             var list = [];
 
-            for(var row in checkedList) {
-                if(checkedList[row] != null) {
-                    list.push(checkedList[row]);
+            for(var row in checkedIndexes) {
+                if(checkedIndexes[row] != null) {
+                    list.push(checkedIndexes[row]);
                 }
             }
 
@@ -7832,12 +7958,8 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
         this.showColumnMenu = function(x) {
             if(!this.options.fields || !ddUi) return;
 
-            var columns = this.listColumn();
-            var offset = $obj.thead.offset(),
-                maxX = offset.left + $obj.table.outerWidth() - $(ddUi.root).outerWidth();
-
-            x = (isNaN(x) || (x > maxX + offset.left)) ? maxX : x;
-            x = (x < 0) ? 0 : x;
+            var columns = this.listColumn(),
+                offset = $obj.thead.offset();
 
             // 현재 체크박스 상태 설정
             $(ddUi.root).find("input[type=checkbox]").each(function(i) {
@@ -7880,9 +8002,8 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
         this.showExpand = function(index, obj, e) {
             if(!this.options.expand) return;
 
-            // 초기화
-            this.unselect();
-            this.hideEditRow();
+            // 모든 로우 상태 초기화
+            resetRowStatus(this);
 
             var expandSel = "#EXPAND_" + this.timestamp,
                 row = this.get(index),
@@ -7901,7 +8022,7 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
             this.setVo();
 
             // 커스텀 이벤트 호출
-            rowIndex = index;
+            expandedIndex = index;
             this.emit("expand", [ row, e ]);
         }
 
@@ -7910,10 +8031,8 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
          * Hides the extended row area of a specified index.
          */
         this.hideExpand = function(e) {
-            if(!this.options.expand) return;
-            if(rowIndex == null) return;
-
-            var row = this.get(rowIndex);
+            if(expandedIndex == null) return;
+            var row = this.get(expandedIndex);
 
             $('#EXPAND_' + this.timestamp).parent().hide();
             $obj.tbody.find("tr").removeClass("open");
@@ -7921,8 +8040,7 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
             // 스크롤 적용
             this.scroll();
 
-            // 커스텀 이벤트 호출
-            rowIndex = null;
+            expandedIndex = null;
             this.emit("expandend", [ row, e ]);
         }
 
@@ -7933,10 +8051,8 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
          * @return {RowObject} row
          */
         this.getExpand = function() {
-            if(!this.options.expand) return;
-
-            if(rowIndex == null) return null;
-            return this.get(rowIndex);
+            if(expandedIndex == null) return null;
+            return this.get(expandedIndex);
         }
 
         /**
@@ -7946,18 +8062,14 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
          * @param {Integer} index
          */
         this.showEditRow = function(index, e) {
-            if(!this.options.editRow || is_edit) return;
+            if(!this.options.editRow) return;
 
-            // 초기화
-            this.unselect();
-            this.hideExpand();
+            // 모든 로우 상태 초기화
+            resetRowStatus(this);
 
             var self = this,
                 row = this.get(index);
             var $cells = $(row.element).find("td");
-
-            // 현재 테이블 수정 상태
-            is_edit = true;
 
             $cells.each(function(i) {
                 setEventEditCell(self, this, row, i, e, function() {
@@ -7968,27 +8080,31 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
                         var column = self.getColumn(colIndex);
 
                         if(column.name != null) {
-                            var value = $(this).find(".edit").val();
-                            data[column.name] = (!isNaN(value) && value != null) ? parseFloat(value) : value;
+                            var $edit = $(this).find("input.edit");
+
+                            if($edit.size() == 1) {
+                                var value = $edit.val();
+                                data[column.name] = (!isNaN(value) && value != null && value != "") ? parseFloat(value) : value;
+                            }
                         }
                     });
 
                     // 변경된 값으로 데이터 갱신하기
-                    row.data = data;
+                    row.data = $.extend(row.data, data);
 
                     // 콜백 결과 가져오기
                     var res = self.emit("editend", [ row, e ]);
 
                     // 이벤트 리턴 값이 false가 아닐 경우에만 업데이트
                     if(res !== false) {
-                        self.update(row.index, data);
+                        self.hideEditRow(data);
                     } else {
                         row.data = originData;
                     }
                 });
             });
 
-            rowIndex = index;
+            editableIndex = index;
             self.emit("editstart", [ row, e ]);
         }
 
@@ -7996,18 +8112,12 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
          * @method hideEditRow
          * Hides the modified row area of a specified index.
          */
-        this.hideEditRow = function() {
-            if(!this.options.editRow) return;
-            if(rowIndex == null) return;
+        this.hideEditRow = function(data) {
+            if(editableIndex == null) return;
+            var row = this.get(editableIndex);
 
-            var row = this.get(rowIndex);
-
-            // 커스텀 이벤트 호출
-            rowIndex = null;
-
-            // 수정 상태 이전의 로우 데이터로 변경
-            this.emit("editend", [ row.data ]);
-            this.update(row.index, row.data);
+            editableIndex = null;
+            this.update(row.index, !data ? row.data : data);
         }
 
         /**
@@ -8017,10 +8127,8 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
          * @return {RowObject} row
          */
         this.getEditRow = function() {
-            if(!this.options.editRow) return;
-
-            if(rowIndex == null) return null;
-            return this.get(rowIndex);
+            if(editableIndex == null) return null;
+            return this.get(editableIndex);
         }
 
         /**
@@ -8136,7 +8244,7 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
          * @return {Integer} index
          */
         this.activeIndex = function() { // 활성화된 확장/수정/선택 상태의 로우 인덱스를 리턴
-            return rowIndex;
+            return selectedIndex || expandedIndex || editableIndex;
         }
     }
 
@@ -8213,12 +8321,6 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
              * Sets the Show/Hide state of an extended row area when clicking on a row.
              */
             expandEvent: true,
-
-            /**
-             * @cfg {Boolean|Array} [editCell=false]
-             * Determines whether to use a modified cell area.
-             */
-            editCell: false,
 
             /**
              * @cfg {Boolean|Array} [editRow=false]
@@ -9502,8 +9604,6 @@ jui.defineUI("uix.tree", [ "util.base", "uix.tree.base" ], function(_, Base) {
 	return UI;
 });
 jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], function($, _, modal, table) {
-	var p_type = null;
-
 	_.resize(function() {
 		var call_list = jui.get("uix.xtable");
 		
@@ -9530,99 +9630,83 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 		var rows = [], o_rows = null;
 		var ui_modal = null, page = 1;
         var is_loading = false, is_resize = false;
-		
+		var w_resize = 8;
 
-		function createTableList(self) { // 2
+		function createTableList(self) {
 			var exceptOpts = [ 
                "buffer", "bufferCount", "csvCount", "sortLoading", "sortCache", "sortIndex", "sortOrder",
                "event", "rows", "scrollWidth", "width"
-            ];
-			
-			body = table($(self.root).children("table"), getExceptOptions(self, exceptOpts.concat("resize"))); // 바디 테이블 생성
+			];
+			var $root = $(self.root);
+
+			// 기본 테이블 마크업 복사해서 추가하기
+			$root.append($root.children("table").clone());
+
+			head = table($root.children("table:first-child"), getExceptOptions(self, exceptOpts)); // 헤더 테이블 생성
+			setTableHeadStyle(self, head);
+
+			body = table($root.children("table:last-child"), getExceptOptions(self, exceptOpts.concat("resize"))); // 바디 테이블 생성
 			setTableBodyStyle(self, body); // X-Table 생성 및 마크업 설정
-			
-			head = table($(self.root).children("table.head"), getExceptOptions(self, exceptOpts)); // 헤더 테이블 생성
+
+			// 공통 테이블 스타일 정의
 			setTableAllStyle(self, head, body);
 			
 			// 테이블 옵션 필터링 함수
 			function getExceptOptions(self, exceptOpts) {
 				var options = {};
-				
+
 				for(var key in self.options) {
 					if($.inArray(key, exceptOpts) == -1) {
 						options[key] = self.options[key];
 					}
 				}
-				
+
+				// 가로 스크롤 모드일 때, resize 옵션 막기
+				if(self.options.scrollWidth > 0) {
+					options.resize = false;
+				}
+
 				return options;
 			}
 			
 			function setTableAllStyle(self, head, body) {
 				var opts = self.options;
 
-				$(self.root).css({ "position": "relative" });
-
-				$(head.root).css({
-					"position": "absolute",
-					"top": "0",
-					"border-bottom-width": "0",
-					"margin": "0"
-				});
-
-				$(body.root).css({
-					"margin": "0"
-				});
-				
-				if(opts.width > 0) {
-					$(self.root).outerWidth(opts.width);
-				}
-				
 				if(opts.scrollWidth > 0) {
-					var rootWidth = $(self.root).outerWidth();
-					
-					$(self.root).css({
-						"max-width": self.options.scrollWidth,
-						"overflow-x": "auto",
-                        "overflow-y": "hidden"
-					});
-					
-					$(head.root).outerWidth(rootWidth);
-					$(body.root).parent().outerWidth(rootWidth);
+					self.scrollWidth(opts.scrollWidth, true);
+				} else {
+					if(opts.width > 0) {
+						$(self.root).outerWidth(opts.width);
+					}
 				}
 			}
-			
+
+			function setTableHeadStyle(self, head) {
+				$(head.root).wrap("<div class='head'></div>");
+				$(head.root).children("tbody").remove();
+			}
+
 			function setTableBodyStyle(self, body) {
-				var $table =  $(body.root).clone(),
-					cols = body.listColumn();
-				
+				var cols = body.listColumn();
+
 				// X-Table 바디 영역 스크롤 높이 설정
-				if(self.options.buffer != "page") 
+				if (self.options.buffer != "page") {
 					$(body.root).wrap("<div class='body' style='max-height: " + self.options.scrollHeight + "px'></div>");
-				else
+
+					$(body.root).parent().css({
+						"overflow-y": "scroll"
+					});
+				} else {
 					$(body.root).wrap("<div class='body'></div>");
+				}
 
                 // X-Table 바디 영역의 헤더라인은 마지막 노드를 제외하고 제거
                 $(body.root).find("thead > tr").outerHeight(0).not(":last-child").remove();
 
-				// X-Table 헤더 영역 설정
+				// X-Table 바디 영역의 헤더 설정
 				for(var i = 0; i < cols.length; i++) {
-					var $elem = $(cols[i].element);
-
-					$elem.html("").outerHeight(0).attr("style",
-							$elem.attr("style") +
-							"border-top-width: 0px !important;" +
-							"border-bottom-width: 0px !important;" +
-							"padding-top: 0px !important;" +
-							"padding-bottom: 0px !important"
-					);
+					$(cols[i].element).html("").outerHeight(0);
 				}
-				
-				// 바디 테이블의 tbody 영역 제거
-				$table.children("tbody").remove();
-				
-				// 헤더와 바디 테이블 중간의 간격 정의 (스크롤 관련)
-				$(self.root).append($table.addClass("head"));
-				$(self.root).css("padding-top", $table.height());
 			}
 		}
 		
@@ -9635,10 +9719,13 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 				for(var j = cols.length - 1; j >= 0; j--) {
 					var hw = $(cols[j].element).outerWidth();
 					
-					// 조건 (스크롤, 컬럼보이기, 마지막컬럼)
-					// 조건이 명확하지 않으니 차후에 변경
 					if(self.options.buffer != "page" && cols[j].type == "show" && !isLast) {
-						$(bodyCols[j].element).outerWidth("auto");
+						if(_.browser.msie) {
+							$(bodyCols[j].element).outerWidth(hw - getScrollBarWidth(self));
+						} else {
+							$(bodyCols[j].element).css({ "width": "auto" });
+						}
+
 						isLast = true;
 					} else {
 						$(cols[j].element).outerWidth(hw);
@@ -9679,7 +9766,10 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 				
 				// 소팅 후, 현재 소팅 상태 캐싱 처리 
 				if(self.options.sortCache) { 
-					self.setOption({ sortIndex: column.index, sortOrder: column.order });
+					self.setOption({
+						sortIndex: column.index,
+						sortOrder: column.order
+					});
 				}
 			});
 			
@@ -9708,20 +9798,32 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 			});
 		}
 		
-		function setScrollEvent(self) {
-			var $body = $(self.root).children(".body");
-			
+		function setScrollEvent(self, width, height) {
+			var opts = self.options;
+
+			var $head = $(self.root).children(".head"),
+				$body = $(self.root).children(".body");
+
 			$body.off("scroll").scroll(function(e) {
-			    if((this.scrollTop + self.options.scrollHeight) >= $body.get(0).scrollHeight) {
-		    		self.next();
-			    	self.emit("scroll", e);
-			    	
-			    	return false;
-			    }
+				// 컬럼 메뉴는 스크롤시 무조건 숨기기
+				self.hideColumnMenu();
+
+				if(width > 0) {
+					$head.scrollLeft(this.scrollLeft);
+				}
+
+				if(opts.buffer == "scroll") { // 무조건 scroll 타입일 때
+					if ((this.scrollTop + height) >= $body.get(0).scrollHeight) {
+						self.next();
+						self.emit("scroll", e);
+					}
+				}
+
+				return false;
 			});
 		}
-		
-        function setColumnResizeScroll(self) {
+
+        function setScrollWidthResize(self) {
             var column = {},
                 width = {},
                 resizeX = 0;
@@ -9729,16 +9831,18 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
             // 리사이즈 엘리먼트 삭제
             $(self.root).find("thead .resize").remove();
 
-            for(var i = 0; i < head.uit.getColumnCount() - 1; i++) {
+            for(var i = 0, len = head.uit.getColumnCount(); i < len; i++) {
                 var $colElem = $(head.getColumn(i).element),
                     $resizeBar = $("<div class='resize'></div>");
-                var pos = $colElem.position();
+
+                var pos = $colElem.position(),
+					left = $colElem.outerWidth() + pos.left - 1;
 
                 $resizeBar.css({
                     position: "absolute",
-                    width: "8px",
+                    width: w_resize + "px",
                     height: $colElem.outerHeight(),
-                    left: ($colElem.outerWidth() + (pos.left - 1)) + "px",
+                    left: ((i == len - 1) ? left - w_resize : left) + "px",
                     top: pos.top + "px",
                     cursor: "w-resize",
                     "z-index": "1"
@@ -9747,7 +9851,7 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
                 $colElem.append($resizeBar);
 
                 // Event Start
-                (function(index) {
+                (function(index, isLast) {
                     self.addEvent($resizeBar, "mousedown", function(e) {
                         if(resizeX == 0) {
                             resizeX = e.pageX;
@@ -9756,70 +9860,99 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
                         // 컬럼 객체 가져오기
                         column = {
                             head: head.getColumn(index),
-                            body: body.getColumn(index)
+                            body: body.getColumn(index),
+							isLast: isLast
                         };
 
                         width = {
                             column: $(column.head.element).outerWidth(),
-                            body: $(body.root).outerWidth()
+							head: $(head.root).outerWidth(),
+                            body: $(body.root).outerWidth(),
+							"max-width": parseInt($(head.root).parent().css("max-width"))
                         };
 
                         is_resize = true;
 
                         return false;
                     });
-                })(i);
+                })(i, i == len - 1);
             }
 
-            self.addEvent("body", "mousemove", function(e) {
+            self.addEvent(document, "mousemove", function(e) {
                 if(resizeX > 0) {
                     colResizeWidth(e.pageX - resizeX);
                 }
             });
 
-            self.addEvent("body", "mouseup", function(e) {
+            self.addEvent(document, "mouseup", function(e) {
                 if(resizeX > 0) {
+					// 마지막 컬럼 크기를 0보다 크게 리사이징시 가로 스크롤 위치 조정
+					if(column.isLast) {
+						var scrollLeft = $(body.root).parent().scrollLeft(),
+							disWidth = e.pageX - resizeX;
+
+						if(disWidth > 0) {
+							$(head.root).parent().scrollLeft(scrollLeft + disWidth);
+							$(body.root).parent().scrollLeft(scrollLeft + disWidth);
+						}
+					}
+
+					// 스크롤 위치 초기화
                     resizeX = 0;
-                    is_resize = false;
 
                     // 리사이징 바, 위치 이동
-                    colResizeBarLeft();
-
+					reloadScrollWidthResizeBar(500);
                     head.emit("colresize", [ column.head, e ]);
 
-                    return false;
-                }
+                	// 리사이징 상태 변경 (delay)
+					setTimeout(function() {
+						is_resize = false;
+					}, 100);
+
+					return false;
+				}
             });
 
             // 리사이징 바 위치 설정
-            head.on("colshow", colResizeBarLeft);
-            head.on("colhide", colResizeBarLeft);
+            head.on("colshow", reloadScrollWidthResizeBar);
+            head.on("colhide", reloadScrollWidthResizeBar);
 
             function colResizeWidth(disWidth) {
                 var colMinWidth = 30;
 
-                // 최소 크기 체크
+				// 전체 최소 크기 체크
+				if (width.head + disWidth < width["max-width"]) {
+					return;
+				}
+
+				// 컬럼 최소 크기 체크
                 if (width.column + disWidth < colMinWidth)
                     return;
 
                 $(column.head.element).outerWidth(width.column + disWidth);
                 $(column.body.element).outerWidth(width.column + disWidth);
 
-                if (disWidth > 0) {
-                    $(body.root).parent().outerWidth(width.body + disWidth);
-                    $(head.root).outerWidth(width.body + disWidth);
-                }
-            }
-
-            function colResizeBarLeft() {
-                for(var i = 0; i < head.uit.getColumnCount() - 1; i++) {
-                    var $colElem = $(head.getColumn(i).element);
-
-                    $colElem.find(".resize").css("left", ($colElem.outerWidth() + $colElem.position().left) + "px");
-                }
+				$(head.root).outerWidth(width.head + disWidth);
+				$(body.root).outerWidth(width.body + disWidth);
             }
         }
-		
+
+		function reloadScrollWidthResizeBar(delay) {
+			setTimeout(function() {
+				for(var i = 0, len = head.uit.getColumnCount(); i < len; i++) {
+					var $colElem = $(head.getColumn(i).element);
+
+					var pos = $colElem.position(),
+						left = $colElem.outerWidth() + pos.left - 1;
+
+					$colElem.find(".resize").css("left", ((i == len - 1) ? left - w_resize : left) + "px");
+				}
+			}, delay);
+		}
+
+		function getScrollBarWidth(self) {
+			return self.options.buffer == "page" ? 0 : _.scrollWidth() + 1;
+		}
 
 		this.init = function() {
 			var opts = this.options;
@@ -9836,26 +9969,10 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 			// 기본 설정
 			createTableList(this);
 			setCustomEvent(this);
-			
-			// 스크롤/페이지-스크롤 옵션
-			if(opts.buffer != "page") {
-				var $body = $(this.root).children(".body");
 
-				$body.css({
-					"overflow-y": "scroll",
-					"overflow-x": "hidden"
-				});
-				
-				$body.children("table").css({
-					"border-bottom-width": "0"
-				});
-			}
-			
-			// 스크롤 버퍼 이벤트
-			if(opts.buffer == "scroll") {
-				setScrollEvent(this);
-			}
-			
+			// 가로/세로 스크롤 설정
+			setScrollEvent(this, opts.scrollWidth, opts.scrollHeight);
+
 			// 데이터가 있을 경우
 			if(opts.data) {
 				this.update(opts.data);
@@ -9878,14 +9995,13 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 			
 			// 컬럼 리사이징 (기본)
 			if(opts.resize) {
-				head.resizeColumns();
-				head.resize();
-            }
-
-            // 컬럼 리사이징 (가로스크롤)
-            if(!opts.resize && opts.scrollWidth > 0) {
-                setColumnResizeScroll(this);
-            }
+				if(opts.scrollWidth > 0) {
+					setScrollWidthResize(this);
+				} else {
+					head.resizeColumns();
+					head.resize();
+				}
+			}
 		}
 
 		/**
@@ -9953,9 +10069,7 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 			if(this.options.buffer == "scroll") return false;
 			if(this.getPage() == pNo) return false;
 			
-			p_type = (page > pNo) ? "prev" : "next";
 			this.clear();
-			
 			page = (pNo < 1) ? 1 : pNo;
 			this.next();
 		}
@@ -10095,18 +10209,62 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 		}
 
 		/**
+		 * @method scrollWidth
+		 * Sets the scroll based on the width of a table.
+		 *
+		 * @param {Integer} width
+		 */
+		this.scrollWidth = function(scrollWidth, isInit) {
+			// 최초에 스크롤 넓이가 설정되있어야만 메소드 사용 가능
+			if(this.options.scrollWidth == 0) return;
+
+			var width = this.options.width;
+
+			if(width > 0) {
+				var w = (scrollWidth >= width) ? scrollWidth - getScrollBarWidth(this) : width;
+				$(this.root).outerWidth(w);
+			} else {
+				$(this.root).outerWidth(scrollWidth - getScrollBarWidth(this));
+			}
+
+			if(scrollWidth > 0) {
+				var originWidth = $(this.root).outerWidth();
+				$(this.root).outerWidth(scrollWidth);
+
+				if(isInit) {
+					$(head.root).outerWidth(originWidth + getScrollBarWidth(this));
+					$(body.root).outerWidth(originWidth);
+
+					reloadScrollWidthResizeBar(1000);
+				}
+
+				$(head.root).parent().css("max-width", scrollWidth);
+				$(body.root).parent().css("max-width", scrollWidth);
+			}
+		}
+
+		/**
+		 * @method scrollHeight
+		 * Sets the scroll based on the height of a table.
+		 *
+		 * @param {Integer} height
+		 */
+		this.scrollHeight = function(h) {
+			if(this.options.buffer == "page") return;
+			$(this.root).find(".body").css("max-height", h + "px");
+
+			setScrollEvent(this, this.options.scrollWidth, h);
+		}
+
+		/**
+		 * @deprecated
 		 * @method height
 		 * Sets the scroll based on the height of a table.
 		 *
 		 * @param {Integer} height
 		 */
 		this.height = function(h) {
-			if(this.options.buffer != "scroll") return;
-			
-			this.options.scrollHeight = h;
-			$(this.root).find(".body").css("max-height", h + "px");
-			
-			setScrollEvent(this);
+			this.scrollHeight(h);
 		}
 
 		/**
@@ -10243,7 +10401,7 @@ jui.defineUI("uix.xtable", [ "jquery", "util.base", "ui.modal", "uix.table" ], f
 		 * @param {Integer} x
 		 */
         this.toggleColumnMenu = function(x) {
-            head.toggleColumnMenu(x);
+			head.toggleColumnMenu(x);
         }
 
 		/**

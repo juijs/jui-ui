@@ -1,6 +1,6 @@
 {
   "name": "jui",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "description": "JENNIFER UI is all free. a simple, fast, many: JUI is all-in-one desktop UI framework. Bootstrap support, Independent style & script components, SVG-based chart components.",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -8,7 +8,7 @@
   "main": "node.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/seogi1004/jui.git"
+    "url": "https://github.com/juijs/jui.git"
   },
   "keywords": [
     "HTML5",
@@ -28,7 +28,7 @@
   "author": "seogi1004",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/seogi1004/jui/issues"
+    "url": "https://github.com/juijs/jui/issues"
   },
   "devDependencies": {
     "css": "^2.1.0",

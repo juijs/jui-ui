@@ -818,8 +818,8 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
      */
     var UI = function() {
         var $obj = null, ddUi = null; // table/thead/tbody 구성요소, 컬럼 설정 UI (Dropdown)
-        var rowIndex = null, checkedList = {};
-        var is_resize = false, is_edit = false;
+        var selectedIndex = null, expandedIndex = null, editableIndex = null, checkedIndexes = {};
+        var is_resize = false;
 
 
         function getExpandHtml(self) {
@@ -864,7 +864,6 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
         }
 
         function setColumnMenu(self) {
-            var $ddObj = null;
             var columns = self.listColumn(),
                 columnNames = [];
 
@@ -872,7 +871,7 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
                 columnNames.push($(columns[i].element).text());
             }
 
-            $ddObj = $(self.tpl.menu({ columns: columnNames }));
+            var $ddObj = $(self.tpl.menu({ columns: columnNames }));
 
             $("body").append($ddObj);
             ddUi = dropdown($ddObj, { close: false });
@@ -980,10 +979,10 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
                 if(self.options.expand) {
                     if(self.options.expandEvent === false) return;
 
-                    if(rowIndex === row.index) {
+                    if(expandedIndex === row.index) {
                         self.hideExpand(e);
                     } else {
-                        if(rowIndex != null) {
+                        if(expandedIndex != null) {
                             self.hideExpand(e);
                         }
 
@@ -1001,30 +1000,7 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
                 return false;
             });
 
-            if(self.options.fields && self.options.editCell) {
-                if(self.options.editEvent === false) return;
-
-                $(row.element).find("td").each(function(i) {
-                    var cell = this;
-
-                    (function(colIndex) {
-                        self.addEvent(cell, "dblclick", function(e) {
-                            if(is_edit) return;
-                            is_edit = true;
-
-                            if(e.target.tagName == "TD") {
-                                setEventEditCell(self, e.currentTarget, row, colIndex);
-                            }
-
-                            self.emit("editstart", [ row, e ]);
-                        });
-                    })(i);
-                });
-            }
-
-            if(self.options.fields && self.options.editRow) {
-                if(self.options.editEvent === false) return;
-
+            if(self.options.editRow && self.options.editEvent) {
                 self.addEvent(row.element, "dblclick", function(e) {
                     if(e.target.tagName == "TD" || e.target.tagName == "TR") {
                         self.showEditRow(row.index, e);
@@ -1035,15 +1011,17 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
 
         function setEventEditCell(self, elem, row, colIndex, event, callback) {
             var column = self.getColumn(colIndex),
-                data = (column.name) ? column.data[row.index] : $(elem).html(),
-                colkeys = (!callback) ? self.options.editCell : self.options.editRow;
-
-            var $input = $("<input type='text' class='edit' />").val(data).css("width", "100%");
-            $(elem).html($input);
+                colkeys = self.options.editRow,
+                $input = null;
 
             if(!column.name || (colkeys !== true && $.inArray(colIndex, getColumnIndexes(self, colkeys)) == -1)) {
+                $input = $("<div class='edit'></div>").html($(elem).html() || "&nbsp;");
                 $input.attr("disabled", true);
+            } else {
+                $input = $("<input type='text' class='edit' />").val((column.name) ? column.data[row.index] : "");
             }
+
+            $(elem).html($input.css("width", "100%"));
 
             // 클릭 엘리먼트에 포커스 맞추기
             if(event && event.target == elem) $input.focus();
@@ -1051,35 +1029,20 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
             // 엔터 키 이벤트 발생시 업데이트
             self.addEvent($input, "keypress", function(e) {
                 if(e.which == 13) {
-                    update(e);
+                    update();
                 }
             });
 
             // 포커스가 바뀌었을 경우 업데이트
-            self.addEvent($obj.tbody.find("tr"), "click", function(e) {
+            self.addEvent($obj.tbody, "mousedown", function(e) {
                 if(e.target.tagName == "TD" || e.target.tagName == "TR") {
-                    update(e);
+                    update();
                 }
             });
 
-            function update(e) {
-                if(!is_edit) return;
-
-                if(typeof(callback) == "function") { // editRow일 경우
+            function update() {
+                if(editableIndex != null) {
                     callback();
-                    is_edit = false;
-                } else {
-                    var data = {};
-                    data[column.name] = $input.val();
-
-                    var res = self.emit("editend", [ data ]);
-
-                    // 이벤트 리턴 값이 false가 아닐 경우에만 업데이트
-                    if(res !== false) {
-                        self.update(row.index, data);
-                        $input.remove();
-                        is_edit = false;
-                    }
                 }
             }
         }
@@ -1171,8 +1134,8 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
                         // 컬럼 객체 가져오기
                         col = self.getColumn(index);
                         colNext = getNextColumn(index);
-                        colWidth = $(col.element).outerWidth(),
-                            colNextWidth = $(colNext.element).outerWidth();
+                        colWidth = $(col.element).outerWidth();
+                        colNextWidth = $(colNext.element).outerWidth();
                         colResize = this;
                         is_resize = true;
 
@@ -1181,22 +1144,26 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
                 })(i);
             }
 
-            self.addEvent("body", "mousemove", function(e) {
+            self.addEvent(document, "mousemove", function(e) {
                 if(resizeX > 0) {
                     colResizeWidth(self, e.pageX - resizeX);
                 }
             });
 
-            self.addEvent("body", "mouseup", function(e) {
+            self.addEvent(document, "mouseup", function(e) {
                 if(resizeX > 0) {
                     resizeX = 0;
-                    is_resize = false;
 
                     // 리사이징 바, 위치 이동
                     var left = $(col.element).offset().left - tablePos.left;
                     $(colResize).css("left", $(col.element).outerWidth() + left - 1);
 
                     self.emit("colresize", [ col, e ]);
+
+                    // 리사이징 상태 변경 (delay)
+                    setTimeout(function() {
+                        is_resize = false;
+                    }, 100);
 
                     return false;
                 }
@@ -1232,6 +1199,15 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
             }
         }
 
+        function resetRowStatus(self, isChecked) {
+            self.hideExpand();
+            self.hideEditRow();
+            self.unselect();
+
+            if(!isChecked) {
+                self.uncheckAll();
+            }
+        }
 
         this.init = function() {
             var opts = this.options;
@@ -1278,7 +1254,7 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
             }
 
             if(!opts.fields) {
-                if(opts.sort || opts.colshow || opts.editCell || opts.editRow) {
+                if(opts.sort || opts.colshow || opts.editRow) {
                     throw new Error("JUI_CRITICAL_ERR: 'fields' option is required");
                 }
             }
@@ -1399,17 +1375,15 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
          * @return {RowObject} row
          */
         this.select = function(index) {
-            var row = this.get(index);
+            // 모든 로우 상태 초기화
+            resetRowStatus(this);
 
-            // 초기화
-            this.hideExpand();
-            this.hideEditRow();
-            this.uncheckAll();
+            var row = this.get(index);
 
             $(row.element).parent().find(".selected").removeClass("selected");
             $(row.element).addClass("selected");
 
-            rowIndex = index;
+            selectedIndex = index;
             return row;
         }
 
@@ -1420,11 +1394,11 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
          * @return {RowObject} row
          */
         this.unselect = function() {
-            if(rowIndex == null) return;
-            var row = this.get(rowIndex);
+            if(selectedIndex == null) return;
+            var row = this.get(selectedIndex);
 
             $(row.element).removeClass("selected");
-            rowIndex = null;
+            selectedIndex = null;
 
             return row;
         }
@@ -1436,6 +1410,9 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
          * @param {Integer} index
          */
         this.check = function(index) {
+            // 모든 로우 상태 초기화 (체크만 제외 )
+            resetRowStatus(this, true);
+
             var row = this.get(index);
 
             // 초기화
@@ -1443,7 +1420,7 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
             this.hideEditRow();
             this.unselect();
 
-            checkedList[index] = row;
+            checkedIndexes[index] = row;
             $(row.element).addClass("checked");
         }
 
@@ -1454,9 +1431,10 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
          * @param {Integer} index
          */
         this.uncheck = function(index) {
+            if(checkedIndexes[index] == null) return;
             var row = this.get(index);
 
-            checkedList[index] = null;
+            checkedIndexes[index] = null;
             $(row.element).removeClass("checked");
         }
 
@@ -1465,7 +1443,7 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
          * Removes checked classes from all rows.
          */
         this.uncheckAll = function() {
-            checkedList = {};
+            checkedIndexes = {};
             $obj.tbody.find(".checked").removeClass("checked");
         }
 
@@ -1709,9 +1687,9 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
         this.listChecked = function() {
             var list = [];
 
-            for(var row in checkedList) {
-                if(checkedList[row] != null) {
-                    list.push(checkedList[row]);
+            for(var row in checkedIndexes) {
+                if(checkedIndexes[row] != null) {
+                    list.push(checkedIndexes[row]);
                 }
             }
 
@@ -1841,12 +1819,8 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
         this.showColumnMenu = function(x) {
             if(!this.options.fields || !ddUi) return;
 
-            var columns = this.listColumn();
-            var offset = $obj.thead.offset(),
-                maxX = offset.left + $obj.table.outerWidth() - $(ddUi.root).outerWidth();
-
-            x = (isNaN(x) || (x > maxX + offset.left)) ? maxX : x;
-            x = (x < 0) ? 0 : x;
+            var columns = this.listColumn(),
+                offset = $obj.thead.offset();
 
             // 현재 체크박스 상태 설정
             $(ddUi.root).find("input[type=checkbox]").each(function(i) {
@@ -1889,9 +1863,8 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
         this.showExpand = function(index, obj, e) {
             if(!this.options.expand) return;
 
-            // 초기화
-            this.unselect();
-            this.hideEditRow();
+            // 모든 로우 상태 초기화
+            resetRowStatus(this);
 
             var expandSel = "#EXPAND_" + this.timestamp,
                 row = this.get(index),
@@ -1910,7 +1883,7 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
             this.setVo();
 
             // 커스텀 이벤트 호출
-            rowIndex = index;
+            expandedIndex = index;
             this.emit("expand", [ row, e ]);
         }
 
@@ -1919,10 +1892,8 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
          * Hides the extended row area of a specified index.
          */
         this.hideExpand = function(e) {
-            if(!this.options.expand) return;
-            if(rowIndex == null) return;
-
-            var row = this.get(rowIndex);
+            if(expandedIndex == null) return;
+            var row = this.get(expandedIndex);
 
             $('#EXPAND_' + this.timestamp).parent().hide();
             $obj.tbody.find("tr").removeClass("open");
@@ -1930,8 +1901,7 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
             // 스크롤 적용
             this.scroll();
 
-            // 커스텀 이벤트 호출
-            rowIndex = null;
+            expandedIndex = null;
             this.emit("expandend", [ row, e ]);
         }
 
@@ -1942,10 +1912,8 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
          * @return {RowObject} row
          */
         this.getExpand = function() {
-            if(!this.options.expand) return;
-
-            if(rowIndex == null) return null;
-            return this.get(rowIndex);
+            if(expandedIndex == null) return null;
+            return this.get(expandedIndex);
         }
 
         /**
@@ -1955,18 +1923,14 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
          * @param {Integer} index
          */
         this.showEditRow = function(index, e) {
-            if(!this.options.editRow || is_edit) return;
+            if(!this.options.editRow) return;
 
-            // 초기화
-            this.unselect();
-            this.hideExpand();
+            // 모든 로우 상태 초기화
+            resetRowStatus(this);
 
             var self = this,
                 row = this.get(index);
             var $cells = $(row.element).find("td");
-
-            // 현재 테이블 수정 상태
-            is_edit = true;
 
             $cells.each(function(i) {
                 setEventEditCell(self, this, row, i, e, function() {
@@ -1977,27 +1941,31 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
                         var column = self.getColumn(colIndex);
 
                         if(column.name != null) {
-                            var value = $(this).find(".edit").val();
-                            data[column.name] = (!isNaN(value) && value != null) ? parseFloat(value) : value;
+                            var $edit = $(this).find("input.edit");
+
+                            if($edit.size() == 1) {
+                                var value = $edit.val();
+                                data[column.name] = (!isNaN(value) && value != null && value != "") ? parseFloat(value) : value;
+                            }
                         }
                     });
 
                     // 변경된 값으로 데이터 갱신하기
-                    row.data = data;
+                    row.data = $.extend(row.data, data);
 
                     // 콜백 결과 가져오기
                     var res = self.emit("editend", [ row, e ]);
 
                     // 이벤트 리턴 값이 false가 아닐 경우에만 업데이트
                     if(res !== false) {
-                        self.update(row.index, data);
+                        self.hideEditRow(data);
                     } else {
                         row.data = originData;
                     }
                 });
             });
 
-            rowIndex = index;
+            editableIndex = index;
             self.emit("editstart", [ row, e ]);
         }
 
@@ -2005,18 +1973,12 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
          * @method hideEditRow
          * Hides the modified row area of a specified index.
          */
-        this.hideEditRow = function() {
-            if(!this.options.editRow) return;
-            if(rowIndex == null) return;
+        this.hideEditRow = function(data) {
+            if(editableIndex == null) return;
+            var row = this.get(editableIndex);
 
-            var row = this.get(rowIndex);
-
-            // 커스텀 이벤트 호출
-            rowIndex = null;
-
-            // 수정 상태 이전의 로우 데이터로 변경
-            this.emit("editend", [ row.data ]);
-            this.update(row.index, row.data);
+            editableIndex = null;
+            this.update(row.index, !data ? row.data : data);
         }
 
         /**
@@ -2026,10 +1988,8 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
          * @return {RowObject} row
          */
         this.getEditRow = function() {
-            if(!this.options.editRow) return;
-
-            if(rowIndex == null) return null;
-            return this.get(rowIndex);
+            if(editableIndex == null) return null;
+            return this.get(editableIndex);
         }
 
         /**
@@ -2145,7 +2105,7 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
          * @return {Integer} index
          */
         this.activeIndex = function() { // 활성화된 확장/수정/선택 상태의 로우 인덱스를 리턴
-            return rowIndex;
+            return selectedIndex || expandedIndex || editableIndex;
         }
     }
 
@@ -2222,12 +2182,6 @@ jui.defineUI("uix.table", [ "jquery", "util.base", "ui.dropdown", "uix.table.bas
              * Sets the Show/Hide state of an extended row area when clicking on a row.
              */
             expandEvent: true,
-
-            /**
-             * @cfg {Boolean|Array} [editCell=false]
-             * Determines whether to use a modified cell area.
-             */
-            editCell: false,
 
             /**
              * @cfg {Boolean|Array} [editRow=false]

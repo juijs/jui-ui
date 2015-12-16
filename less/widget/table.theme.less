@@ -9,7 +9,7 @@ table.table {
 // --------------------------------------------------
 
 .table.classic {
-  border-bottom: 1px solid @tableClassicBorderColor !important;
+  border-bottom: 1px solid @tableClassicBorderColor;
 
   > thead {
     th {
@@ -242,6 +242,12 @@ table.table {
       outline: 0;
       .box-shadow(@tableEditCellFocusBoxShadow);
       .transition(@tableEditCellFocusTransition);
+    }
+
+    &[disabled], &[readonly] {
+      cursor: not-allowed;
+      background-color: @tableEditCellDisabledBackgroundColor;
+      color: @tableEditCellDisabledFontColor;
     }
   }
 }

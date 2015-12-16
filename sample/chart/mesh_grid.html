@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="charset=utf-8;"/>
+    <link rel="stylesheet" href="../../dist/jui.css" />
+    <script src="../../lib/jquery-1.8.0.min.js"></script>
+    <script src="../../dist/jui.js"></script>
+</head>
+<body class="jui">
+
+<div id="result"></div>
+
+<script>
+
+    jui.define("chart.polygon.meshgrid", [], function() {
+        var PointMeshGrid = function(data, x, y, z) {
+            var len  = this.len = data.length;
+            var clen = this.clen = data[0].length;
+
+            this.vertices = new Array(len * clen);
+            for(var row = 0; row < len; row++) {
+                for(var col = 0; col < clen; col++) {
+                    var obj = data[row][col];
+                    this.vertices[row*clen + col] = new Float32Array([x(obj.x), y(obj.y), z(obj.z), 1]);
+                }
+            }
+        }
+
+        return PointMeshGrid;
+    }, "chart.polygon.core");
+
+    jui.define("chart.brush.mesh.grid", [ "util.base", "util.math", "util.color", "chart.polygon.meshgrid" ],
+        function(_, MathUtil, ColorUtil, MeshGrid) {
+
+            /**
+             * @class chart.brush.polygon.column
+             * @extends chart.brush.polygon.core
+             */
+            var PolygonMeshGridBrush = function() {
+
+                var maxY, minY, dist, colors = [], darken = [], fillOpacity, strokeOpacity;
+
+                this.createGrid = function(meshGrid, row, col) {
+                    var pos1 = row * meshGrid.clen + col;
+                    var pos2 = row * meshGrid.clen + (col+1);
+                    var pos3 = (row+1) * meshGrid.clen + (col+1);
+                    var pos4 = (row+1) * meshGrid.clen + col;
+
+                    var points = [
+                        meshGrid.vertices[pos1],
+                        meshGrid.vertices[pos2],
+                        meshGrid.vertices[pos3],
+                        meshGrid.vertices[pos4]
+                    ];
+
+                    var max = this.axis.data[row][col].y;
+                    if (max < this.axis.data[row][col+1].y) max = this.axis.data[row][col+1].y;
+                    if (max < this.axis.data[row+1][col+1].y) max = this.axis.data[row+1][col+1].y;
+                    if (max < this.axis.data[row+1][col].y) max = this.axis.data[row+1][col].y;
+
+                    var maxZ = points[0][2];
+                    if (maxZ < points[1][2]) maxZ = points[1][2];
+                    if (maxZ < points[2][2]) maxZ = points[2][2];
+                    if (maxZ < points[3][2]) maxZ = points[3][2];
+
+                    var colorIndex = (Math.abs(max - minY)/dist) * 5 + 1;
+                    colorIndex = Math.floor(colorIndex);
+
+                    var face = this.chart.svg.polygon({
+                        fill: colors[colorIndex],
+                        "fill-opacity": fillOpacity,
+                        stroke: darken[colorIndex],
+                        "stroke-opacity": strokeOpacity
+                    });
+
+                    face.point(points[0][0], points[0][1]);
+                    face.point(points[1][0], points[1][1]);
+                    face.point(points[2][0], points[2][1]);
+                    face.point(points[3][0], points[3][1]);
+
+                    return {
+                        element: face,
+                        depth: maxZ / 2
+                    };
+                }
+
+                this.drawBefore = function() {
+                    maxY = this.axis.y.max();
+                    minY = this.axis.y.min();
+
+                    dist = Math.abs(maxY - minY) ;
+
+                    var borderColor = this.chart.theme("polygonColumnBorderOpacity");
+
+                    for(var i  = 0; i < 10; i++) {
+                        colors[i] = this.color(i);
+                        darken[i] = ColorUtil.darken(colors[i], borderColor);
+                    }
+
+                    fillOpacity = this.chart.theme("polygonColumnBackgroundOpacity");
+                    strokeOpacity = this.chart.theme("polygonColumnBorderOpacity");
+                }
+
+                this.draw = function() {
+                    var g = this.chart.svg.group(),
+                            datas = this.listData(),
+                            groups = [];
+
+                    var meshGrid = new MeshGrid(datas, this.axis.x, this.axis.y, this.axis.z);
+                    this.calculate3d(meshGrid);
+
+                    // 폴리곤 객체를 따로 만든다.
+
+                    var len = meshGrid.len -1;
+                    var clen = meshGrid.clen -1;
+                    for(var row = 0; row < len; row++) {
+                        for(var col = 0; col < clen; col++) {
+                            var p = this.createGrid(meshGrid, row, col);
+                            groups.push(p);
+                        }
+                    }
+
+                    for(var i = 0; i < groups.length; i++) {
+                        g.append(groups[i].element);
+                    }
+
+                    return g;
+                }
+            }
+
+            PolygonMeshGridBrush.setup = function() {
+                return {
+                    /** @cfg {Number} [width=50]  Determines the size of a starter. */
+                    width: 0,
+                    /** @cfg {Number} [height=50]  Determines the size of a starter. */
+                    height: 0,
+                    /** @cfg {Number} [padding=20] Determines the outer margin of a bar.  */
+                    padding: 20,
+                    /** @cfg {Boolean} [clip=false] If the brush is drawn outside of the chart, cut the area. */
+                    clip: false
+                };
+            }
+
+            return PolygonMeshGridBrush;
+    }, "chart.brush.polygon.core");
+
+    jui.ready([ "chart.builder" ], function(chart) {
+
+        var scale = jui.include('util.scale');
+
+
+        var r = scale.linear().domain([-8, 8]).range([0, 1]);
+
+        /*
+         [x,y] = meshgrid(-10:0.5:10,-10:0.5:10);
+         z = sinc(sqrt((x/pi).^2+(y/pi).^2));
+         surf(x,y,z);
+         */
+
+        var x = r.ticks(64);
+        var z = r.ticks(64);
+
+
+        function sinc(n) {
+            if (n == 0) return 1;
+
+            return Math.sin(n*Math.PI)/(n*Math.PI);
+        }
+
+        var data = [];
+
+        for(var i = 0, len = x.length; i < len; i++) {
+            var row = [];
+            for (var j = 0; j < len; j++) {
+
+                var result = sinc(
+                        Math.sqrt(Math.pow((x[i]/Math.PI),2) + Math.pow((z[j]/Math.PI), 2))
+                );
+
+                row.push({ x : x[i], y : result, z : z[j] });
+            }
+
+            data.push(row);
+        }
+
+        //console.log(data);
+
+        jui.create("chart.builder", "#result", {
+            height: 800,
+            width: 800,
+            padding: 150,
+            theme : "jennifer",
+            axis : {
+                x : {
+                    type : "range",
+                    domain : [-10, 10],
+                    step : 5,
+                    line : true,
+                    orient : "bottom"
+                },
+                y : {
+                    type : "range",
+                    domain : [-0.2, 1],
+                    unit : 0.2,
+                    line : true,
+                    orient : "left"
+                },
+                z : {
+                    type : 'range',
+                    domain : [-10, 10],
+                    step : 5,
+                    line: true,
+                    reverse: true
+                },
+                data : data,
+                depth: 450
+            },
+            brush : {
+                type: "mesh.grid"
+            },
+            widget : [{
+                type : "polygon.rotate"
+            }, {
+                type : "tooltip"
+            }],
+            style : {
+                gridXAxisBorderWidth: 1,
+                gridYAxisBorderWidth: 1,
+                gridZAxisBorderWidth: 1
+            }
+        });
+	})
+</script>
+
+
+</body>
+</html>

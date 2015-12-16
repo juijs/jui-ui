@@ -13,58 +13,60 @@ jui.define("util.transform", [ "util.math" ], function(math) {
             var a = arguments,
                 type = a[0];
 
-            var map = {
-                // 2D 행렬, 3x3
-                move: [
-                    [ 1, 0, a[1] ],
-                    [ 0, 1, a[2] ],
-                    [ 0, 0, 1 ]
-                ],
-                scale: [
-                    [ a[1], 0, 0 ],
-                    [ 0, a[2], 0 ],
-                    [ 0, 0, 1 ]
-                ],
-                rotate: [
-                    [ Math.cos(math.radian(a[1])), -Math.sin(math.radian(a[1])), 0 ],
-                    [ Math.sin(math.radian(a[1])), Math.cos(math.radian(a[1])), 0 ],
-                    [ 0, 0, 1 ]
-                ],
-
-                // 3D 행렬, 4x4
-                move3d: [
-                    [ 1, 0, 0, a[1] ],
-                    [ 0, 1, 0, a[2] ],
-                    [ 0, 0, 1, a[3] ],
-                    [ 0, 0, 0, 1 ]
-                ],
-                scale3d: [
-                    [ a[1], 0, 0, 0 ],
-                    [ 0, a[2], 0, 0 ],
-                    [ 0, 0, a[3], 0 ],
-                    [ 0, 0, 0, 1 ]
-                ],
-                rotate3dz: [
-                    [ Math.cos(math.radian(a[1])), -Math.sin(math.radian(a[1])), 0, 0 ],
-                    [ Math.sin(math.radian(a[1])), Math.cos(math.radian(a[1])), 0, 0 ],
-                    [ 0, 0, 1, 0 ],
-                    [ 0, 0, 0, 1 ]
-                ],
-                rotate3dx: [
-                    [ 1, 0, 0, 0 ],
-                    [ 0, Math.cos(math.radian(a[1])), -Math.sin(math.radian(a[1])), 0 ],
-                    [ 0, Math.sin(math.radian(a[1])), Math.cos(math.radian(a[1])), 0 ],
-                    [ 0, 0, 0, 1 ]
-                ],
-                rotate3dy: [
-                    [ Math.cos(math.radian(a[1])), 0, Math.sin(math.radian(a[1])), 0 ],
-                    [ 0, 1, 0, 0 ],
-                    [ -Math.sin(math.radian(a[1])), 0, Math.cos(math.radian(a[1])), 0 ],
-                    [ 0, 0, 0, 1 ]
-                ]
+            if(type == "move") {
+                return [
+                    new Float32Array([1, 0, a[1]]),
+                    new Float32Array([0, 1, a[2]]),
+                    new Float32Array([0, 0, 1])
+                ];
+            } else if(type == "scale") {
+                return [
+                    new Float32Array([ a[1], 0, 0 ]),
+                    new Float32Array([ 0, a[2], 0 ]),
+                    new Float32Array([ 0, 0, 1 ])
+                ];
+            } else if(type == "rotate") {
+                return [
+                    new Float32Array([ Math.cos(math.radian(a[1])), -Math.sin(math.radian(a[1])), 0 ]),
+                    new Float32Array([ Math.sin(math.radian(a[1])), Math.cos(math.radian(a[1])), 0 ]),
+                    new Float32Array([ 0, 0, 1 ])
+                ];
+            } else if(type == "move3d") {
+                return [
+                    new Float32Array([ 1, 0, 0, a[1] ]),
+                    new Float32Array([ 0, 1, 0, a[2] ]),
+                    new Float32Array([ 0, 0, 1, a[3] ]),
+                    new Float32Array([ 0, 0, 0, 1 ])
+                ];
+            } else if(type == "scale3d") {
+                return [
+                    new Float32Array([ a[1], 0, 0, 0 ]),
+                    new Float32Array([ 0, a[2], 0, 0 ]),
+                    new Float32Array([ 0, 0, a[3], 0 ]),
+                    new Float32Array([ 0, 0, 0, 1 ])
+                ];
+            } else if(type == "rotate3dz") {
+                return [
+                    new Float32Array([ Math.cos(math.radian(a[1])), -Math.sin(math.radian(a[1])), 0, 0 ]),
+                    new Float32Array([ Math.sin(math.radian(a[1])), Math.cos(math.radian(a[1])), 0, 0 ]),
+                    new Float32Array([ 0, 0, 1, 0 ]),
+                    new Float32Array([ 0, 0, 0, 1 ])
+                ];
+            } else if(type == "rotate3dx") {
+                return [
+                    new Float32Array([ 1, 0, 0, 0 ]),
+                    new Float32Array([ 0, Math.cos(math.radian(a[1])), -Math.sin(math.radian(a[1])), 0 ]),
+                    new Float32Array([ 0, Math.sin(math.radian(a[1])), Math.cos(math.radian(a[1])), 0 ]),
+                    new Float32Array([ 0, 0, 0, 1 ])
+                ];
+            } else if(type == "rotate3dy") {
+                return [
+                    new Float32Array([ Math.cos(math.radian(a[1])), 0, Math.sin(math.radian(a[1])), 0 ]),
+                    new Float32Array([ 0, 1, 0, 0 ]),
+                    new Float32Array([ -Math.sin(math.radian(a[1])), 0, Math.cos(math.radian(a[1])), 0 ]),
+                    new Float32Array([ 0, 0, 0, 1 ])
+                ];
             }
-
-            return map[type];
         }
 
         // 2차원 이동

@@ -210,7 +210,7 @@
   color: transparent;
 }
 .jui .datepicker > table.body td.now {
-  color: #6600cc;
+  color: #740cd2;
   font-weight: bold;
 }
 .jui .datepicker > table.body td.active {
@@ -248,7 +248,7 @@
   color: transparent;
 }
 .jui .calendar > table.body td.now {
-  color: #6600cc;
+  color: #740cd2;
 }
 .jui .calendar > table.body td.active {
   background-color: #f4f0f9;
@@ -269,7 +269,7 @@
 }
 .jui .paging .list > *.active {
   background-color: #ffffff;
-  color: #6600cc;
+  color: #740cd2;
   cursor: default;
 }
 .jui .paging > .prev {
@@ -340,7 +340,7 @@
   background-color: #dcdcdc;
 }
 .jui .tab li > a {
-  color: #6836c4;
+  color: #740cd2;
   border: 1px solid #e6e6e6;
   background-color: #ffffff;
   background-image: -moz-linear-gradient(top, #ffffff 0%, #f4f4f4 100%);
@@ -464,7 +464,7 @@
 .jui ul.tree li.active > a,
 .jui ul.tree li.active > span,
 .jui ul.tree li.active > div {
-  color: #6633cc;
+  color: #740cd2;
   font-weight: bold;
 }
 .jui ul.tree .drag.on {
@@ -860,7 +860,7 @@
   color: inherit;
 }
 .jui .vmenu > *.submenu > li.active {
-  color: #6836c4;
+  color: #740cd2;
 }
 .jui .vmenu > *.submenu > li.active > * {
   color: inherit;
@@ -892,7 +892,7 @@
   background-image: -ms-linear-gradient(top, #ffffff 0%, #ffffff 100%) !important;
 }
 .jui .vmenu.flat > *.active {
-  color: #6836c4 !important;
+  color: #740cd2 !important;
 }
 .jui .vmenu.flat > *:hover:not(.active):not(.submenu) {
   background-color: #eeeeee !important;
@@ -917,7 +917,7 @@
   color: inherit;
 }
 .jui .vmenu.flat > *.submenu > li.active {
-  color: #6836c4;
+  color: #740cd2;
 }
 .jui .vmenu.flat > *.submenu > li.active > * {
   color: inherit;
@@ -941,6 +941,11 @@
 .jui .msgbox > .body::-webkit-scrollbar {
   width: 10px;
   height: 10px;
+}
+.jui .msgbox > .body::-webkit-scrollbar-corner {
+  background: transparent;
+  border-right: 1px solid #e6e6e6;
+  border-bottom: 1px solid #e6e6e6;
 }
 .jui .msgbox > .body::-webkit-scrollbar-track {
   background-color: #f2f2f2;
@@ -1041,6 +1046,11 @@
 .jui .window > .body::-webkit-scrollbar {
   width: 10px;
   height: 10px;
+}
+.jui .window > .body::-webkit-scrollbar-corner {
+  background: transparent;
+  border-right: 1px solid #e6e6e6;
+  border-bottom: 1px solid #e6e6e6;
 }
 .jui .window > .body::-webkit-scrollbar-track {
   background-color: #f2f2f2;
@@ -1317,6 +1327,11 @@
   width: 10px;
   height: 10px;
 }
+.jui table.table > tbody::-webkit-scrollbar-corner {
+  background: transparent;
+  border-right: 1px solid #e6e6e6;
+  border-bottom: 1px solid #e6e6e6;
+}
 .jui table.table > tbody::-webkit-scrollbar-track {
   background-color: #f2f2f2;
   background-image: -moz-linear-gradient(left, #f2f2f2 0%, #ffffff 100%);
@@ -1338,7 +1353,7 @@
   border: 1px solid #737373;
 }
 .jui .table.classic {
-  border-bottom: 1px solid #dfdce3 !important;
+  border-bottom: 1px solid #dfdce3;
 }
 .jui .table.classic > thead th {
   color: #ffffff;
@@ -1434,7 +1449,7 @@
   background: #efebf5;
 }
 .jui .table.expand {
-  border-bottom: 1px solid #dfdce3 !important;
+  border-bottom: 1px solid #dfdce3;
 }
 .jui .table.expand > thead th {
   color: #ffffff;
@@ -1667,12 +1682,23 @@
   -o-transition: border linear .2s, box-shadow linear .2s;
   transition: border linear .2s, box-shadow linear .2s;
 }
-.jui .xtable > .body {
-  border-bottom: 1px solid #dfdce3 !important;
+.jui .table > tbody td > .edit[disabled],
+.jui .table > tbody td > .edit[readonly] {
+  cursor: not-allowed;
+  background-color: #eeeeee;
+  color: #333333;
+}
+.jui .xtable > .loading {
+  background-image: url("img/theme/jennifer/xtable-loading.gif");
 }
 .jui .xtable > .body::-webkit-scrollbar {
   width: 10px;
   height: 10px;
+}
+.jui .xtable > .body::-webkit-scrollbar-corner {
+  background: transparent;
+  border-right: 1px solid #e6e6e6;
+  border-bottom: 1px solid #e6e6e6;
 }
 .jui .xtable > .body::-webkit-scrollbar-track {
   background-color: #f2f2f2;
@@ -1694,8 +1720,13 @@
   background: #8a8a8a;
   border: 1px solid #737373;
 }
-.jui .xtable > .loading {
-  background-image: url("img/theme/jennifer/xtable-loading.gif");
+.jui .xtable.scroll > .head {
+  border-left: 1px solid #e6e6e6;
+  border-right: 1px solid #e6e6e6;
+}
+.jui .xtable.scroll > .body {
+  border-left: 1px solid #e6e6e6;
+  border-bottom: 1px solid #e6e6e6;
 }
 .jui .combo > ul {
   background-color: #ffffff;

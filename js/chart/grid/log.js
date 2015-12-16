@@ -53,7 +53,9 @@ jui.define("chart.grid.log", [ "util.scale", "util.base" ], function(UtilScale, 
 			/** @cfg {Number} [base=10] log's base */
 			base : 10,
 			step : 4,
-			nice : false
+			nice : false,
+			/** @cfg {Boolean} [hideText=false] Determines whether to show text across the grid. */
+			hideText: false
 		};
 	}
 

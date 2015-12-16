@@ -81,6 +81,7 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             obj.chart = chart;
             obj.axis = axis;
             obj.grid = axis[k];
+            obj.svg = chart.svg;
 
             var elem = obj.render();
 
@@ -125,6 +126,7 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             map.chart = chart;
             map.axis = axis;
             map.map = axis[k];
+            map.svg = chart.svg;
 
             // 그리드 별 위치 선정하기
             var elem = map.render();
@@ -295,7 +297,8 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
                 end : cloneAxis.end,
 
                 degree : cloneAxis.degree,
-                depth : cloneAxis.depth
+                depth : cloneAxis.depth,
+                perspective : cloneAxis.perspective
             });
 
             // 원본 데이터 설정
@@ -595,7 +598,9 @@ jui.define("chart.axis", [ "jquery", "util.base" ], function($, _) {
             /** @cfg {Number} [degree=0]  Set degree of 3d chart */
             degree: 0,
             /** @cfg {Number} [depth=0]  Set depth of 3d chart  */
-            depth: 0
+            depth: 0,
+            /** @cfg {Number} [perspective=0.9]  Set perspective values in the 3d chart  */
+            perspective: 0.9
         }
     }
 

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="charset=utf-8;"/>
+    <script src="../../lib/jquery-1.8.0.min.js"></script>
+    <script src="../../dist/jui.js"></script>
+</head>
+<body>
+
+<script id="script_code">
+    jui.define("chart.brush.vector", [ "chart.polygon.line" ], function(PolygonLine) {
+        var VectorBrush = function() {
+            this.draw = function() {
+                var g = this.svg.group();
+
+                this.eachData(function(i, d) {
+                    var x1 = this.axis.x(0),
+                        y1 = this.axis.y(0),
+                        z1 = this.axis.z(0),
+                        x2 = this.axis.x(d.x),
+                        y2 = this.axis.y(d.y),
+                        z2 = this.axis.z(d.z);
+
+                    var p = new PolygonLine(x1, y1, z1, x2, y2, z2);
+                    this.calculate3d(p);
+
+                    g.append(this.svg.line({
+                        x1: p.vectors[0].x,
+                        y1: p.vectors[0].y,
+                        x2: p.vectors[1].x,
+                        y2: p.vectors[1].y,
+                        stroke: this.color(i),
+                        "stroke-width": 2
+                    }));
+                });
+
+                return g;
+            }
+        }
+
+        return VectorBrush;
+    }, "chart.brush.core");
+
+    jui.ready([ "chart.builder", "chart.vector", "util.math" ], function(Builder, Vector3D, Math2) {
+        var v1 = new Vector3D(10, 0, 0),
+            v2 = new Vector3D(-10, 0, 0),
+            v3 = v1.crossProduct(v2);
+
+        v3.normalize();
+        var data = [ v1, v2, v3 ];
+
+        var value = v1.dotProduct(v2);
+        console.log("두 벡터의 각도: " + Math2.degree(value));
+
+        chart = Builder("#result", {
+            theme: "jennifer",
+            padding: 150,
+            width: 800,
+            height: 800,
+            axis: [{
+                x: {
+                    type: "range",
+                    domain: [ -10, 10 ],
+                    unit: 1,
+                    line: "solid"
+                },
+                y: {
+                    type: "range",
+                    domain: [ -10, 10 ],
+                    unit: 1,
+                    line: "solid"
+                },
+                z: {
+                    type: "range",
+                    domain: [ -10, 10 ],
+                    unit: 1,
+                    line: "solid",
+                    reverse: true
+                },
+                data: data,
+                depth: 400
+            }],
+            brush: [{
+                type: "vector"
+            }],
+            widget: [{
+                type: "polygon.rotate"
+            }],
+            style: {
+                gridXAxisBorderWidth: 1,
+                gridYAxisBorderWidth: 1,
+                gridZAxisBorderWidth: 1,
+                gridTickBorderSize: 0,
+                gridXFontSize: 9,
+                gridYFontSize: 9
+            }
+        });
+	});
+</script>
+
+<div id="result"></div>
+</body>
+</html>
