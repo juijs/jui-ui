@@ -134,6 +134,7 @@ jui.define("chart.theme.pastel", [], function() {
         topologyNodeTitleFontColor : "#333",
         topologyEdgeColor : "#b2b2b2",
         topologyActiveEdgeColor : "#905ed1",
+		topologyHoverEdgeColor : "#d3bdeb",
         topologyEdgeFontSize : 10,
         topologyEdgeFontColor : "#666",
         topologyEdgePointRadius : 3,
