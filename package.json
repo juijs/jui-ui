@@ -1,7 +1,7 @@
 {
   "name": "jui",
-  "version": "1.4.3",
-  "description": "JENNIFER UI is all free. a simple, fast, many: JUI is all-in-one desktop UI framework. Bootstrap support, Independent style & script components, SVG-based chart components.",
+  "version": "2.0.0",
+  "description": "JUI provide all kinds of UI components that are used in web pages. However, charts and grids are not included.",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -15,8 +15,6 @@
     "CSS",
     "JS",
     "JavaScript",
-    "SVG",
-    "chart",
     "framework",
     "bootstrap",
     "front-end",
@@ -32,7 +30,6 @@
   },
   "devDependencies": {
     "css": "^2.1.0",
-    "datauri": "^0.6.0",
     "grunt": "~0.4.4",
     "grunt-contrib-concat": "~0.3.0",
     "grunt-contrib-copy": "~0.5.0",
@@ -67,16 +64,12 @@
     "dependencies": {
       "jquery": ">1.8.0"
     },
-    "main": "jui.min.js",
+    "main": "dist/ui.min.js",
     "shim": {
       "deps": [
         "jquery"
       ],
       "exports": "jui"
     }
-  },
-  "dependencies": {
-    "jsdom": "~3.1.0",
-    "jquery": "~2.1.3"
   }
 }

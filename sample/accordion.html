@@ -1,0 +1,116 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<META charset="UTF-8">
+<title>[JUI Library] - CSS/Accordion</title>
+
+<link rel="stylesheet" href="../dist/ui.css" />
+<link rel="stylesheet" href="../dist/ui-jennifer.css" />
+<script src="../lib/jquery-1.8.0.min.js"></script>
+<script src="../lib/core.js"></script>
+<script src="../dist/ui.js"></script>
+
+<style>
+    .col {
+        padding: 50px;
+    }
+</style>
+<script>
+    jui.ready([ "ui.accordion" ], function(accordion) {
+        var uiObj = accordion(".accordion:first", {
+            event: {
+                open: function(index, e) {
+                    $(this.root).find(".title > i").attr("class", "icon-arrow1");
+                    $(e.target).find("i").attr("class", "icon-arrow3");
+                }
+            },
+            index: 1
+        });
+    });
+</script>
+</head>
+<body class="jui">
+
+<div class="page-header">
+    <h1>Accordion</h1>
+</div>
+
+<div class="row">
+    <div class="col col-3">
+        <p>Classic, Normal</p>
+
+        <div class="accordion">
+            <div class="title">
+                Group Item #1 <i class="icon-arrow1"></i>
+            </div>
+            <div class="content">
+                <i class="icon-add-dir"></i> The style components provide various options in addition to the basic functionality. In addition, script components can be added, which facilitate the development of more diverse UI components.
+            </div>
+            <div class="title">
+                Group Item #2 <i class="icon-arrow3"></i>
+            </div>
+            <div class="title">
+                Group Item #3 <i class="icon-arrow1"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="col col-3">
+        <p>Classic, Large</p>
+
+        <div class="accordion large">
+            <div class="title active">
+                Group Item #1 <i class="icon-arrow3"></i>
+            </div>
+            <div class="content">
+                The style components provide various options in addition to the basic functionality. In addition, script components can be added, which facilitate the development of more diverse UI components.
+            </div>
+            <div class="title">
+                Group Item #2 <i class="icon-arrow1"></i>
+            </div>
+            <div class="title">
+                Group Item #3 <i class="icon-arrow1"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="col col-3">
+        <p>Simple, Normal</p>
+
+        <div class="accordion simple">
+            <div class="title active">
+                Group Item #1
+            </div>
+            <div class="content">
+                The style components provide various options in addition to the basic functionality. In addition, script components can be added, which facilitate the development of more diverse UI components.
+            </div>
+            <div class="title">
+                Group Item #2
+            </div>
+            <div class="title">
+                Group Item #3
+            </div>
+        </div>
+    </div>
+
+    <div class="col col-3">
+        <p>Simple, Large</p>
+
+        <div class="accordion simple large">
+            <div class="title active">
+                Group Item #1
+            </div>
+            <div class="content">
+                The style components provide various options in addition to the basic functionality. In addition, script components can be added, which facilitate the development of more diverse UI components.
+            </div>
+            <div class="title">
+                Group Item #2
+            </div>
+            <div class="title">
+                Group Item #3
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

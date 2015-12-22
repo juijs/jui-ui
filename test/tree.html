@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>[JENNIFER UI Test] - Tree</title>
+
+<link rel="stylesheet" href="../lib/qunit-1.14.0.css">
+<script src="../lib/qunit-1.14.0.js"></script>
+<script src="../lib/jquery-1.8.0.min.js"></script>
+<script src="../lib/core.js"></script>
+<script src="../dist/ui.js"></script>
+
+<script>
+var t1;
+
+jui.ready([ "ui.tree" ], function(tree) {
+    t1 = tree("#t1", {
+        root: { title: "C:\\" },
+        tpl: {
+            node: $("#tpl_tree").html()
+        }
+    });
+});
+</script>
+
+</head>
+<body>
+
+<script>
+    QUnit.test("노드 추가 테스트", function(assert) {
+        t1.append({ title: "Windows" });
+        t1.append({ title: "Download" });
+        t1.append({ title: "Program Files" });
+        t1.append({ title: "Apache" });
+
+        assert.ok(t1.get("1").data.title == "Download", "노드 데이터 확인");
+        assert.ok($(t1.get("2").element).text().indexOf("Program Files") != -1, "노드 엘리먼트 확인");
+    });
+
+    QUnit.test("자식노드 추가 테스트", function(assert) {
+        t1.append("0", { title: "run.exe" });
+        t1.append("0", { title: "setting.conf" });
+        t1.append("1", { title: "jui.torrrent" });
+        t1.insert("2.0", { title: "Riot Games" });
+        t1.insert("2.0.0", { title: "lol.exe" });
+        t1.append("3", { title: "startup.bat" });
+
+        assert.ok(t1.get("0").children[1].data.title == t1.get("0.1").data.title, "자식노드 데이터 확인");
+        assert.equal(t1.get("1").children[0], t1.get("1.0"), "자식노드 확인");
+        assert.equal(t1.get("2").children[0].children[0], t1.get("2.0.0"), "자식노드 추가 확인");
+    });
+
+    QUnit.done(function() {
+        $(t1.root).remove();
+    });
+</script>
+
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+
+<!-- Test Markup -->
+<ul id="t1"></ul>
+
+<script id="tpl_tree" type="text/template">
+    <li>
+        <div><!= title !></div>
+        <ul></ul>
+    </li>
+</script>
+
+</body>
+</html>

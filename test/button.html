@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>[JENNIFER UI Test] - Button</title>
+
+<link rel="stylesheet" href="../lib/qunit-1.14.0.css">
+<script src="../lib/qunit-1.14.0.js"></script>
+<script src="../lib/jquery-1.8.0.min.js"></script>
+<script src="../lib/core.js"></script>
+<script src="../dist/ui.js"></script>
+
+<script>
+var b1, b2;
+
+jui.ready([ "ui.button" ], function(button) {
+    b1 = button("#b1", {
+        type: "radio",
+        index: 1
+    });
+
+    b2 = button("#b2", {
+        type: "check",
+        value: [ "b", "home" ]
+    });
+});
+</script>
+
+</head>
+<body>
+<script>
+    QUnit.test("라디오 버튼 기본 테스트", function(assert) {
+        assert.ok(b1.getValue() == "b", "체크된 버튼 값 확인");
+        assert.ok(b1.getData().text == "B", "체크된 버튼 텍스트 확인");
+        assert.ok(b1.getData().index == 1, "체크된 버튼 인덱스 확인");
+    });
+
+    QUnit.test("라디오 버튼 클릭 테스트", function(assert) {
+        $(b1.root).find("a:last-child").trigger("click");
+
+        assert.ok(b1.getValue() == "help", "체크된 버튼 값 확인");
+        assert.ok(b1.getData().text == "Help", "체크된 버튼 텍스트 확인");
+        assert.ok(b1.getData().index == 5, "체크된 버튼 인덱스 확인");
+    });
+
+    QUnit.test("체크 버튼 기본 테스트", function(assert) {
+        assert.ok(b2.getValue()[1] == "b" && b2.getValue()[3] == "home", "체크된 버튼 값 확인");
+        assert.ok(b2.getData()[1].text == "B" && b2.getData()[3].text == "Home", "체크된 버튼 텍스트 확인");
+        assert.ok(b2.getData()[1].index == 1 && b2.getData()[3].index == 3, "체크된 버튼 인덱스 확인");
+    });
+
+    QUnit.test("체크 버튼 클릭 테스트", function(assert) {
+        $(b2.root).find("a:last-child").trigger("click");
+
+        assert.ok(b2.getValue()[1] == "b" && b2.getValue()[3] == "home" && b2.getValue()[5] == "help", "체크된 버튼 값 확인");
+        assert.ok(b2.getData()[1].text == "B" && b2.getData()[3].text == "Home" && b2.getData()[5].text == "Help", "체크된 버튼 텍스트 확인");
+        assert.ok(b2.getData()[1].index == 1 && b2.getData()[3].index == 3 && b2.getData()[5].index == 5, "체크된 버튼 인덱스 확인");
+    });
+
+    QUnit.done(function() {
+        $(b1.root).remove();
+        $(b2.root).remove();
+    });
+</script>
+
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+
+<!-- Test Markup -->
+<div id="b1">
+    <a class="btn" value="a">A</a>
+    <a class="btn" value="b">B</a>
+    <a class="btn" value="c">C</a>
+    <a class="btn" value="home">Home</a>
+    <a class="btn" value="gear">Gear</a>
+    <a class="btn" value="help">Help</a>
+</div>
+
+<div id="b2">
+    <a class="btn" value="a">A</a>
+    <a class="btn" value="b">B</a>
+    <a class="btn" value="c">C</a>
+    <a class="btn" value="home">Home</a>
+    <a class="btn" value="gear">Gear</a>
+    <a class="btn" value="help">Help</a>
+</div>
+
+</body>
+</html>
