@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>[JENNIFER UI Test] - Date Picker</title>
+
+<link rel="stylesheet" href="../lib/qunit-1.14.0.css">
+<script src="../lib/qunit-1.14.0.js"></script>
+<script src="../lib/jquery-1.8.0.min.js"></script>
+<script src="../lib/core.js"></script>
+<script src="../dist/ui.js"></script>
+
+<script>
+var d1;
+
+jui.ready([ "ui.datepicker" ], function(datepicker) {
+    d1 = datepicker("#d1", {
+        titleFormat: "yyyy년 MM월",
+        format: "yyyy/MM/dd",
+        date: "2014-01-01",
+        tpl: {
+            dates: $("#tpl_dates").html()
+        }
+    });
+});
+</script>
+
+<body>
+<script>
+    QUnit.test("달력 기본 테스트", function(assert) {
+        assert.ok($(d1.root).find(".title").text() == "2014년 01월", "월 선택 확인");
+
+        $(d1.root).find("td:eq(10)").trigger("click");
+        assert.ok(d1.getFormat() == "2014/01/08", "날짜 선택 확인");
+    });
+
+    QUnit.test("달력 시간 테스트", function(assert) {
+        var d = d1.getDate();
+
+        assert.ok(d.getHours() == 0, "시 확인");
+        assert.ok(d.getMinutes() == 0, "분 확인");
+        assert.ok(d.getSeconds() == 0, "초 확인");
+    });
+
+    QUnit.done(function() {
+        $(d1.root).remove();
+    });
+</script>
+
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+
+<!-- Test Markup -->
+<div id="d1">
+    <div class="head">
+        <div class="prev"></div>
+        <div class="title"></div>
+        <div class="next"></div>
+    </div>
+    <table class="body">
+        <tr>
+            <th>S</th><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th>
+        </tr>
+    </table>
+</div>
+
+<script id="tpl_dates" type="text/template">
+    <tr>
+        <! for(var i = 0; i < dates.length; i++) { !>
+        <td><!= dates[i] !></td>
+        <! } !>
+    </tr>
+</script>
+
+</body>
+</html>

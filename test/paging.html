@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>[JENNIFER UI Test] - Paging</title>
+
+<link rel="stylesheet" href="../lib/qunit-1.14.0.css">
+<script src="../lib/qunit-1.14.0.js"></script>
+<script src="../lib/jquery-1.8.0.min.js"></script>
+<script src="../lib/core.js"></script>
+<script src="../dist/ui.js"></script>
+
+<script>
+var p1;
+
+jui.ready([ "ui.paging" ], function(paging) {
+    p1 = paging("#p1", {
+        count: 1000,
+        pageCount: 10,
+        screenCount: 7,
+        tpl: {
+            pages: $("#tpl_pages").html()
+        }
+    });
+});
+</script>
+
+<body>
+<script>
+    QUnit.test("페이징 기본 테스트", function(assert) {
+        $(p1.root).find(".next").trigger("click").trigger("click");
+        assert.ok($(p1.root).find(".page:eq(2)").hasClass("active"), "다음 페이지 변경 확인");
+
+        $(p1.root).find(".prev").trigger("click");
+        assert.ok($(p1.root).find(".page:eq(1)").hasClass("active"), "이전 페이지 변경 확인");
+
+        $(p1.root).find(".page:eq(5)").trigger("click");
+        assert.ok($(p1.root).find(".active").text() == "6", "페이지 선택 확인");
+    });
+
+    QUnit.done(function() {
+        $(p1.root).remove();
+    });
+</script>
+
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+
+<!-- Test Markup -->
+<div id="p1" class="paging">
+    <a href="#" class="prev">Previous</a>
+    <div class="list"></div>
+    <a href="#" class="next">Next</a>
+</div>
+
+<script id="tpl_pages" type="text/template">
+    <! for(var i = 0; i < pages.length; i++) { !>
+    <a href="#" class="page"><!= pages[i] !></a>
+    <! } !>
+</script>
+
+</body>
+</html>

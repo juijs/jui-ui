@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>[JENNIFER UI Test] - Notify</title>
+
+<link rel="stylesheet" href="../lib/qunit-1.14.0.css">
+<script src="../lib/qunit-1.14.0.js"></script>
+<script src="../lib/jquery-1.8.0.min.js"></script>
+<script src="../lib/core.js"></script>
+<script src="../dist/ui.js"></script>
+
+<script>
+var n1;
+
+jui.ready([ "ui.notify" ], function(notify) {
+    n1 = notify("body", {
+        position: "top-right",
+        tpl: {
+            item: $("#tpl_alarm").html()
+        }
+    });
+});
+</script>
+
+<body>
+<script>
+    QUnit.test("알림 기본 테스트", function(assert) {
+        n1.add({ msg: "Message" });
+        assert.ok($("#n1_msg").size() == 1, "알림 추가 확인");
+    });
+</script>
+
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+
+<!-- Test Markup -->
+<script id="tpl_alarm" type="text/template">
+    <div id="n1_msg"><!= msg !></div>
+</script>
+
+</body>
+</html>

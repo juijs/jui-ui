@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>[JENNIFER UI Test] - Tooltip</title>
+
+<link rel="stylesheet" href="../lib/qunit-1.14.0.css">
+<script src="../lib/qunit-1.14.0.js"></script>
+<script src="../lib/jquery-1.8.0.min.js"></script>
+<script src="../lib/core.js"></script>
+<script src="../dist/ui.js"></script>
+
+<script>
+var t1, t1_msg;
+
+jui.ready([ "ui.tooltip" ], function(tooltip) {
+    t1_msg = $("#t1").attr("title");
+    t1 = tooltip("#t1", {
+        tpl: {
+            item: $("#tpl_message").html()
+        }
+    });
+
+    $(t1.root).trigger("mouseover");
+});
+</script>
+
+</head>
+<body>
+<script>
+    QUnit.test("툴팁 기본 테스트", function(assert) {
+        assert.ok($("#TOOLTIP_" + t1.timestamp).size() == 1, "툴팁 생성 확인");
+        assert.ok($("#TOOLTIP_" + t1.timestamp).html() == t1_msg, "툴팁 메시지 확인");
+
+        $(t1.root).trigger("mouseout");
+        assert.ok($("#TOOLTIP_" + t1.timestamp).size() == 0, "툴팁 제거 확인");
+    });
+
+    QUnit.done(function() {
+        $(t1.root).remove();
+    });
+</script>
+
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+
+<!-- Test Markup -->
+<span id="t1" title="Tooltip 1">Over</span>
+
+<script id="tpl_message" type="text/template">
+    <div id="TOOLTIP_<!= timestamp !>"><!= message !></div>
+</script>
+
+</body>
+</html>
