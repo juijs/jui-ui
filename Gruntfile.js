@@ -1,30 +1,4 @@
-var css = require("css"),
-    fs = require("fs");
-
 module.exports = function(grunt) {
-
-    var ui_src = [
-        "js/button.js",
-        "js/combo.js",
-        "js/datepicker.js",
-        "js/colorpicker.js",
-        "js/dropdown.js",
-        "js/modal.js",
-        "js/notify.js",
-        "js/paging.js",
-        "js/tooltip.js",
-        "js/layout.js",
-        "js/accordion.js",
-        "js/switch.js",
-        "js/slider.js",
-        "js/progress.js",
-        "js/colorpicker.js",
-        "js/autocomplete.js",
-        "js/tab.js",
-        "js/tree.js",
-        "js/window.js"
-    ];
-
     grunt.initConfig({
         watch : {
             scripts : {
@@ -49,9 +23,28 @@ module.exports = function(grunt) {
             all: [ "test/*.html", "test/*/*.html" ]
         },
         concat : {
-            // jui all 
             dist : {
-                src : ui_src,
+                src : [
+                    "js/button.js",
+                    "js/combo.js",
+                    "js/datepicker.js",
+                    "js/colorpicker.js",
+                    "js/dropdown.js",
+                    "js/modal.js",
+                    "js/notify.js",
+                    "js/paging.js",
+                    "js/tooltip.js",
+                    "js/layout.js",
+                    "js/accordion.js",
+                    "js/switch.js",
+                    "js/slider.js",
+                    "js/progress.js",
+                    "js/colorpicker.js",
+                    "js/autocomplete.js",
+                    "js/tab.js",
+                    "js/tree.js",
+                    "js/window.js"
+                ],
                 dest : "dist/ui.js"
             }
         },
