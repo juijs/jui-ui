@@ -66,8 +66,8 @@ module.exports = function(grunt) {
             dist: {
                 files: {
                     "dist/ui.min.css": "dist/ui.css",
-                    "dist/ui-jennifer.min.css": "dist/ui-jennifer.theme.css",
-                    "dist/ui-dark.min.css": "dist/ui-dark.theme.css"
+                    "dist/ui-jennifer.min.css": "dist/ui-jennifer.css",
+                    "dist/ui-dark.min.css": "dist/ui-dark.css"
                 }
             }
         },
@@ -77,10 +77,10 @@ module.exports = function(grunt) {
                     "dist/ui.css" : [
                         "less/main.less"
                     ],
-                    "dist/ui-jennifer.theme.css" : [
+                    "dist/ui-jennifer.css" : [
                         "less/theme/jennifer.less"
                     ],
-                    "dist/ui-dark.theme.css" : [
+                    "dist/ui-dark.css" : [
                         "less/theme/dark.less"
                     ]
                 }
