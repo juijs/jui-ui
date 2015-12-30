@@ -2546,11 +2546,11 @@
   border-top-right-radius: 0px !important;
 }
 .jui .vmenu.large > * {
-  padding: 11px 14px !important;
+  padding: 11px 14px;
 }
 .jui .vmenu > .submenu {
   list-style: none;
-  padding: 10px 0px !important;
+  padding: 10px 0px;
 }
 .jui .vmenu > .submenu > li {
   padding: 6px 20px;
