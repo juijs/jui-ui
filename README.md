@@ -1,6 +1,6 @@
 ## Getting Started
 
-#### Install
+#### Loading resources
 JUI library only requires the user to load a single package file.
 Access to the jui class must then be configured in the markup.
 ```html
@@ -16,17 +16,14 @@ As the script works only with jQuery 1.8 or higher, it is necessary to load the 
 <script src="dist/ui.min.js"></script>
 ```
 
-#### Install with Bower
+#### Installing in command
 ```
+npm install jui
 bower install jui
-```
-
-#### Install with JamJS
-```
 jamjs install jui
 ```
 
-#### Build
+#### To build the project
 Build using a grunt in JUI Library
 ```
 grunt       // Build all processes
