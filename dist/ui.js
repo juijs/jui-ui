@@ -1807,6 +1807,12 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
 			
 			var self = this,
 				$list = ui_list.menu.find("li");
+
+			// 탭을 눌렀을 경우, 드롭다운 숨기기
+			if(key == 9) {
+				this.hide();
+				return;
+			}
 			
 			if(key == 38 || key == -1) { // up
 				if(index < 1) index = $list.size() - 1;
