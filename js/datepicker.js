@@ -20,6 +20,7 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
     	var year = null, month = null, date = null,
             selDate = null, items = {}; // 헌재 페이지의 요소 엘리먼트 캐싱
         var $head = null, $body = null;
+        var minDate = null, maxDate = null;
 
 
         function setCalendarEvent(self) {
@@ -31,7 +32,7 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
                 self.next(e);
             });
         }
-        
+
         function setCalendarDate(self, no) {
         	var opts = self.options;
 
@@ -53,7 +54,7 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
         function getCalendarDate(self) {
         	var opts = self.options,
         		tmpDate = null;
-        	
+
         	if(opts.type == "daily") {
         		var m = (month < 10) ? "0" + month : month;
         		tmpDate = new Date(year + "/" + m + "/01");
@@ -70,7 +71,7 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
             var opts = self.options,
                 resHtml = [],
                 tmpItems = [];
-            
+
             // 활성화 날짜 캐시 초기화
             items = {};
 
@@ -107,11 +108,11 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
 
                     $body.find("td").removeClass("active");
                     $(this).addClass("active");
-                    
+
                     setCalendarDate(self, obj.objs[i].no);
                     self.emit("select", [ self.getFormat(), e ]);
                 });
-                
+
                 if(obj.objs[i].type != "none") {
                 	items[obj.objs[i].no] = this;
                 }
@@ -136,18 +137,28 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
             }
         }
 
-        function getDateList(y, m) {
+        function getDateList(self, y, m) {
             var objs = [],
                 nums = [],
                 no = 1;
 
             var d = new Date(),
                 start = new Date(y + "-" + ((m < 10) ? "0" + m : m)).getDay(),
-                ldate = getLastDate(y, m);
+                ldate = getLastDate(y, m), sdate = 0;
 
             var prevYear = (m == 1) ? y - 1 : y,
                 prevMonth = (m == 1) ? 12 : m - 1,
                 prevLastDay = getLastDate(prevYear, prevMonth);
+
+            // 최소 날짜로 시작일 설정
+            if(minDate && minDate.getFullYear() == y && minDate.getMonth() + 1 == m) {
+                sdate = minDate.getDate();
+            }
+
+            // 최대 날짜로 종료일 설정
+            if(maxDate && maxDate.getFullYear() == y && maxDate.getMonth() + 1 == m) {
+                ldate = maxDate.getDate();
+            }
 
             for(var i = 0; i < start; i++) {
                 nums[i] = (prevLastDay - start) + (i + 1);
@@ -155,7 +166,7 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
             }
 
             for(var i = start; i < 42; i++) {
-                if(no <= ldate) {
+                if(sdate <= no && no <= ldate) {
                     var type = "";
 
                     if(d.getMonth() + 1 == m && d.getDate() == no) {
@@ -235,14 +246,33 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
         }
 
         this.init = function() {
+            var opts = this.options;
+
             $head = $(this.root).children(".head");
             $body = $(this.root).children(".body");
+            minDate = (_.typeCheck("date", opts.minDate)) ? opts.minDate : null;
+            maxDate = (_.typeCheck("date", opts.maxDate)) ? opts.maxDate : null;
+
+            if(opts.type == "daily") {
+                // 기본 날짜가 최소 날짜나 최대 날짜보다 작거나 큰 경우
+                if(opts.date < minDate) {
+                    opts.date = minDate;
+                } else if(opts.date < minDate) {
+                    opts.date = maxDate;
+                }
+
+                // 최소 날짜와 최대 날짜가 서로 교차하는 경우
+                if(maxDate < minDate || maxDate > minDate) {
+                    minDate = null;
+                    maxDate = null;
+                }
+            }
 
             // 이벤트 정의
             setCalendarEvent(this);
 
             // 기본 날짜 설정
-            this.select(this.options.date);
+            this.select(opts.date);
         }
 
         /**
@@ -259,12 +289,12 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
             if(opts.type == "daily") {
                 year = y;
                 month = m;
-                
+
                 $body.find("tr:not(:first-child)").remove();
-                $body.append(getCalendarHtml(this, getDateList(year, month)));
+                $body.append(getCalendarHtml(this, getDateList(this, year, month)));
             } else if(opts.type == "monthly") {
                 year = y;
-                
+
                 $body.find("tr").remove();
                 $body.append(getCalendarHtml(this, getMonthList(year)));
             } else if(opts.type == "yearly") {
@@ -273,7 +303,7 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
                 $body.find("tr").remove();
                 $body.append(getCalendarHtml(this, getYearList(year)));
             }
-            
+
             $head.children(".title").html(_.dateFormat(getCalendarDate(this), opts.titleFormat));
         }
 
@@ -288,14 +318,18 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
             if(opts.type == "daily") {
                 var y = (month == 1) ? year - 1 : year,
                     m = (month == 1) ? 12 : month - 1;
-                
+
+                if(minDate && minDate.getFullYear() == year && minDate.getMonth() + 1 == month) {
+                    return;
+                }
+
                 this.page(y, m);
             } else if(opts.type == "monthly") {
                 this.page(year - 1);
             } else if(opts.type == "yearly") {
                 this.page(year - 12);
             }
-            
+
             this.emit("prev", [ e ]);
         }
 
@@ -310,6 +344,10 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
             if(opts.type == "daily") {
                 var y = (month == 12) ? year + 1 : year,
                     m = (month == 12) ? 1 : month + 1;
+
+                if(maxDate && maxDate.getFullYear() == year && maxDate.getMonth() + 1 == month) {
+                    return;
+                }
 
                 this.page(y, m);
             } else if(opts.type == "monthly") {
@@ -433,7 +471,19 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
              * @cfg {Boolean} [animate=false]
              * @deprecated
              */
-            animate: false
+            animate: false,
+
+            /**
+             * @cfg {Date} [date="null"]
+             * Selects a specific minimum date
+             */
+            minDate: null,
+
+            /**
+             * @cfg {Date} [date="null"]
+             * Selects a specific maximum date
+             */
+            maxDate: null
         };
     }
 

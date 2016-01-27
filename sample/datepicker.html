@@ -67,6 +67,18 @@
                 $r.hide();
             }
         });
+
+        datepicker5 = datepicker("#datepicker5", {
+            titleFormat: "yyyy MM",
+            format: "yyyy/MM/dd",
+            minDate: new Date(new Date().setDate(new Date().getDate()-5)),
+            maxDate: new Date(new Date().setDate(new Date().getDate()+5)),
+            event: {
+                select: function(date, e) {
+                    alert(date);
+                }
+            }
+        });
     });
 </script>
 
@@ -126,6 +138,20 @@
 </div>
 <br/>
 
+<div id="datepicker5" class="datepicker">
+    <div class="head">
+        <div class="prev"><i class="icon-chevron-left"></i></div>
+        <div class="title"></div>
+        <div class="next"><i class="icon-chevron-right"></i></div>
+    </div>
+    <table class="body">
+        <tr>
+            <th>S</th><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th>
+        </tr>
+    </table>
+</div>
+<br/>
+
 <script data-jui="#datepicker1" data-tpl="dates" type="text/template">
     <tr>
         <! for(var i = 0; i < dates.length; i++) { !>
@@ -151,6 +177,14 @@
 </script>
 
 <script data-jui="#datepicker4" data-tpl="dates" type="text/template">
+    <tr>
+        <! for(var i = 0; i < dates.length; i++) { !>
+        <td><!= dates[i] !></td>
+        <! } !>
+    </tr>
+</script>
+
+<script data-jui="#datepicker5" data-tpl="dates" type="text/template">
     <tr>
         <! for(var i = 0; i < dates.length; i++) { !>
         <td><!= dates[i] !></td>
