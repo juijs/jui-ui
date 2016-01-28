@@ -262,7 +262,7 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
                 }
 
                 // 최소 날짜와 최대 날짜가 서로 교차하는 경우
-                if(maxDate < minDate || maxDate > minDate) {
+                if(maxDate < minDate) {
                     minDate = null;
                     maxDate = null;
                 }

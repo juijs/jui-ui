@@ -71,8 +71,8 @@
         datepicker5 = datepicker("#datepicker5", {
             titleFormat: "yyyy MM",
             format: "yyyy/MM/dd",
-            minDate: new Date(new Date().setDate(new Date().getDate()-5)),
-            maxDate: new Date(new Date().setDate(new Date().getDate()+5)),
+            minDate: new Date(new Date().setDate(new Date().getDate()-5)),   // new Date('2015-12-25'),
+            maxDate: new Date(new Date().setDate(new Date().getDate()+5)),   // new Date('2016-02-25'),
             event: {
                 select: function(date, e) {
                     alert(date);
