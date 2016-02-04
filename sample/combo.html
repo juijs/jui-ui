@@ -12,11 +12,12 @@
 <script src="../dist/ui.js"></script>
 
 <script>
-jui.ready([ "ui.combo" ], function(combo) {
+jui.ready([ "util.dom", "ui.combo" ], function(_, combo) {
 	// 2-1. 콤보박스
 	combo_1 = combo("#combo_1", {
 		index: 2,
 		position: "top",
+		keydown: true,
 		event: {
 			change: function(data) {
 				alert("text(" + data.text + "), value(" + data.value + ")");
@@ -35,6 +36,10 @@ jui.ready([ "ui.combo" ], function(combo) {
 			}
 		}
 	});
+
+	var body = _.find("body");
+	console.log(body);
+
 });
 
 </script>

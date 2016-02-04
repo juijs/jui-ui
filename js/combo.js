@@ -13,7 +13,7 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 	}
 	
 	$(function() { 
-		$("body").on("click", function(e) {
+		document.addEventListener("click", function(e) {
 			hideAll();
 		});
 	});

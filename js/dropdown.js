@@ -22,16 +22,16 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
 		return null;
 	}
 	
-	$(function() { 
-		$("body").on("click", function(e) {
+	$(function() {
+		document.addEventListener("click", function(e) {
 			var tn = e.target.tagName;
 			
 			if(tn != "LI" && tn != "INPUT" && tn != "A" && tn != "BUTTON" && tn != "I") {
 				hideAll();
 			}
 		});
-		
-		$(window).on("keydown", function(e) {
+
+		window.addEventListener("keydown", function(e) {
 			var dd = getDropdown();
 			
 			if(dd != null) {
