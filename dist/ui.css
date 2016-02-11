@@ -1547,6 +1547,21 @@
     transform: scale(1);
   }
 }
+.jui .icon-3d:before {
+  content: "\e938";
+}
+.jui .icon-cursor:before {
+  content: "\e93a";
+}
+.jui .icon-feed:before {
+  content: "\e93b";
+}
+.jui .icon-filter:before {
+  content: "\e93c";
+}
+.jui .icon-column:before {
+  content: "\e93d";
+}
 .jui .icon-analysis:before {
   content: "\e936";
 }
