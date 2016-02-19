@@ -1133,13 +1133,13 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
             animate: false,
 
             /**
-             * @cfg {Date} [date="null"]
+             * @cfg {Date} [minDate="null"]
              * Selects a specific minimum date
              */
             minDate: null,
 
             /**
-             * @cfg {Date} [date="null"]
+             * @cfg {Date} [maxDate="null"]
              * Selects a specific maximum date
              */
             maxDate: null
