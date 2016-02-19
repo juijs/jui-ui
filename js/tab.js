@@ -357,6 +357,32 @@ jui.defineUI("ui.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _, 
 			changeTab(this, index);
 		}
 
+		/**
+		 * @method enable
+		 * Enables the tab at a specified index
+		 *
+		 * @param {Integer} index
+		 */
+		this.enable = function(index) {
+			if(index == menuIndex || index == activeIndex) return;
+
+			var $target = $(this.root).children("li").eq(index);
+			$target.removeClass("disabled");
+		}
+
+		/**
+		 * @method disable
+		 * Disables the tab at a specified index
+		 *
+		 * @param {Integer} index
+		 */
+		this.disable = function(index) {
+			if(index == menuIndex || index == activeIndex) return;
+
+			var $target = $(this.root).children("li").eq(index);
+			$target.addClass("disabled");
+		}
+
         /**
          * @method activeIndex
          * Gets the index of the currently enabled tab
