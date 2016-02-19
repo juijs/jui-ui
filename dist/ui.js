@@ -4449,7 +4449,7 @@ jui.defineUI("ui.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _, 
 			var $list = $(self.root).children("li"),
 				$markupNode = $list.filter(".active"),
 				$indexNode = $list.eq(activeIndex),
-				$node = ($indexNode.size() == 1) ? $indexNode : $markupNode;
+				$node = ($markupNode.size() == 1) ? $markupNode : $indexNode;
 			
 			// 노드가 없거나 disabled 상태일 때, 맨 첫번째 노드를 활성화
 			if($node.hasClass("disabled") || $node.size() == 0) {
