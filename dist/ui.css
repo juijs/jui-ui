@@ -2115,6 +2115,10 @@
 .jui .pill li.active > a {
   cursor: default;
 }
+.jui .tab li.disabled > a,
+.jui .pill li.disabled > a {
+  cursor: default;
+}
 .jui .tab > li,
 .jui .pill > li {
   float: left;

@@ -9,6 +9,14 @@
     }
   }
 
+  li.disabled {
+    .opacity(@tabListDisabledOpacity * 100);
+
+    > a {
+      border: 1px solid @tabListBorderColor;
+    }
+  }
+
   li.active > a {
     color: @tabListActiveFontColor;
     .btn-bgcolor-2(@tabListActiveBackgroundColor, @tabListActiveBackgroundColor);
@@ -42,6 +50,15 @@
 
     &:hover, &:focus {
       background: @pillListHoverBorderColor;
+    }
+  }
+
+  li.disabled {
+    .opacity(@pillListDisabledOpacity * 100);
+
+    > a {
+      color: @pillListFontColor;
+      background: none;
     }
   }
 

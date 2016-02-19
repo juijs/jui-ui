@@ -353,6 +353,13 @@
 .jui .tab li > a:focus {
   border: 1px solid #6F6F6F;
 }
+.jui .tab li.disabled {
+  opacity: 0.5;
+  filter: alpha(opacity=50);
+}
+.jui .tab li.disabled > a {
+  border: 1px solid #595959;
+}
 .jui .tab li.active > a {
   color: #ffffff;
   background-color: #835acc;
@@ -389,6 +396,14 @@
 .jui .pill li > a:hover,
 .jui .pill li > a:focus {
   background: rgba(255, 255, 255, 0.1);
+}
+.jui .pill li.disabled {
+  opacity: 0.5;
+  filter: alpha(opacity=50);
+}
+.jui .pill li.disabled > a {
+  color: #D5D5D5;
+  background: none;
 }
 .jui .pill li.active > a {
   color: #fff;

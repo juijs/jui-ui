@@ -4347,6 +4347,10 @@ jui.defineUI("ui.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _, 
 			
 				// 이벤트 설정
 				self.addEvent(this, [ "click", "contextmenu" ], function(e) {
+					if($(this).hasClass("disabled")) {
+						return false;
+					}
+
 					var text = $.trim($(this).text()),
                         value = $(this).val();
 
@@ -4355,6 +4359,7 @@ jui.defineUI("ui.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _, 
                             var args = [ { index: i, text: text, value: value }, e ];
 
                             if(e.type == "click") {
+
                                 if(self.options.target != "") {
                                     showTarget(self.options.target, this);
                                 }
@@ -4446,9 +4451,10 @@ jui.defineUI("ui.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _, 
 				$indexNode = $list.eq(activeIndex),
 				$node = ($indexNode.size() == 1) ? $indexNode : $markupNode;
 			
-			// 노드가 없을 경우, 맨 첫번째 노드를 활성화
-			if($node.size() == 0) {
+			// 노드가 없거나 disabled 상태일 때, 맨 첫번째 노드를 활성화
+			if($node.hasClass("disabled") || $node.size() == 0) {
 				$node = $list.eq(0);
+				activeIndex = 0;
 			}
 			
 			$anchor.appendTo($node);
@@ -4617,8 +4623,10 @@ jui.defineUI("ui.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _, 
 		this.show = function(index) {
             if(index == menuIndex || index == activeIndex) return;
 
+			var $target = $(this.root).children("li").eq(index);
+			if($target.hasClass("disabled")) return;
+
 			activeIndex = index;
-            var $target = $(this.root).children("li").eq(index);
 
 			this.emit("change", [{ 
 				index: index, 
