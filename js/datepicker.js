@@ -437,6 +437,28 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
         this.getFormat = function(format) {
             return _.dateFormat(selDate, (typeof(format) == "string") ? format : this.options.format);
         }
+
+        /**
+         * @method reload
+         * Reloads the datepicker
+         */
+        this.reload = function() {
+            var opts = this.options;
+            minDate = (_.typeCheck("date", opts.minDate)) ? opts.minDate : null;
+            maxDate = (_.typeCheck("date", opts.maxDate)) ? opts.maxDate : null;
+
+            if(opts.type == "daily") {
+                // 기본 날짜가 최소 날짜나 최대 날짜보다 작거나 큰 경우
+                if(opts.date < minDate) {
+                    opts.date = minDate;
+                } else if(opts.date < minDate) {
+                    opts.date = maxDate;
+                }
+            }
+
+            this.select();
+            this.emit("reload");
+        }
     }
 
     UI.setup = function() {
