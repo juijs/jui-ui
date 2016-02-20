@@ -79,6 +79,52 @@
                 }
             }
         });
+
+        datepicker6 = datepicker("#datepicker6", {
+            titleFormat: "yyyy MM",
+            format: "yyyy/MM/dd",
+            event: {
+                select: function(date, e) {
+                    $("#datepicker6_group").find("input").val(this.getFormat("yyyyMMdd"));
+                    $("#datepicker6_group").find("a").click();
+                    datepicker7.setOption('minDate', new Date(date));
+                    datepicker7.reload();
+                }
+            }
+        });
+
+        $("#datepicker6_group").find("a").on("click", function(e) {
+            var $r = $(datepicker6.root);
+
+            if($r.css("display") == "none") {
+                $r.show();
+            } else {
+                $r.hide();
+            }
+        });
+
+        datepicker7 = datepicker("#datepicker7", {
+            titleFormat: "yyyy MM",
+            format: "yyyy/MM/dd",
+            event: {
+                select: function(date, e) {
+                    $("#datepicker7_group").find("input").val(this.getFormat("yyyyMMdd"));
+                    $("#datepicker7_group").find("a").click();
+                    datepicker6.setOption('maxDate', new Date(date));
+                    datepicker6.reload();
+                }
+            }
+        });
+
+        $("#datepicker7_group").find("a").on("click", function(e) {
+            var $r = $(datepicker7.root);
+
+            if($r.css("display") == "none") {
+                $r.show();
+            } else {
+                $r.hide();
+            }
+        });
     });
 </script>
 
@@ -152,6 +198,42 @@
 </div>
 <br/>
 
+<div id="datepicker6_group" class="group">
+    <input type="text" class="input" style="width: 157px;" value="From" />
+    <a class="btn btn-gray"><i class="icon-calendar"></i></a>
+</div>
+<div id="datepicker6" class="datepicker" style="display: none;">
+    <div class="head">
+        <div class="prev"><i class="icon-chevron-left"></i></div>
+        <div class="title"></div>
+        <div class="next"><i class="icon-chevron-right"></i></div>
+    </div>
+    <table class="body">
+        <tr>
+            <th>S</th><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th>
+        </tr>
+    </table>
+</div>
+<br/>
+
+<div id="datepicker7_group" class="group">
+    <input type="text" class="input" style="width: 157px;" value="To" />
+    <a class="btn btn-gray"><i class="icon-calendar"></i></a>
+</div>
+<div id="datepicker7" class="datepicker" style="display: none;">
+    <div class="head">
+        <div class="prev"><i class="icon-chevron-left"></i></div>
+        <div class="title"></div>
+        <div class="next"><i class="icon-chevron-right"></i></div>
+    </div>
+    <table class="body">
+        <tr>
+            <th>S</th><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th>
+        </tr>
+    </table>
+</div>
+<br/>
+
 <script data-jui="#datepicker1" data-tpl="dates" type="text/template">
     <tr>
         <! for(var i = 0; i < dates.length; i++) { !>
@@ -185,6 +267,22 @@
 </script>
 
 <script data-jui="#datepicker5" data-tpl="dates" type="text/template">
+    <tr>
+        <! for(var i = 0; i < dates.length; i++) { !>
+        <td><!= dates[i] !></td>
+        <! } !>
+    </tr>
+</script>
+
+<script data-jui="#datepicker6" data-tpl="dates" type="text/template">
+    <tr>
+        <! for(var i = 0; i < dates.length; i++) { !>
+        <td><!= dates[i] !></td>
+        <! } !>
+    </tr>
+</script>
+
+<script data-jui="#datepicker7" data-tpl="dates" type="text/template">
     <tr>
         <! for(var i = 0; i < dates.length; i++) { !>
         <td><!= dates[i] !></td>
