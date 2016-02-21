@@ -406,7 +406,7 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
 
                 initColor(color.format(value, "hex"));
             } else if(typeof(value) == "string") {
-                if(value.length != 7 || value.charAt(0) != "#")
+                if(value.charAt(0) != "#")
                     return;
 
                 initColor(value);
