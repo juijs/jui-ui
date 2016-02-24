@@ -23,7 +23,7 @@ jui.defineUI("ui.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _, 
 		function showMenu(self, elem) {
 			var pos = $(elem).offset();
 			
-			$(elem).parent().addClass("menu-keep");
+			$(elem).addClass("checked");
 			ui_menu.show(pos.left, pos.top + $(self.root).height());
 		}
 		
@@ -31,7 +31,7 @@ jui.defineUI("ui.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _, 
 			var $list = $(self.root).children("li"),
 				$menuTab = $list.eq(menuIndex);
 			
-			$menuTab.removeClass("menu-keep");
+			$menuTab.removeClass("checked");
 		}
 		
 		function changeTab(self, index) {
@@ -200,7 +200,7 @@ jui.defineUI("ui.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _, 
 			// 드롭다운 메뉴 
 			if(this.tpl.menu) {
 				var $menu = $(this.tpl.menu());
-				$menu.insertAfter($(self.root));
+				$("body").append($menu);
 				
 				ui_menu = dropdown($menu, {
 					event: {
