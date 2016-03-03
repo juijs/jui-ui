@@ -78,22 +78,17 @@ jui.defineUI("ui.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _, 
                         if(i != activeIndex) {
                             var args = [ { index: i, text: text, value: value }, e ];
 
-                            if(e.type == "click") {
+							if(self.options.target != "") {
+								showTarget(self.options.target, this);
+							}
 
-                                if(self.options.target != "") {
-                                    showTarget(self.options.target, this);
-                                }
+							// 엑티브 인덱스 변경
+							activeIndex = i;
 
-                                // 엑티브 인덱스 변경
-                                activeIndex = i;
+							self.emit("change", args);
+							self.emit("click", args);
 
-                                self.emit("change", args);
-                                self.emit("click", args);
-
-                                changeTab(self, i);
-                            } else if(e.type == "contextmenu") {
-                                self.emit("rclick", args);
-                            }
+							changeTab(self, i);
                         }
 					} else {
 						self.emit("menu", [ { index: i, text: text }, e ]);
@@ -433,14 +428,6 @@ jui.defineUI("ui.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _, 
     /**
      * @event click
      * Event that occurs when a tab is mouse clicked
-     *
-     * @param {Object} data changed data
-     * @param {EventObject} e The event object
-     */
-
-    /**
-     * @event rclick
-     * Event that occurs when a tab is mouse right clicked
      *
      * @param {Object} data changed data
      * @param {EventObject} e The event object
