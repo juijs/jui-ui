@@ -1547,6 +1547,21 @@
     transform: scale(1);
   }
 }
+.jui .icon-server2:before {
+  content: "\e93e";
+}
+.jui .icon-server1:before {
+  content: "\e93f";
+}
+.jui .icon-unhappy:before {
+  content: "\e940";
+}
+.jui .icon-layout2:before {
+  content: "\e988";
+}
+.jui .icon-layout1:before {
+  content: "\e989";
+}
 .jui .icon-3d:before {
   content: "\e938";
 }
