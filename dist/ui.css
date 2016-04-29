@@ -1547,6 +1547,51 @@
     transform: scale(1);
   }
 }
+.jui .icon-grip3:before {
+  content: "\e998";
+}
+.jui .icon-tag:before {
+  content: "\e993";
+}
+.jui .icon-all:before {
+  content: "\e994";
+}
+.jui .icon-grip2:before {
+  content: "\e995";
+}
+.jui .icon-cursor1:before {
+  content: "\e996";
+}
+.jui .icon-grip1:before {
+  content: "\e997";
+}
+.jui .icon-roundsquare:before {
+  content: "\e98a";
+}
+.jui .icon-paintbucket:before {
+  content: "\e98b";
+}
+.jui .icon-square:before {
+  content: "\e98c";
+}
+.jui .icon-circle:before {
+  content: "\e98d";
+}
+.jui .icon-eraser:before {
+  content: "\e98e";
+}
+.jui .icon-paintbrush:before {
+  content: "\e98f";
+}
+.jui .icon-pen:before {
+  content: "\e990";
+}
+.jui .icon-eyedropper:before {
+  content: "\e991";
+}
+.jui .icon-x-mark:before {
+  content: "\e992";
+}
 .jui .icon-server2:before {
   content: "\e93e";
 }
