@@ -652,10 +652,10 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 			position: "bottom",
 
 			/**
-			 * @cfg {Boolean} [flex=false]
-			 * It is possible to determine an initial selection button with a specified value
+			 * @cfg {Boolean} [flex=true]
+			 * Drop-down menu is varied by changing the width function
 			 */
-			flex: false
+			flex: true
         }
     }
 
