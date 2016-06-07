@@ -3529,7 +3529,6 @@
   display: inline-block;
   color: inherit;
   text-decoration: none;
-  width: 100%;
 }
 .jui .combo > ul > li:not(.divider) {
   padding: 0px 10px;

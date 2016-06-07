@@ -294,8 +294,8 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 				var elem = getElement(this),
 					value = $(elem).attr("value"),
 					text = $(elem).text();
-				
-				if(!value) { 
+
+				if(!value) {
 					value = text;
 					$(elem).attr("value", value);
 				}
@@ -413,6 +413,17 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 			});
 		}
 
+		function getMaxListWidth() {
+			var maxValue = 0;
+
+			ui_list["drop"].children("li").each(function(i) {
+				var elem = getElement(this);
+				maxValue = Math.max(maxValue, $(elem).outerWidth());
+			});
+
+			return maxValue;
+		}
+
 		this.init = function() {
 			var self = this, opts = this.options;
 			
@@ -429,14 +440,19 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 			if(opts.width > 0) {
 				$combo_text.outerWidth(opts.width - $combo_toggle.outerWidth() + 1);
 				$combo_text.css({
-					"overflow": "hidden",
+					"overflow-x": "hidden",
+					"overflow-y": "hidden",
 					"white-space": "nowrap"
 				});
 			}
 			
 			// Height
 			if(opts.height > 0) {
-				$combo_drop.css({ "maxHeight": opts.height, "overflow": "auto" });
+				$combo_drop.css({
+					"overflow-x": "hidden",
+					"overflow-y": "auto",
+					"max-height": opts.height
+				});
 			}
 
 			// Show
@@ -552,6 +568,14 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 				ui_list["drop"].slideDown(100);
 			}
 
+			if(this.options.flex) {
+				var maxWidth = getMaxListWidth();
+
+				if(maxWidth > ui_list["drop"].outerWidth()) {
+					ui_list["drop"].outerWidth(getMaxListWidth() + 50);
+				}
+			}
+
 			this.emit("open", e);
 			this.type = "open";
 		}
@@ -625,7 +649,13 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
              * @cfg {"top"/"bottom"} [position="bottom"]
              * It is possible to determine an initial selection button with a specified value
              */
-			position: "bottom"
+			position: "bottom",
+
+			/**
+			 * @cfg {Boolean} [flex=false]
+			 * It is possible to determine an initial selection button with a specified value
+			 */
+			flex: false
         }
     }
 
