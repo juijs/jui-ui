@@ -1550,6 +1550,24 @@
 .jui .icon-grip3:before {
   content: "\e998";
 }
+.jui .icon-clip:before {
+  content: "\e999";
+}
+.jui .icon-scissors:before {
+  content: "\e99a";
+}
+.jui .icon-topology:before {
+  content: "\e99b";
+}
+.jui .icon-equalizer:before {
+  content: "\e99c";
+}
+.jui .icon-idea:before {
+  content: "\e99d";
+}
+.jui .icon-screenshot:before {
+  content: "\e99e";
+}
 .jui .icon-tag:before {
   content: "\e993";
 }
