@@ -1,10 +1,16 @@
 ul.tree {
   color: @treeFontColor;
 
-  li.active {
-    > a, > span, > div {
-      color: @treeActiveFontColor;
-      font-weight: bold;
+  li {
+    &.disabled, &:disabled {
+      opacity: 0.4;
+    }
+
+    &.active {
+      > a, > span, > div {
+        color: @treeActiveFontColor;
+        font-weight: bold;
+      }
     }
   }
 

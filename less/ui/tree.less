@@ -5,6 +5,12 @@ ul.tree {
   font-size: 12px;
 
   li {
+    &.disabled, &:disabled {
+      > a, > span, > div {
+        cursor: not-allowed;
+      }
+    }
+
     > a, > span, > div {
       text-decoration: none;
       color: inherit;

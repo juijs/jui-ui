@@ -2534,6 +2534,14 @@
   margin: 0;
   font-size: 12px;
 }
+.jui ul.tree li.disabled > a,
+.jui ul.tree li:disabled > a,
+.jui ul.tree li.disabled > span,
+.jui ul.tree li:disabled > span,
+.jui ul.tree li.disabled > div,
+.jui ul.tree li:disabled > div {
+  cursor: not-allowed;
+}
 .jui ul.tree li > a,
 .jui ul.tree li > span,
 .jui ul.tree li > div {

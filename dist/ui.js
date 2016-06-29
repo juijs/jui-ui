@@ -5368,6 +5368,8 @@ jui.defineUI("ui.tree", [ "util.base", "ui.tree.base" ], function(_, Base) {
 					});
 					
 					self.addEvent($elem.children("a,span,div")[0], "click", function(e) {
+                        if($elem.hasClass("disabled") || $elem.attr("disabled")) return;
+
 						self.emit("select", [ node, e ]);
 						e.stopPropagation();
 					});

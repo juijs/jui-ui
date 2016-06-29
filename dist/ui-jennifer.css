@@ -476,6 +476,10 @@
 .jui ul.tree {
   color: #333;
 }
+.jui ul.tree li.disabled,
+.jui ul.tree li:disabled {
+  opacity: 0.4;
+}
 .jui ul.tree li.active > a,
 .jui ul.tree li.active > span,
 .jui ul.tree li.active > div {
