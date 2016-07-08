@@ -137,6 +137,11 @@ jui.defineUI("ui.tooltip", [ "jquery" ], function($) {
          */
         this.update = function(newTitle) {
             title = newTitle;
+
+            // TODO: 특정 클래스의 마크업에 한정하는거라 차후에 개선해야함
+            if($tooltip != null) {
+                $tooltip.find(".message").html(title);
+            }
         }
 	}
 
