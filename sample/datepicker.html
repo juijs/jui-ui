@@ -105,6 +105,28 @@
             }
         });
 
+        datepicker10 = datepicker("#datepicker10", {
+            titleFormat: "yyyy MM",
+            format: "yyyy/MM/dd",
+            minDate: new Date(new Date().setDate(new Date().getDate()-5)),   // new Date('2015-12-25'),
+            event: {
+                select: function(date, e) {
+                    alert(date);
+                }
+            }
+        });
+
+        datepicker11 = datepicker("#datepicker11", {
+            titleFormat: "yyyy MM",
+            format: "yyyy/MM/dd",
+            maxDate: new Date(new Date().setDate(new Date().getDate()+5)),   // new Date('2016-02-25'),
+            event: {
+                select: function(date, e) {
+                    alert(date);
+                }
+            }
+        });
+
         datepicker7 = datepicker("#datepicker7", {
             titleFormat: "yyyy MM",
             format: "yyyy/MM/dd",
@@ -300,6 +322,36 @@
             </div>
         </div>
 
+        <div style="display: inline-block; position: relative;">
+            <div id="datepicker10" class="datepicker">
+                <div class="head">
+                    <div class="prev"><i class="icon-chevron-left"></i></div>
+                    <div class="title"></div>
+                    <div class="next"><i class="icon-chevron-right"></i></div>
+                </div>
+                <table class="body">
+                    <tr>
+                        <th>S</th><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div style="display: inline-block; position: relative;">
+            <div id="datepicker11" class="datepicker">
+                <div class="head">
+                    <div class="prev"><i class="icon-chevron-left"></i></div>
+                    <div class="title"></div>
+                    <div class="next"><i class="icon-chevron-right"></i></div>
+                </div>
+                <table class="body">
+                    <tr>
+                        <th>S</th><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
         <br/><br/>
 
         <strong>setOption</strong>와 <strong>reload</strong> 함수를 사용하여
@@ -417,6 +469,22 @@ event: {
 </script>
 
 <script data-jui="#datepicker6" data-tpl="dates" type="text/template">
+    <tr>
+        <! for(var i = 0; i < dates.length; i++) { !>
+        <td><!= dates[i] !></td>
+        <! } !>
+    </tr>
+</script>
+
+<script data-jui="#datepicker10" data-tpl="dates" type="text/template">
+    <tr>
+        <! for(var i = 0; i < dates.length; i++) { !>
+        <td><!= dates[i] !></td>
+        <! } !>
+    </tr>
+</script>
+
+<script data-jui="#datepicker11" data-tpl="dates" type="text/template">
     <tr>
         <! for(var i = 0; i < dates.length; i++) { !>
         <td><!= dates[i] !></td>
