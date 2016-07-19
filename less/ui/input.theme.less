@@ -6,7 +6,7 @@
   .border-radius(@inputBorderRadius);
   .box-shadow(@inputBoxShadow);
 
-  &:focus {
+  &:focus, &.focus {
     color: @inputFocusFontColor;
     border-color: @inputFocusBorderColor;
     background-color: @inputFocusBackgroundColor;
@@ -16,13 +16,13 @@
   }
 }
 
-.input[disabled], .input[readonly] {
+.input[disabled], .input[readonly], .input.disabled, .input.readonly {
   cursor: not-allowed;
   background-color: @inputDisabledBackgroundColor;
   color: @inputDisabledFontColor;
 }
 
-.input:focus:invalid {
+.input:focus:invalid, .input.invalid {
   color: @inputInvalidFontColor;
   border-color: @inputInvalidBorderColor;
 

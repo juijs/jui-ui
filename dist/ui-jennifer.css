@@ -1112,7 +1112,8 @@
   -moz-box-shadow: "0 4px 5px -5px rgba(0,0,0,0.3) inset";
   box-shadow: "0 4px 5px -5px rgba(0,0,0,0.3) inset";
 }
-.jui .input:focus {
+.jui .input:focus,
+.jui .input.focus {
   color: #333333;
   border-color: #b08bfc;
   background-color: none;
@@ -1126,16 +1127,20 @@
   transition: border linear .2s, box-shadow linear .2s;
 }
 .jui .input[disabled],
-.jui .input[readonly] {
+.jui .input[readonly],
+.jui .input.disabled,
+.jui .input.readonly {
   cursor: not-allowed;
   background-color: #eee;
   color: #333;
 }
-.jui .input:focus:invalid {
+.jui .input:focus:invalid,
+.jui .input.invalid {
   color: #b94a48;
   border-color: #ee5f5b;
 }
-.jui .input:focus:invalid:focus {
+.jui .input:focus:invalid:focus,
+.jui .input.invalid:focus {
   border-color: #e9322d;
   -webkit-box-shadow: 0 0 6px #f8b9b7;
   -moz-box-shadow: 0 0 6px #f8b9b7;
