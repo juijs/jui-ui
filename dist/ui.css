@@ -1547,6 +1547,12 @@
     transform: scale(1);
   }
 }
+.jui .icon-3d:before {
+  content: "\e91c";
+}
+.jui .icon-tumblr:before {
+  content: "\e9aa";
+}
 .jui .icon-kakao:before {
   content: "\e9a1";
 }
@@ -1573,9 +1579,6 @@
 }
 .jui .icon-theme:before {
   content: "\e9a9";
-}
-.jui .icon-tumblr:before {
-  content: "\e9aa";
 }
 .jui .icon-line-merge:before {
   content: "\e9ab";
@@ -1666,9 +1669,6 @@
 }
 .jui .icon-layout1:before {
   content: "\e91b";
-}
-.jui .icon-d:before {
-  content: "\e91c";
 }
 .jui .icon-cursor:before {
   content: "\e91d";
