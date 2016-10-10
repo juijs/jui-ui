@@ -21,9 +21,16 @@
       font-size: 20px;
     }
 
-    > .prev, .next {
+    > .prev, .next, .prev-year, .next-year {
       font-size: 14px;
       cursor: pointer;
+    }
+
+    .prev-year, .next-year {
+      display:none;
+      font-size:16px;
+      vertical-align:middle;
+      margin-top:-5px;
     }
 
     > .prev {
@@ -32,6 +39,12 @@
 
     > .next {
       margin-left: 12px;
+    }
+
+    &.move-year {
+      .prev-year, .next-year {
+        display:inline-block;
+      }
     }
   }
 

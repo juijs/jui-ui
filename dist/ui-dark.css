@@ -188,7 +188,9 @@
   background: #181818;
 }
 .jui .datepicker > .head > .prev,
-.jui .datepicker > .head .next {
+.jui .datepicker > .head .next,
+.jui .datepicker > .head .prev-year,
+.jui .datepicker > .head .next-year {
   color: #DCDCDC;
 }
 .jui .datepicker > .head > .title {
@@ -227,7 +229,9 @@
   border-bottom-color: #595959;
 }
 .jui .calendar > .head > .prev,
-.jui .calendar > .head .next {
+.jui .calendar > .head .next,
+.jui .calendar > .head .prev-year,
+.jui .calendar > .head .next-year {
   color: #DCDCDC;
 }
 .jui .calendar > .head > .title {
