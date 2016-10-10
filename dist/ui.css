@@ -3173,11 +3173,37 @@
   font-size: 9px;
   cursor: pointer;
 }
+.jui .datepicker > .head > .prev-year,
+.jui .datepicker > .head .next-year {
+  display: none;
+  position: absolute;
+  top: 7px;
+  font-size: 9px;
+  cursor: pointer;
+}
 .jui .datepicker > .head > .prev {
   left: 5px;
 }
 .jui .datepicker > .head > .next {
   right: 5px;
+}
+.jui .datepicker > .head.move-year > .prev-year,
+.jui .datepicker > .head.move-year .next-year {
+  display: block;
+  font-size: 13px;
+  vertical-align: middle;
+}
+.jui .datepicker > .head.move-year > .prev-year {
+  left: 5px;
+}
+.jui .datepicker > .head.move-year > .next-year {
+  right: 5px;
+}
+.jui .datepicker > .head.move-year > .prev {
+  left: 30px;
+}
+.jui .datepicker > .head.move-year > .next {
+  right: 30px;
 }
 .jui .datepicker > table.body {
   width: 100%;
@@ -3273,15 +3299,28 @@
   font-size: 20px;
 }
 .jui .calendar > .head > .prev,
-.jui .calendar > .head .next {
+.jui .calendar > .head .next,
+.jui .calendar > .head .prev-year,
+.jui .calendar > .head .next-year {
   font-size: 14px;
   cursor: pointer;
+}
+.jui .calendar > .head .prev-year,
+.jui .calendar > .head .next-year {
+  display: none;
+  font-size: 16px;
+  vertical-align: middle;
+  margin-top: -5px;
 }
 .jui .calendar > .head > .prev {
   margin-right: 12px;
 }
 .jui .calendar > .head > .next {
   margin-left: 12px;
+}
+.jui .calendar > .head.move-year .prev-year,
+.jui .calendar > .head.move-year .next-year {
+  display: inline-block;
 }
 .jui .calendar > table.body {
   width: 100%;

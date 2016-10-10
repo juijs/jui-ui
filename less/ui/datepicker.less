@@ -30,12 +30,44 @@
       cursor: pointer;
     }
 
+    > .prev-year, .next-year {
+      display:none;
+      position: absolute;
+      top: 7px;
+      font-size: 9px;
+      cursor: pointer;
+    }
+
     > .prev {
       left: 5px;
     }
 
     > .next {
       right: 5px;
+    }
+
+    &.move-year {
+      > .prev-year, .next-year {
+        display:block;
+        font-size:13px;
+        vertical-align:middle;
+      }
+
+      > .prev-year {
+        left: 5px;
+      }
+
+      > .next-year {
+        right: 5px;
+      }
+
+      > .prev {
+        left: 30px;
+      }
+
+      > .next {
+        right: 30px;
+      }
     }
   }
 
