@@ -5411,8 +5411,10 @@ jui.defineUI("ui.tree", [ "util.base", "ui.tree.base" ], function(_, Base) {
 								var cNode = node.lastChild(),
 									endIndex = (cNode) ? iParser.getNextIndex(cNode.index) : node.index + ".0";
 
-								self.move(dragIndex.start, endIndex);
-								self.emit("dragend", [ e ]);
+                                // 특정 부모 노드에 추가할 경우
+                                if(self.emit("dragend", [ self.get(node.index), e ]) !== false) {
+                                    self.move(dragIndex.start, endIndex);
+                                }
 							}
 						}
 						
