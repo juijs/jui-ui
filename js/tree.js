@@ -257,8 +257,8 @@ jui.define("ui.tree.base", [ "jquery", "util.base", "ui.tree.node" ], function($
             var keys = iParser.getIndexList(index);
 
             var pNode = self.getNodeParent(index),
-                nodenum = keys[keys.length - 1];
-            node = createNode(data, nodenum, pNode);
+                nodenum = keys[keys.length - 1],
+                node = createNode(data, nodenum, pNode);
 
             // 데이터 갱신
             pNode.insertChild(nodenum, node);
@@ -561,7 +561,6 @@ jui.defineUI("ui.tree", [ "util.base", "ui.tree.base" ], function(_, Base) {
 			if(!self.options.drag) return;
 			
 			var root = self.uit.getRoot();
-			$("body").off("mousemove").off("mouseup");
 
 			for(var i = 0; i < nodeList.length; i++) {
 				(function(node) {
@@ -571,8 +570,9 @@ jui.defineUI("ui.tree", [ "util.base", "ui.tree.base" ], function(_, Base) {
 						if(e.target.tagName == "I") return;
 						
 						if(dragIndex.start == null) {
-							dragIndex.start = node.index;
-							self.emit("dragstart", [ node.index, e ]);
+						    if(self.emit("dragstart", [ node, e ]) !== false) {
+                                dragIndex.start = node.index;
+                            }
 						}
 						
 						return false;
@@ -585,9 +585,9 @@ jui.defineUI("ui.tree", [ "util.base", "ui.tree.base" ], function(_, Base) {
 							if(dragIndex.start && dragIndex.start != node.index) {
 								var cNode = node.lastChild(),
 									endIndex = (cNode) ? iParser.getNextIndex(cNode.index) : node.index + ".0";
-								
+
 								self.move(dragIndex.start, endIndex);
-								self.emit("dragend", [ endIndex, e ]);
+								self.emit("dragend", [ e ]);
 							}
 						}
 						
@@ -605,7 +605,7 @@ jui.defineUI("ui.tree", [ "util.base", "ui.tree.base" ], function(_, Base) {
 								var endIndex = "" + root.children.length;
 								
 								self.move(dragIndex.start, endIndex);
-								self.emit("dragend", [ endIndex, e ]);
+								self.emit("dragend", [ e ]);
 							}
 						}
 						
@@ -620,7 +620,7 @@ jui.defineUI("ui.tree", [ "util.base", "ui.tree.base" ], function(_, Base) {
 			self.addEvent("body", "mouseup", function(e) {
 				if(dragIndex.start && dragIndex.end) {
 					self.move(dragIndex.start, dragIndex.end);
-					self.emit("dragend", [ dragIndex.end, e ]);
+					self.emit("dragend", [ e ]);
 				}
 				
 				dragIndex.start = null;
@@ -705,7 +705,7 @@ jui.defineUI("ui.tree", [ "util.base", "ui.tree.base" ], function(_, Base) {
 
 
 		this.init = function() {
-			var self = this, opts = this.options;
+			var opts = this.options;
 			
 			// UITable 객체 생성
 			this.uit = new Base({ $obj: { tree: $(this.root) }, $tpl: this.tpl }); // 신규 테이블 클래스 사용
