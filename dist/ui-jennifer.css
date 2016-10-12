@@ -489,7 +489,7 @@
 .jui ul.tree .drag.on {
   background: #dcdcdc;
 }
-.jui ul.tree.arrow-file li.open > i {
+.jui ul.tree.arrow-file li.open > i:first-child {
   width: 15px;
   height: 15px;
   line-height: 15px;
@@ -498,7 +498,7 @@
   background-repeat: no-repeat;
   background-image: url("../img/theme/jennifer/tree-list.png");
 }
-.jui ul.tree.arrow-file li.fold > i {
+.jui ul.tree.arrow-file li.fold > i:first-child {
   width: 15px;
   height: 15px;
   line-height: 15px;
@@ -507,7 +507,7 @@
   background-repeat: no-repeat;
   background-image: url("../img/theme/jennifer/tree-list.png");
 }
-.jui ul.tree.arrow-file li.leaf > i {
+.jui ul.tree.arrow-file li.leaf > i:first-child {
   width: 15px;
   height: 15px;
   line-height: 15px;
@@ -519,7 +519,7 @@
 .jui ul.tree.line-file li {
   background: url("../img/theme/jennifer/tree-line.gif") 0 0 no-repeat;
 }
-.jui ul.tree.line-file li.open > i {
+.jui ul.tree.line-file li.open > i:first-child {
   width: 16px;
   height: 16px;
   line-height: 16px;
@@ -528,7 +528,7 @@
   background-repeat: no-repeat;
   background-image: url("../img/theme/jennifer/tree-list.png");
 }
-.jui ul.tree.line-file li.open.root > i {
+.jui ul.tree.line-file li.open.root > i:first-child {
   width: 16px;
   height: 16px;
   line-height: 16px;
@@ -537,7 +537,7 @@
   background-repeat: no-repeat;
   background-image: url("../img/theme/jennifer/tree-list.png");
 }
-.jui ul.tree.line-file li.fold > i {
+.jui ul.tree.line-file li.fold > i:first-child {
   width: 16px;
   height: 16px;
   line-height: 16px;
@@ -546,7 +546,7 @@
   background-repeat: no-repeat;
   background-image: url("../img/theme/jennifer/tree-list.png");
 }
-.jui ul.tree.line-file li.fold.root > i {
+.jui ul.tree.line-file li.fold.root > i:first-child {
   width: 16px;
   height: 16px;
   line-height: 16px;
@@ -555,7 +555,7 @@
   background-repeat: no-repeat;
   background-image: url("../img/theme/jennifer/tree-list.png");
 }
-.jui ul.tree.arrow li.open > i {
+.jui ul.tree.arrow li.open > i:first-child {
   width: 15px;
   height: 15px;
   line-height: 15px;
@@ -564,7 +564,7 @@
   background-repeat: no-repeat;
   background-image: url("../img/theme/jennifer/tree-list.png");
 }
-.jui ul.tree.arrow li.fold > i {
+.jui ul.tree.arrow li.fold > i:first-child {
   width: 15px;
   height: 15px;
   line-height: 15px;
@@ -573,7 +573,7 @@
   background-repeat: no-repeat;
   background-image: url("../img/theme/jennifer/tree-list.png");
 }
-.jui ul.tree.arrow li.leaf > i {
+.jui ul.tree.arrow li.leaf > i:first-child {
   width: 15px;
   height: 15px;
   line-height: 15px;
@@ -585,7 +585,7 @@
 .jui ul.tree.line li {
   background: url("../img/theme/jennifer/tree-line.gif") 0 0 no-repeat;
 }
-.jui ul.tree.line li.open > i {
+.jui ul.tree.line li.open > i:first-child {
   width: 16px;
   height: 16px;
   line-height: 16px;
@@ -594,7 +594,7 @@
   background-repeat: no-repeat;
   background-image: url("../img/theme/jennifer/tree-list.png");
 }
-.jui ul.tree.line li.open.root > i {
+.jui ul.tree.line li.open.root > i:first-child {
   width: 16px;
   height: 16px;
   line-height: 16px;
@@ -603,7 +603,7 @@
   background-repeat: no-repeat;
   background-image: url("../img/theme/jennifer/tree-list.png");
 }
-.jui ul.tree.line li.fold > i {
+.jui ul.tree.line li.fold > i:first-child {
   width: 16px;
   height: 16px;
   line-height: 16px;
@@ -612,7 +612,7 @@
   background-repeat: no-repeat;
   background-image: url("../img/theme/jennifer/tree-list.png");
 }
-.jui ul.tree.line li.fold.root > i {
+.jui ul.tree.line li.fold.root > i:first-child {
   width: 16px;
   height: 16px;
   line-height: 16px;
@@ -621,12 +621,12 @@
   background-repeat: no-repeat;
   background-image: url("../img/theme/jennifer/tree-list.png");
 }
-.jui ul.tree.arrow-file li.open > a > i,
-.jui ul.tree.line-file li.open > a > i,
-.jui ul.tree.arrow-file li.open > span > i,
-.jui ul.tree.line-file li.open > span > i,
-.jui ul.tree.arrow-file li.open > div > i,
-.jui ul.tree.line-file li.open > div > i {
+.jui ul.tree.arrow-file li.open > a > i:first-child,
+.jui ul.tree.line-file li.open > a > i:first-child,
+.jui ul.tree.arrow-file li.open > span > i:first-child,
+.jui ul.tree.line-file li.open > span > i:first-child,
+.jui ul.tree.arrow-file li.open > div > i:first-child,
+.jui ul.tree.line-file li.open > div > i:first-child {
   width: 15px;
   height: 14px;
   line-height: 14px;
@@ -635,12 +635,12 @@
   background-repeat: no-repeat;
   background-image: url("../img/theme/jennifer/tree-list.png");
 }
-.jui ul.tree.arrow-file li.fold > a > i,
-.jui ul.tree.line-file li.fold > a > i,
-.jui ul.tree.arrow-file li.fold > span > i,
-.jui ul.tree.line-file li.fold > span > i,
-.jui ul.tree.arrow-file li.fold > div > i,
-.jui ul.tree.line-file li.fold > div > i {
+.jui ul.tree.arrow-file li.fold > a > i:first-child,
+.jui ul.tree.line-file li.fold > a > i:first-child,
+.jui ul.tree.arrow-file li.fold > span > i:first-child,
+.jui ul.tree.line-file li.fold > span > i:first-child,
+.jui ul.tree.arrow-file li.fold > div > i:first-child,
+.jui ul.tree.line-file li.fold > div > i:first-child {
   width: 15px;
   height: 14px;
   line-height: 14px;
@@ -649,12 +649,12 @@
   background-repeat: no-repeat;
   background-image: url("../img/theme/jennifer/tree-list.png");
 }
-.jui ul.tree.arrow-file li.leaf > a > i,
-.jui ul.tree.line-file li.leaf > a > i,
-.jui ul.tree.arrow-file li.leaf > span > i,
-.jui ul.tree.line-file li.leaf > span > i,
-.jui ul.tree.arrow-file li.leaf > div > i,
-.jui ul.tree.line-file li.leaf > div > i {
+.jui ul.tree.arrow-file li.leaf > a > i:first-child,
+.jui ul.tree.line-file li.leaf > a > i:first-child,
+.jui ul.tree.arrow-file li.leaf > span > i:first-child,
+.jui ul.tree.line-file li.leaf > span > i:first-child,
+.jui ul.tree.arrow-file li.leaf > div > i:first-child,
+.jui ul.tree.line-file li.leaf > div > i:first-child {
   width: 14px;
   height: 14px;
   line-height: 14px;
