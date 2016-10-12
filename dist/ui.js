@@ -5432,7 +5432,7 @@ jui.defineUI("ui.tree", [ "util.base", "ui.tree.base" ], function(_, Base) {
 								var endIndex = "" + root.children.length;
 								
 								self.move(dragIndex.start, endIndex);
-								self.emit("dragend", [ e ]);
+								self.emit("dragend", [ self.get(endIndex), e ]);
 							}
 						}
 						
@@ -5447,7 +5447,7 @@ jui.defineUI("ui.tree", [ "util.base", "ui.tree.base" ], function(_, Base) {
 			self.addEvent("body", "mouseup", function(e) {
 				if(dragIndex.start && dragIndex.end) {
 					self.move(dragIndex.start, dragIndex.end);
-					self.emit("dragend", [ e ]);
+					self.emit("dragend", [ self.get(dragIndex.end), e ]);
 				}
 				
 				dragIndex.start = null;
