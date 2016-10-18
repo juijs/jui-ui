@@ -399,11 +399,11 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
 
             if(opts.type == "daily") {
                 // 최소일과 최대일이 교차하는 경우
-                if(minDate || maxDate) {
-                    var checkedDate = checkDate(y, m, d);
-                    this.page(checkedDate[0], checkedDate[1]);
-                	this.addTrigger(items[checkedDate[2]], "click");
-                }
+                // if(minDate || maxDate) {
+                //     var checkedDate = checkDate(y, m, d);
+                //     this.page(checkedDate[0], checkedDate[1]);
+                // 	this.addTrigger(items[checkedDate[2]], "click");
+                // }
 
             	this.page(y, m);
             	this.addTrigger(items[d], "click");
@@ -468,9 +468,9 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
 
             if(opts.type == "daily") {
                 // 기본 날짜가 최소 날짜나 최대 날짜보다 작거나 큰 경우
-                if(opts.date < minDate) {
+                if(minDate && opts.date < minDate) {
                     opts.date = minDate;
-                } else if(opts.date < minDate) {
+                } else if(maxDate && opts.date > maxDate) {
                     opts.date = maxDate;
                 }
             }
