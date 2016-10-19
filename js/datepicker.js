@@ -248,11 +248,11 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
         function checkDate(y, m, d) {
             if(minDate) {
                 var minY = minDate.getFullYear(), minM = minDate.getMonth() + 1, minD = minDate.getDate();
-                if (y < minY || (y >= minY && m < minM)) return [minY, minM, minD];
+                if (y < minY || (y == minY && m < minM)) return [minY, minM, minD];
             }
             if(maxDate) {
                 var maxY = maxDate.getFullYear(),maxM = maxDate.getMonth() + 1, maxD = maxDate.getDate()
-                if (y > maxY || (y <= maxY && m > maxM)) return [maxY, maxM, maxD];
+                if (y > maxY || (y == maxY && m > maxM)) return [maxY, maxM, maxD];
             }
             return [y, m, d];
         }
@@ -399,11 +399,11 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
 
             if(opts.type == "daily") {
                 // 최소일과 최대일이 교차하는 경우
-                // if(minDate || maxDate) {
-                //     var checkedDate = checkDate(y, m, d);
-                //     this.page(checkedDate[0], checkedDate[1]);
-                // 	this.addTrigger(items[checkedDate[2]], "click");
-                // }
+                if(minDate || maxDate) {
+                    var checkedDate = checkDate(y, m, d);
+                    this.page(checkedDate[0], checkedDate[1]);
+                	this.addTrigger(items[checkedDate[2]], "click");
+                }
 
             	this.page(y, m);
             	this.addTrigger(items[d], "click");
