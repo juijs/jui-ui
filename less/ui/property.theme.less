@@ -1,0 +1,155 @@
+
+/* property */
+
+.property {
+
+
+  .property-header {
+    color: @propertyHeaderFontColor;
+    //background-color: @propertyHeaderBackgroundColor;
+
+  }
+
+  .property-item {
+    border-top: 1px solid @propertyItemBorderColor;
+    border-bottom: 1px solid @propertyItemBorderColor;
+
+    &.expanded {
+      border-bottom:1px solid @propertyItemExpandedBorderColor !important;
+    }
+
+
+    .property-title {
+      color: @propertyItemTitleFontColor;
+    }
+
+    textarea, .html[contenteditable] {
+      border: 1px solid @propertyItemTextBorderColor;
+    }
+
+
+    textarea:focus, .html[contenteditable]:focus
+    {
+      border-color:@propertyItemTextFocusBorderColor;
+    }
+
+
+    select {
+      border-bottom: 1px solid @propertyItemTextBorderColor;
+
+      &:focus {
+        border-color:#48cfad;
+      }
+    }
+
+    /* text */
+    input[type=text]{
+      border-bottom: 1px solid @propertyItemTextBorderColor;
+
+      &:focus {
+        border-color:@propertyItemTextFocusBorderColor;
+      }
+    }
+
+    /* number */
+    input[type=number] {
+      border-bottom: 1px solid @propertyItemNumberBorderColor;
+    }
+
+    /* checkbox */
+    input[type=checkbox] + .icon-checkbox {
+      color:@propertyItemCheckboxOnColor;
+    }
+    input[type=checkbox] + .icon-checkbox2 {
+      color:@propertyItemCheckboxOffColor;
+    }
+
+    /* color */
+    .color-input {
+
+      > span:first-child {
+        border: 1px solid @propertyItemColorInputBorderColor;
+      }
+
+      > span:nth-child(2) {
+        color: @propertyItemColorInputColorTextFontColor;
+      }
+
+      > span.none-color {
+        color:@propertyItemColorInputNoneFontColor;
+
+        &:hover {
+          color: @propertyItemColorInputNoneHoverFontColor;
+        }
+
+      }
+
+    }
+
+
+    /* range */
+    input[type=range] + .range-progress {
+      background: @propertyItemRangeProgressBackgroundColor;
+    }
+
+
+    input[type=range]::-webkit-slider-runnable-track {
+      box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+      background: @propertyItemRangeRunnableBackgroundColor;
+      border: 0px solid rgba(67, 73, 84, 0.2);
+    }
+    input[type=range]::-webkit-slider-thumb {
+      box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+      border: 0px solid #000000;
+      background: @propertyItemRangeProgressBackgroundColor;
+    }
+
+    input[type=range]::-moz-range-track {
+      box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+      background: @propertyItemRangeRunnableBackgroundColor;
+      border: 0px solid rgba(67, 73, 84, 0.1);
+
+    }
+    input[type=range]::-moz-range-thumb {
+      box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+      border: 0px solid #000000;
+      background: @propertyItemRangeProgressBackgroundColor;
+    }
+    input[type=range]::-ms-fill-lower {
+      background:@propertyItemRangeRunnableBackgroundColor;
+      border: 0px solid #000101;
+      box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+    }
+    input[type=range]::-ms-fill-upper {
+      background: @propertyItemRangeRunnableBackgroundColor;
+      border: 0px solid #000101;
+      box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+    }
+    input[type=range]::-ms-thumb {
+      box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+      border: 0px solid #000000;
+      background: @propertyItemRangeProgressBackgroundColor;
+    }
+    input[type=range]:focus::-ms-fill-lower {
+      background: @propertyItemRangeProgressBackgroundColor;
+    }
+    input[type=range]:focus::-ms-fill-upper {
+      background: @propertyItemRangeProgressBackgroundColor;
+    }
+
+
+    .description {
+      color: @propertyItemDescriptionFontColor;
+
+      a {
+        color: @propertyItemDescriptionLinkFontColor;
+      }
+    }
+
+    small.description {
+      color: @propertyItemDescriptionFontColor;
+    }
+  }
+
+
+}

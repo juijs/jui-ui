@@ -5,6 +5,8 @@
   /* Icon position in Tab */
   /* vgroup margin */
   /* vgroup margin */
+  /* property */
+  /* custom select box */
 }
 .jui .clearfix {
   *zoom: 1;
@@ -4021,4 +4023,317 @@
 .jui .progress.vertical .area .bar:not(:last-child) {
   border-bottom-left-radius: 0px;
   border-bottom-right-radius: 0px;
+}
+.jui .property .property-header {
+  font-weight: 400;
+  font-size: 12px;
+  padding: 10px 10px;
+}
+.jui .property .property-header .expand-btn {
+  position: absolute;
+  right: 10px;
+  top: 0px;
+  height: 100%;
+  width: 30px;
+  line-height: 45px;
+}
+.jui .property .property-table {
+  border-bottom: 0px;
+  width: 100%;
+}
+.jui .property .property-item {
+  position: relative;
+  box-sizing: border-box;
+  padding: 5px 0px;
+  overflow: hidden;
+  margin-top: -1px;
+  height: auto;
+  display: flex;
+  /* text */
+  /* number */
+  /* checkbox */
+  /* color */
+  /* range */
+}
+.jui .property .property-item.property-header-item {
+  padding: 5px 10px;
+  cursor: pointer;
+}
+.jui .property .property-item:not(.property-header-item) {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+.jui .property .property-item:last-child {
+  border-bottom: 0px;
+}
+.jui .property .property-item.expanded {
+  z-index: 2;
+}
+.jui .property .property-item.vertical {
+  flex-direction: column;
+}
+.jui .property .property-item.vertical .property-render .item {
+  text-align: left;
+}
+.jui .property .property-item .property-title {
+  flex: 1;
+  font-size: 12px;
+  line-height: 24px;
+  padding: 10px;
+  font-weight: 400;
+  box-sizing: border-box;
+}
+.jui .property .property-item .property-render {
+  flex: 2;
+  padding: 2px 10px;
+  padding-top: 5px;
+  box-sizing: border-box;
+  text-align: left;
+}
+.jui .property .property-item textarea,
+.jui .property .property-item .html[contenteditable] {
+  width: 100%;
+  outline: none;
+  border-radius: 0px;
+  font-size: 13px;
+  box-sizing: border-box;
+}
+.jui .property .property-item textarea:focus,
+.jui .property .property-item .html[contenteditable]:focus {
+  border-width: 1px;
+}
+.jui .property .property-item select {
+  border: 0px;
+  height: 30px;
+  outline: none;
+  border-radius: 0px;
+  font-size: 13px;
+  box-sizing: border-box;
+}
+.jui .property .property-item input[type=text] {
+  width: 100%;
+  max-width: 300px;
+  border: 0px;
+  height: 30px;
+  outline: none;
+  border-radius: 0px;
+  font-size: 13px;
+  box-sizing: border-box;
+}
+.jui .property .property-item input[type=text]:focus {
+  border-width: 1px;
+}
+.jui .property .property-item input[type=number] {
+  width: 100px;
+  border: 0px;
+  height: 30px;
+  outline: none;
+  border-radius: 0px;
+  text-align: right;
+}
+.jui .property .property-item input[type=checkbox] + i {
+  cursor: pointer;
+  font-size: 20px;
+}
+.jui .property .property-item .color-input {
+  cursor: pointer;
+  display: inline-block;
+  box-sizing: border-box;
+  margin-bottom: 5px;
+  margin-right: 5px;
+}
+.jui .property .property-item .color-input > span:first-child {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  margin-right: 5px;
+  vertical-align: middle;
+}
+.jui .property .property-item .color-input > span:nth-child(2) {
+  display: inline-block;
+  height: 20px;
+  font-size: 12px;
+  line-height: 26px;
+  font-weight: 300;
+  text-transform: uppercase;
+}
+.jui .property .property-item .color-input > span.none-color {
+  margin-left: 2px;
+  font-size: 12px;
+  vertical-align: middle;
+}
+.jui .property .property-item .color-input > span.none-color i {
+  transform-origin: 50% 50%;
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+.jui .property .property-item input[type=range] {
+  -webkit-appearance: none;
+  margin: 10px 0;
+  width: 100%;
+  position: relative;
+  z-index: 300;
+}
+.jui .property .property-item input[type=range] + .range-progress {
+  position: absolute;
+  height: 2px;
+  left: 0px;
+  top: 50%;
+  z-index: 2;
+  margin-top: -1px;
+  pointer-events: none;
+  width: 30px;
+}
+.jui .property .property-item input[type=range] + .range-progress + span {
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 13px;
+  margin-left: 10px;
+}
+.jui .property .property-item input[type=range]:focus {
+  outline: none;
+}
+.jui .property .property-item input[type=range]::-webkit-slider-runnable-track {
+  width: 10%;
+  height: 2px;
+  cursor: pointer;
+  animate: 0.2s;
+}
+.jui .property .property-item input[type=range]::-webkit-slider-thumb {
+  height: 12px;
+  width: 12px;
+  border-radius: 50%;
+  cursor: pointer;
+  -webkit-appearance: none;
+  margin-top: -5px;
+  z-index: 3;
+}
+.jui .property .property-item input[type=range]:focus::-webkit-slider-runnable-track {
+  width: 10%;
+}
+.jui .property .property-item input[type=range]::-moz-range-track {
+  width: 100%;
+  height: 2px;
+  cursor: pointer;
+  animate: 0.2s;
+}
+.jui .property .property-item input[type=range]::-moz-range-thumb {
+  height: 12px;
+  width: 12px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.jui .property .property-item input[type=range]::-ms-track {
+  width: 100%;
+  height: 2px;
+  cursor: pointer;
+  animate: 0.2s;
+  background: transparent;
+  border-color: transparent;
+  border-width: 2px 0;
+  color: transparent;
+}
+.jui .property .property-item input[type=range]::-ms-fill-lower {
+  border-radius: 50px;
+}
+.jui .property .property-item input[type=range]::-ms-fill-upper {
+  border-radius: 50px;
+}
+.jui .property .property-item input[type=range]::-ms-thumb {
+  height: 12px;
+  width: 12px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.jui .property .property-item .description {
+  font-size: 12px;
+  font-weight: 300;
+  max-width: 500px;
+  display: block;
+  margin-top: 2px;
+}
+.jui .property .property-item .description a {
+  text-decoration: none;
+}
+.jui .property .property-item small.description {
+  display: inline-block;
+  margin-left: 10px;
+}
+.jui .select {
+  display: inline-block;
+  z-index: 5;
+  position: relative;
+  vertical-align: middle;
+}
+.jui .select .title {
+  border: 0px;
+  background-image: none;
+  background-color: white;
+  color: black;
+  border-color: #dfdfdf;
+  border-radius: 0px;
+  font-size: 13px;
+  padding: 5px 10px;
+  padding-right: 30px;
+  line-height: 17px;
+  height: 25px;
+  box-sizing: border-box;
+  cursor: pointer;
+  text-decoration: none;
+  vertical-align: middle;
+  overflow: hidden;
+  min-width: 100px;
+  z-index: 4;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+.jui .select .items {
+  position: absolute;
+  border-color: #dfdfdf;
+  border-width: 1px;
+  border-style: solid;
+  z-index: 1000;
+  background-color: #ffffff;
+  box-sizing: border-box;
+  cursor: pointer;
+  min-width: 200px;
+  max-height: 300px;
+  pointer-events: none;
+  opacity: 0;
+  overflow: auto;
+  transition: opacity 0.3s ease-in-out;
+  -webkit-transition: opacity 0.3s ease-in-out;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+.jui .select .items .item {
+  height: 25px;
+  box-sizing: border-box;
+  padding: 8px;
+  overflow: hidden;
+  font-size: 13px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+.jui .select .items .item:hover {
+  background-color: #9fe6d5;
+}
+.jui .select .items .item.selected {
+  background-color: #48cfad;
+  color: white;
+}
+.jui .select.open .items {
+  display: inline-block;
+  pointer-events: auto;
+  opacity: 1;
+}
+.jui .select.right .items {
+  right: 0px;
 }
