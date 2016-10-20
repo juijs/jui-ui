@@ -6468,7 +6468,7 @@ jui.defineUI("ui.property", ['jquery', 'util.base'], function ($, _) {
      *
      * Property view is a list of properties
      *
-     * ## Property Types
+     * ## Property Items Types
      *
      * * group
      * * text
@@ -6476,10 +6476,19 @@ jui.defineUI("ui.property", ['jquery', 'util.base'], function ($, _) {
      * * select
      * * color
      * * colors
-     * * range
+     * * range - native range slider (simple design)
      * * number
      * * html
      * * textarea
+     * * property - support nested property view 
+     *
+     * ## Item Attributes
+     *
+     * * type -  group, text, color , colors, range, checkbox, number , textarea, html
+     * * title - item's title
+     * * description
+     * * key - item's key name
+     * * value - item's value (array, text, boolean)
      *
      * @class ui.property
      * @extends core
@@ -7016,6 +7025,23 @@ jui.defineUI("ui.property", ['jquery', 'util.base'], function ($, _) {
 
                 self.refreshValue($(this).closest('.property-item'), is_checked);
             }, 100, $input));
+
+            return $input;
+        }
+
+        renderer.property = function ($dom, item) {
+            var $input = $("<div class='property inner' />");
+
+            var propertyObj = jui.create('ui.property', $input, {
+                items : item.items,
+                event : {
+                    change : function () {
+                        self.refreshValue($dom, this.getValue());
+                    }
+                }
+            });
+
+            propertyObj.setValue(item.value);
 
             return $input;
         }

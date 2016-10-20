@@ -4,6 +4,38 @@
 .property {
 
 
+  &.inner {
+    .property-item {
+
+
+      &.property-header-item {
+        padding:5px 0px;
+      }
+
+      .property-header {
+        padding: 10px 0px;
+
+        .expand-btn {
+          display:none;
+        }
+      }
+
+      &:not(.property-header-item) {
+        margin-left:0px;
+        margin-right:0px;
+      }
+
+      .property-title {
+        padding-left:0px;
+      }
+
+      .property-render {
+        flex:3;
+        padding-right:0px;
+      }
+    }
+  }
+
   .property-header {
     font-weight:400;
     font-size:12px;
