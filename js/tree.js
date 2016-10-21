@@ -550,7 +550,8 @@ jui.defineUI("ui.tree", [ "util.base", "ui.tree.base" ], function(_, Base) {
 					self.addEvent($elem.children("a,span,div")[0], "click", function(e) {
                         if($elem.hasClass("disabled") || $elem.attr("disabled")) return;
 
-						self.emit("select", [ node, e ]);
+						self.emit("select", [ node, e ]); // 차후 제거 요망
+						self.emit("change", [ node, e ]);
 						e.stopPropagation();
 					});
 				})(nodeList[i]);
