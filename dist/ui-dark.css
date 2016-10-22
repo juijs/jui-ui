@@ -2345,6 +2345,9 @@
 .jui .property .property-item small.description {
   color: #aaa;
 }
+.jui .select.bordered {
+  border: 1px solid #dfdfdf;
+}
 .jui .select .title {
   background-color: white;
   color: black;
@@ -2356,10 +2359,10 @@
   border-style: solid;
   background-color: #ffffff;
 }
-.jui .select .items .item:hover {
+.jui .select .items .item.option:hover {
   background-color: #9fe6d5;
 }
-.jui .select .items .item.selected {
+.jui .select .items .item.option.selected {
   background-color: #48cfad;
   color: #ffffff;
 }

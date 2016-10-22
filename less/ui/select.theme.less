@@ -2,6 +2,11 @@
 /* custom select box */
 .select {
 
+  &.bordered {
+    border: 1px solid @selectTitleBorderColor;
+  }
+
+
   .title {
     background-color:@selectTitleBackgroundColor;
     color: @selectTitleFontColor;
@@ -16,14 +21,16 @@
 
     .item {
 
-      &:hover {
-        background-color: @selectItemHoverBackgroundColor;
-      }
+      &.option {
+        &:hover {
+          background-color: @selectItemHoverBackgroundColor;
+        }
 
-      &.selected
-      {
-        background-color:  @selectItemSelectedBackgroundColor;
-        color: @selectItemSelectedFontColor;
+        &.selected
+        {
+          background-color:  @selectItemSelectedBackgroundColor;
+          color: @selectItemSelectedFontColor;
+        }
       }
     }
   }

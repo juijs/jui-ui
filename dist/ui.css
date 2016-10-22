@@ -4096,7 +4096,7 @@
   text-align: left;
 }
 .jui .property .property-item .property-title {
-  flex: 1;
+  flex: 2;
   font-size: 12px;
   line-height: 24px;
   padding: 10px;
@@ -4104,7 +4104,7 @@
   box-sizing: border-box;
 }
 .jui .property .property-item .property-render {
-  flex: 2;
+  flex: 5;
   padding: 2px 10px;
   padding-top: 5px;
   box-sizing: border-box;
@@ -4282,22 +4282,19 @@
 }
 .jui .select {
   display: inline-block;
-  z-index: 5;
   position: relative;
   vertical-align: middle;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
 }
 .jui .select .title {
   border: 0px;
   background-image: none;
-  background-color: white;
-  color: black;
-  border-color: #dfdfdf;
   border-radius: 0px;
   font-size: 13px;
-  padding: 5px 10px;
-  padding-right: 30px;
+  padding: 5px;
   line-height: 17px;
-  height: 25px;
   box-sizing: border-box;
   cursor: pointer;
   text-decoration: none;
@@ -4311,17 +4308,23 @@
   -o-user-select: none;
   user-select: none;
 }
+.jui .select .title i {
+  float: right;
+}
+.jui .select .title .title-content .item-view {
+  margin-right: 5px;
+}
 .jui .select .items {
+  display: none;
   position: absolute;
-  border-color: #dfdfdf;
   border-width: 1px;
   border-style: solid;
   z-index: 1000;
-  background-color: #ffffff;
   box-sizing: border-box;
   cursor: pointer;
   min-width: 200px;
   max-height: 300px;
+  margin-left: -1px;
   pointer-events: none;
   opacity: 0;
   overflow: auto;
@@ -4329,9 +4332,9 @@
   -webkit-transition: opacity 0.3s ease-in-out;
   padding-top: 5px;
   padding-bottom: 5px;
+  text-align: left;
 }
 .jui .select .items .item {
-  height: 25px;
   box-sizing: border-box;
   padding: 8px;
   overflow: hidden;
@@ -4342,18 +4345,40 @@
   -o-user-select: none;
   user-select: none;
 }
-.jui .select .items .item:hover {
-  background-color: #9fe6d5;
+.jui .select .items .item.divider {
+  border: 0px;
+  border-top: 1px solid #dfdfdf;
+  padding: 0px;
 }
-.jui .select .items .item.selected {
-  background-color: #48cfad;
-  color: white;
+.jui .select.multi .title .title-content .item-view {
+  border-bottom: 1px solid #dfdfdf;
+}
+.jui .select.multi .items .item {
+  padding-left: 30px;
+  background-color: transparent;
+}
+.jui .select.multi .items .item.option.selected {
+  background-color: transparent;
+  color: inherit;
+}
+.jui .select.multi .items .item.option.selected:before {
+  content: "✔";
+  position: absolute;
+  left: 10px;
+  color: #48cfad;
+  font-size: 15px;
+}
+.jui .select.multi .items .item.divider {
+  margin-left: 0px;
+}
+.jui .select.select-bottom .items {
+  bottom: 100%;
 }
 .jui .select.open .items {
   display: inline-block;
   pointer-events: auto;
   opacity: 1;
 }
-.jui .select.right .items {
+.jui .select.select-right .items {
   right: 0px;
 }

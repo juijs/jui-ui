@@ -4,6 +4,36 @@ jui.defineUI("ui.select", ['jquery', 'util.base'], function ($, _) {
         var $title, $items;
         var items = [];
 
+        var renderer = {
+            'divider' : function (it, index) {
+                return $("<hr class='item divider' />");
+            },
+            
+            'item' : function (it, index) {
+                var $item = $('<div class="item option " />');
+
+                $item.attr('data-index', index);
+                $item.attr('value', it.value);
+
+                var itemContentType = (it.text) ? 'text' : 'html';
+
+                if (typeof it[itemContentType] == 'function') {
+                    $item[itemContentType].call($item, it[itemContentType].call(it, this));
+                } else {
+                    $item.text(it.text);
+                    $item[itemContentType].call($item, it[itemContentType]);
+                }
+
+                if (it.selected)
+                {
+                    $item.addClass('selected');
+                }
+
+                return $item;
+
+            }
+        }
+        
         this.init = function () {
             self = this;
             $root = $(this.root);
@@ -53,16 +83,15 @@ jui.defineUI("ui.select", ['jquery', 'util.base'], function ($, _) {
 
 
             $title.append($("<span />").addClass('title-content'));
-            $title.append($("<img />").attr('src', '/v2/images/main/arrow1.svg').css({
-                position: 'absolute',
-                right: '10px',
-                width: '8px',
-                height: '8px',
-                top: "50%",
-                'margin-top': '-4px'
-            }));
+            $title.append($("<i class='icon-arrow2' ></i>"));
 
-            $root.addClass(this.options.align);
+            $root.addClass('select-' + this.options.align);
+            $root.addClass('select-' + this.options.valign);
+
+            if (this.options.multi) {
+                $root.addClass('multi');
+            }
+
 
             $root.append($title).append($items);
         }
@@ -74,18 +103,11 @@ jui.defineUI("ui.select", ['jquery', 'util.base'], function ($, _) {
             for(var i = 0, len = items.length; i < len; i++) {
                 var it = items[i];
 
-                var $item = $('<div class="item option " />');
-
-                $item.attr('data-index', i);
-                $item.attr('value', it.value);
-                $item.text(it.text);
-
-                if (it.selected)
-                {
-                    $item.addClass('selected');
-                }
+                var type = it.type || 'item';
+                var $item = renderer[type].call(null, it, i);
 
                 $items.append($item);
+
             }
         }
 
@@ -104,34 +126,56 @@ jui.defineUI("ui.select", ['jquery', 'util.base'], function ($, _) {
         }
 
         this.getValue = function () {
-            return this.getSelectedItem().value;
+
+            var valueList = $items.find(".selected").map(function() {
+                return  items[+$(this).data('index')];
+            }).toArray();
+
+            if (this.options.multi) {
+                return valueList;
+            } else {
+                return valueList[0];
+            }
         }
 
         this.setSelectedIndex = function (index) {
-            var prevItem = $items.find(".selected");
 
-            if (+prevItem.data('index') == +index)
-            {
-                return;
+            if (!this.options.multi) {
+                var prevItem = $items.find(".selected");
+
+                if (+prevItem.data('index') == +index)
+                {
+                    return;
+                }
+
             }
 
             if (!items[index]) return;
-            $root.removeClass('open');
-            var $item = $items.find("[data-index=" + index + "]");
 
-            $items.find(".selected").removeClass('selected');
-            $item.addClass('selected');
+            if (this.options.multi) {
+                var $item = $items.find("[data-index=" + index + "]");
+                $item.toggleClass('selected');
+            } else {
+                $root.removeClass('open');
+                var $item = $items.find("[data-index=" + index + "]");
+
+                $items.find(".selected").removeClass('selected');
+                $item.addClass('selected');
+
+            }
+
 
             this.setTitle();
 
-            this.emit("change", [ items[index].value, index, +prevItem.data('index') ] );
+            this.emit("change", [ this.getValue() ] );
+
 
         }
 
         this.getSelectedIndex = function () {
             var index = +$items.find(".selected").data('index');
 
-            return index;
+            return index || -1;
         }
 
         this.getSelectedItem = function () {
@@ -148,7 +192,19 @@ jui.defineUI("ui.select", ['jquery', 'util.base'], function ($, _) {
 
 
         this.setTitle = function () {
-            $title.find(".title-content").text(this.getSelectedItem().text);
+
+            var contentList = $items.find(".selected").map(function() {
+                return  $("<span class='item-view'>" + $(this).html() + "</span>")[0];
+            }).toArray();
+
+
+            if (contentList.length == 0) {
+                var html = this.options.placeholder;
+            } else {
+                var html = $(contentList);
+            }
+
+            $title.find(".title-content").html(html);
         }
 
         this.update = function (data) {
@@ -177,7 +233,10 @@ jui.defineUI("ui.select", ['jquery', 'util.base'], function ($, _) {
         return {
             items : [],
             selectedIndex : -1,
-            align: 'left'
+            placeholder : 'Select a item',
+            align: 'left',
+            valign: 'top',
+            multi : false
         }
     }
 

@@ -2,22 +2,17 @@
 /* custom select box */
 .select {
   display:inline-block;
-  z-index:5;
   position:relative;
   vertical-align: middle;
+  .box-sizing(border-box);
 
   .title {
     border: 0px;
     background-image: none;
-    background-color:white;
-    color: black;
-    border-color:#dfdfdf;
     border-radius:0px;
     font-size:13px;
-    padding:5px 10px;
-    padding-right:30px;
+    padding:5px;
     line-height:17px;
-    height: 25px;
     box-sizing:border-box;
     cursor:pointer;
     text-decoration:none;
@@ -25,20 +20,32 @@
     overflow:hidden;
     min-width:100px;
     z-index:4;
-    .user-select(none)
+    .user-select(none);
+
+    i {
+      float:right;
+    }
+
+    .title-content {
+      .item-view {
+        margin-right:5px;
+      }
+    }
   }
 
+
+
   .items {
+    display:none;
     position:absolute;
-    border-color:#dfdfdf;
     border-width:1px;
     border-style:solid;
     z-index:1000;
-    background-color: #ffffff;
     box-sizing:border-box;
     cursor:pointer;
     min-width:200px;
     max-height: 300px;
+    margin-left:-1px;
     pointer-events:none;
     opacity:0;
     overflow:auto;
@@ -46,24 +53,66 @@
     -webkit-transition:opacity 0.3s ease-in-out;
     padding-top:5px;
     padding-bottom:5px;
+    text-align:left;
 
     .item {
-      height: 25px;
       box-sizing:border-box;
       padding:8px;
       overflow:hidden;
       font-size:13px;
       .user-select(none);
 
-      &:hover {
-        background-color: #9fe6d5;
+      &.divider {
+        border:0px;
+        border-top:1px solid #dfdfdf;
+        padding:0px;
       }
+    }
+  }
 
-      &.selected
-      {
-        background-color: #48cfad;
-        color:white;
+  &.multi {
+
+    .title {
+      .title-content {
+        .item-view {
+          border-bottom:1px solid #dfdfdf;
+        }
       }
+    }
+
+    .items {
+      .item {
+        padding-left: 30px;
+        background-color:transparent;
+
+        &.option {
+
+          &.selected {
+
+            background-color:transparent;
+            color:inherit;
+
+            &:before {
+              content: "✔";
+              position:absolute;
+              left:10px;
+              color:#48cfad;
+              font-size:15px;
+            }
+          }
+
+        }
+
+        &.divider {
+          margin-left:0px;
+        }
+      }
+    }
+  }
+
+  &.select-bottom {
+    .items {
+      bottom:100%;
     }
   }
 
@@ -75,7 +124,7 @@
     }
   }
 
-  &.right .items {
+  &.select-right .items {
     right: 0px;
   }
 }
