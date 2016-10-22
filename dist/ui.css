@@ -4322,7 +4322,7 @@
   z-index: 1000;
   box-sizing: border-box;
   cursor: pointer;
-  min-width: 200px;
+  min-width: 150px;
   max-height: 300px;
   margin-left: -1px;
   pointer-events: none;
