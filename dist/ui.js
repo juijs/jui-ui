@@ -7238,10 +7238,6 @@ jui.defineUI("ui.select", ['jquery', 'util.base'], function ($, _) {
 
             this.update(items);
 
-            if (this.options.selectedIndex > -1)  {
-                this.setSelectedIndex(this.options.selectedIndex);
-            }
-
         }
 
         this.initEvent = function () {
@@ -7252,7 +7248,7 @@ jui.defineUI("ui.select", ['jquery', 'util.base'], function ($, _) {
 
             // item 클릭 
             $root.on('click', '.item.option', function () {
-                self.setSelectedIndex(+$(this).data('index'));
+                self.setValue($(this).attr('value'));
             });
 
             $('body').on('click', function (e) {
@@ -7302,23 +7298,38 @@ jui.defineUI("ui.select", ['jquery', 'util.base'], function ($, _) {
         }
 
         this.setValue = function (value) {
+            
             var i = 0;
-            for(len = items.length; i < len; i++) {
-                var it = items[i];
 
-                if (it.value == value)
-                {
-                    break;
+            if (this.options.multi) {
+
+                if (!(value instanceof Array)) {
+                    value = [ value ];
                 }
+                for(var i = 0, len = value.length; i < len; i++) {
+                    $items.find("[value='"+value[i]+"']").addClass('selected');
+                }
+
+            } else {
+                var $prev = $items.find('.selected');
+                var prevValue = $prev.attr('value');
+
+                $prev.removeClass('selected');
+                $items.find("[value='"+value+"']").addClass('selected');
+
             }
 
-            this.setSelectedIndex(i);
+            this.setTitle();
+
+            this.emit("change", [ this.getValue(), prevValue ] );
+
+
         }
 
         this.getValue = function () {
 
             var valueList = $items.find(".selected").map(function() {
-                return  items[+$(this).data('index')];
+                return  $(this).attr('value');
             }).toArray();
 
             if (this.options.multi) {
@@ -7330,35 +7341,9 @@ jui.defineUI("ui.select", ['jquery', 'util.base'], function ($, _) {
 
         this.setSelectedIndex = function (index) {
 
-            if (!this.options.multi) {
-                var prevItem = $items.find(".selected");
-
-                if (+prevItem.data('index') == +index)
-                {
-                    return;
-                }
-
-            }
-
             if (!items[index]) return;
 
-            if (this.options.multi) {
-                var $item = $items.find("[data-index=" + index + "]");
-                $item.toggleClass('selected');
-            } else {
-                $root.removeClass('open');
-                var $item = $items.find("[data-index=" + index + "]");
-
-                $items.find(".selected").removeClass('selected');
-                $item.addClass('selected');
-
-            }
-
-
-            this.setTitle();
-
-            this.emit("change", [ this.getValue() ] );
-
+            this.setValue(items[index].value);
 
         }
 
@@ -7366,18 +7351,6 @@ jui.defineUI("ui.select", ['jquery', 'util.base'], function ($, _) {
             var index = +$items.find(".selected").data('index');
 
             return index || -1;
-        }
-
-        this.getSelectedItem = function () {
-            var index = this.getSelectedIndex();
-
-            if (items[index])
-            {
-                var it = items[index];
-                return it;
-            }
-
-            return items[0] || { text : '', value : '' } ;
         }
 
 
@@ -7422,11 +7395,11 @@ jui.defineUI("ui.select", ['jquery', 'util.base'], function ($, _) {
     SelectView.setup = function () {
         return {
             items : [],
-            selectedIndex : -1,
             placeholder : 'Select a item',
             align: 'left',
             valign: 'top',
-            multi : false
+            multi : false,
+            modal : false
         }
     }
 

@@ -56,7 +56,12 @@
 
             window.themeListMulti  = jui.create('ui.select', '.theme-list-multi', {
                 items : items,
-                multi : true
+                multi : true,
+                event : {
+                    change : function (value) {
+                        console.log(value);
+                    }
+                }
             });
 
             window.themeBottom  = jui.create('ui.select', '.theme-list-bottom', {
