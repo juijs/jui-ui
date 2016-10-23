@@ -34,7 +34,7 @@ jui.defineUI("ui.filedrop", ['jquery'], function ($) {
         this.processFile = function (e) {
             var files = _files;
 
-            if (this.options.uploadUrl != '') {
+            if (this.options.url != '') {
 
                 if (this.options.isMultiFileUpload) {
 
@@ -54,9 +54,9 @@ jui.defineUI("ui.filedrop", ['jquery'], function ($) {
         this.uploadOneFile = function (file, index, callback) {
             var formData = new FormData();
 
-            for(var k in this.options.uploadParams) {
+            for(var k in this.options.params) {
                 var key = k;
-                var value = this.options.uploadParams[k];
+                var value = this.options.params[k];
 
                 if (typeof value == 'function') {
                     formData.append(key, value.call(this));
@@ -65,10 +65,10 @@ jui.defineUI("ui.filedrop", ['jquery'], function ($) {
                 }
             }
 
-            formData.append(this.options.uploadParamName, file);
+            formData.append(this.options.name, file);
 
             $.ajax({
-                url: this.options.uploadFile,
+                url: this.options.file,
                 type: 'post',
                 data: formData,
                 dataType: 'json',
@@ -149,9 +149,9 @@ jui.defineUI("ui.filedrop", ['jquery'], function ($) {
 
             var formData = new FormData();
 
-            for(var k in this.options.uploadParams) {
+            for(var k in this.options.params) {
                 var key = k;
-                var value = this.options.uploadParams[k];
+                var value = this.options.params[k];
 
                 if (typeof value == 'function') {
                     formData.append(key, value.call(this));
@@ -163,11 +163,11 @@ jui.defineUI("ui.filedrop", ['jquery'], function ($) {
             // TODO: 업로드 코드 
             for(var i = 0, len = files.length; i < len; i++) {
                 var file = files[i];
-                formData.append(this.options.uploadParamName, file);
+                formData.append(this.options.name, file);
             }
 
             $.ajax({
-                url: this.options.uploadFile,
+                url: this.options.File,
                 type: 'post',
                 data: formData,
                 dataType: 'json',
@@ -211,9 +211,9 @@ jui.defineUI("ui.filedrop", ['jquery'], function ($) {
 
     FileDrop.setup = function () {
         return {
-            uploadName : 'files[]',
-            uploadUrl : '<?php echo V2_PLUGIN_URL ?>/file/upload_file.php',
-            uploadParams : {},
+            name : 'files[]',
+            url : '/file/upload_file.php',
+            params : {},
             isMultiFileUpload : true      // true 면 파일 업로드 개별로 함. 
         }
     }

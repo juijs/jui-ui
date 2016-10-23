@@ -13,7 +13,7 @@ jui.defineUI('ui.splitter', [], function () {
 
             var temp = [];
             for(var i = 0, len = this.options.items.length; i < len; i++) {
-                $list[i] = $(this.options.items[i]);
+                $list[i] = $el.find(this.options.items[i]);
                 $list[i].css({
                     width : 'auto',
                     height: 'auto',

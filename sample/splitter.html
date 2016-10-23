@@ -1,0 +1,104 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+    <META charset="UTF-8">
+    <title>[JUI Library] - JavaScript/PropertyView </title>
+
+    <link rel="stylesheet" href="../dist/ui.css" />
+    <link rel="stylesheet" href="../dist/ui-jennifer.css" />
+    <script src="../lib/jquery-1.8.0.min.js"></script>
+    <script src="../lib/core.js"></script>
+    <script src="../dist/ui.js"></script>
+
+    <script>
+        jui.ready(function() {
+
+            window.themeBottom  = jui.create('ui.splitter', '#container-1', {
+                items : [ '.left', '.right' ]
+            });
+
+            window.themeTop  = jui.create('ui.splitter', '#container-2', {
+                items : [ '.top', '.bottom' ],
+                direction: 'horizontal'
+            });
+
+
+        });
+
+    </script>
+    <style type="text/css">
+
+        .container {
+            width:100%;
+            position:relative;
+            height:150px;
+        }
+
+        .container-2 {
+            width:500px;
+            height:500px;
+            position:relative;
+        }
+
+        .container h3 {
+            padding-left:20px;
+        }
+
+        .left {
+            position:absolute;
+            left:0px;
+            bottom:0px;
+            top:0px;
+            width:500px;
+            box-sizing:border-box;
+            border:1px solid #ececec;
+        }
+
+        .right {
+            position:absolute;
+            left:520px;
+            bottom:0px;
+            top:0px;
+            width:500px;
+            box-sizing:border-box;
+            border:1px solid #ececec;
+            overflow:auto;
+        }
+
+        .top, .bottom {
+            position:absolute;
+            box-sizing:border-box;
+            border:1px solid #ececec;
+            overflow:auto;
+        }
+
+
+
+
+    </style>
+</head>
+<body class="jui">
+
+<h3>Splitter for Vertical</h3>
+<div class="container" id="container-1">
+    <div class="left">
+        <h3>Left</h3>
+    </div>
+    <div class="right">
+        <h3>Right</h3>
+    </div>
+</div>
+<h3>Splitter for Horizontal</h3>
+<div class="container-2" id="container-2">
+    <div class="top">
+        <h3>Top</h3>
+    </div>
+    <div class="bottom">
+        <h3>Bottom</h3>
+    </div>
+</div>
+
+
+</body>
+</html>
