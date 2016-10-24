@@ -1411,6 +1411,7 @@
   border-radius: 20px;
 }
 .jui .switch .area .bar {
+  border-radius: 20px;
   -webkit-transition: all 0.25s ease;
   -moz-transition: all 0.25s ease;
   -o-transition: all 0.25s ease;

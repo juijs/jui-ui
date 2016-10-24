@@ -6473,6 +6473,7 @@ jui.defineUI("ui.property", ['jquery', 'util.base'], function ($, _) {
      * * group
      * * text
      * * checkbox
+     * * switch
      * * select
      * * color
      * * colors
@@ -6970,6 +6971,10 @@ jui.defineUI("ui.property", ['jquery', 'util.base'], function ($, _) {
             $input.attr('step', item.step || 1);
             $input.val(+value);
 
+            if (item.readonly) {
+                $input.attr('readonly', true);
+            }
+
             var $progress = $("<div class='range-progress' />");
             $progress.width((value / (+$input.attr('max') - +$input.attr('min'))) * $input.width());
 
@@ -7023,8 +7028,25 @@ jui.defineUI("ui.property", ['jquery', 'util.base'], function ($, _) {
                 is_checked = !is_checked;
 
 
-                self.refreshValue($(this).closest('.property-item'), is_checked);
+                self.refreshValue($dom, is_checked);
             }, 100, $input));
+
+            return $input;
+        }
+
+        renderer.switch = function ($dom, item) {
+            var $input = $("<div class='switch inner small' />");
+
+            var is_checked = (item.value == 'true' || item.value === true) ? true : false;
+
+            jui.create('ui.switch',$input, {
+                checked : is_checked,
+                event: {
+                    change: function(is_on) {
+                        self.refreshValue($dom, is_on);
+                    }
+                }
+            });
 
             return $input;
         }

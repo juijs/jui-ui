@@ -19,6 +19,10 @@
                     { type : 'select', title : 'Theme', key : 'theme' , value : 'white', items : ['white', 'black', 'league', 'beige', 'sky', 'night', 'serif', 'simple', 'solarized', 'mozila' ] },
                     { type : 'group', title : 'Configure'},
                     { type : 'checkbox', title : 'Controls', key : 'controls' , value : true, description : 'Display controls in the bottom right corner' },
+                    { type : 'switch', title : 'Controls', key : 'controls-2' , value : true, description : 'Display controls in the bottom right corner' },
+                    { type : 'range', title : 'Range Controls', key : 'range-control' , value : 50, min : 0, max : 100, description : 'Display controls in the bottom right corner' },
+                    { type : 'range', title : 'Range Step', key : 'range-step' , value : 50, min : 0, max : 100, step : 0.5, description : 'Display controls in the bottom right corner' },
+                    { type : 'range', title : 'Range - readonly mode', key : 'range-readonly-mode' , value : 50, min : 0, max : 100, step : 0.5, readonly : true, description : 'Display controls in the bottom right corner' },
                     { type : 'checkbox', title : 'Progress', key : 'progress' , value : true, description : 'Display a presentation progress bar' },
                     { type : 'checkbox', title : 'Slide Number', key : 'slideNumber' , value : false, description : 'Display the page number of the current slide' },
                     { type : 'checkbox', title : 'History', key : 'history' , value : false, description : 'Push each slide change to the browser history' },
@@ -172,7 +176,7 @@
             padding-left:20px;
         }
 
-        .left {
+        .container-left {
             position:absolute;
             left:0px;
             bottom:0px;
@@ -184,7 +188,7 @@
             overflow:auto;
         }
 
-        .right {
+        .container-right {
             position:absolute;
             left:520px;
             bottom:0px;
@@ -212,11 +216,11 @@
 <body class="jui">
 
 <div class="container">
-    <div class="left">
+    <div class="container-left">
         <h3>Presentation Settings</h3>
         <div id="pr-settings" class="property"></div>
     </div>
-    <div class="right">
+    <div class="container-right">
         <h3>Slider Settings</h3>
         <div id="slider-settings" class="property"></div>
     </div>
