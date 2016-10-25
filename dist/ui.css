@@ -1547,6 +1547,9 @@
     transform: scale(1);
   }
 }
+.jui .icon-layout3:before {
+  content: "\e9ac";
+}
 .jui .icon-tool:before {
   content: "\e900";
 }
