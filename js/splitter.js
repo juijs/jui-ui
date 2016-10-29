@@ -1,8 +1,16 @@
-jui.defineUI('ui.splitter', [], function () {
+jui.defineUI('ui.splitter', ["jquery"], function ($) {
+    /**
+     * @class ui.splitter
+     *
+     * implements Splitter for placed panels
+     *
+     * @alias Splitter
+     * @requires jquery
+     */
     var Splitter = function () {
-        var self, $el, $splitter, $items, barSize;
+        var self, $el, $splitter, $items, barSize, caculateBarSize, minSize;
         var $list = [];
-        var maxSize, direction, initSize;
+        var maxSize, direction, initSize, fixed;
 
         this.init = function () {
             self = this;
@@ -10,11 +18,18 @@ jui.defineUI('ui.splitter', [], function () {
             barSize = this.options.barSize;
             direction = this.options.direction;
             initSize = this.options.initSize;
+            minSize = this.options.minSize;
+            fixed = this.options.fixed;
+
+            if (typeof minSize == 'number') {
+                minSize = [minSize, minSize];
+            }
 
             var temp = [];
             for(var i = 0, len = this.options.items.length; i < len; i++) {
                 $list[i] = $el.find(this.options.items[i]);
                 $list[i].css({
+                    position: 'absolute',
                     width : 'auto',
                     height: 'auto',
                     top : 0,
@@ -36,6 +51,13 @@ jui.defineUI('ui.splitter', [], function () {
         }
 
         this.initElement = function () {
+
+            $el.css({
+                position: 'absolute',
+                width: '100%',
+                height: '100%',
+                overflow: 'hidden'
+            });
 
             if ($splitter && $splitter.length) $splitter.remove();
 
@@ -60,8 +82,9 @@ jui.defineUI('ui.splitter', [], function () {
             }
 
             $splitter.addClass(this.options.splitterClass);
-            $splitter.css('z-index', 9999999);
             $splitter.css(this.options.barStyle);
+
+            caculateBarSize = (is_vertical()) ? $splitter.outerWidth() : $splitter.outerHeight();
 
             $el.append($splitter);
 
@@ -90,6 +113,24 @@ jui.defineUI('ui.splitter', [], function () {
             return $(list);
         }
 
+        this.caculateMinSize = function (centerPos) {
+            if (is_vertical()) {
+                if (centerPos < caculateBarSize + minSize[0]) {
+                    centerPos = caculateBarSize + minSize[0];
+                } else if (centerPos > maxSize - caculateBarSize - minSize[1]) {
+                    centerPos = maxSize - caculateBarSize  - minSize[1];
+                }
+            } else {
+                if (centerPos < caculateBarSize + minSize[0]) {
+                    centerPos = caculateBarSize + minSize[0];
+                } else if (centerPos > maxSize - caculateBarSize - minSize[1]) {
+                    centerPos = maxSize - caculateBarSize - minSize[1];
+                }
+            }
+
+            return centerPos;
+        }
+
         this.initResize = function () {
 
             var $showList = this.getShowList();
@@ -101,15 +142,17 @@ jui.defineUI('ui.splitter', [], function () {
             } else {
                 if (is_vertical()) {
                     var maxWidth = $el.width();
-                    var centerPos = this.getSize(initSize, maxWidth);
+                    var centerPos = this.caculateMinSize(this.getSize(initSize, maxWidth));
+
                     $list[0].css({ 'left': '0px', 'width' : centerPos + 'px', top : 0, bottom : 0 });
-                    $list[1].css({ 'left': centerPos + 'px', 'right' : '0px', top : 0, bottom : 0  });
+                    $list[1].css({ 'left': (centerPos + caculateBarSize) + 'px', 'right' : '0px', width: 'auto', top : 0, bottom : 0  });
                     $splitter.css({ 'left': centerPos + 'px' });
                 } else {
                     var maxHeight = $el.height();
-                    var centerPos = this.getSize(initSize, maxHeight);
-                    $list[0].css({ 'top': '0px', 'height' :  centerPos + 'px', left : 0, right : 0 });
-                    $list[1].css({ 'top': centerPos + 'px', 'bottom' : '0px', left : 0, right : 0  });
+                    var centerPos = this.caculateMinSize(this.getSize(initSize, maxHeight));
+
+                    $list[0].css({ 'top': '0px', 'height' :  centerPos + 'px', width: 'auto', left : 0, right : 0, 'bottom' : 'auto' });
+                    $list[1].css({ 'top': (centerPos + caculateBarSize) + 'px', 'bottom' : '0px', width: 'auto', left : 0, right : 0  });
                     $splitter.css({ 'top': centerPos + 'px' });
                 }
                 $splitter.show();
@@ -122,14 +165,11 @@ jui.defineUI('ui.splitter', [], function () {
                 var distX = e.clientX - $splitter.data('prevClientX');
                 var posX = parseFloat($splitter.css('left')) + distX;;
 
-                if (posX < 0) {
-                    posX = 0;
-                } else if (posX > maxSize) {
-                    posX = maxSize;
-                }
+
+                posX = self.caculateMinSize(posX);
 
                 $splitter.css('left' , posX + 'px');
-                $list[1].css('left' , (posX) + 'px');
+                $list[1].css('left' , (posX + caculateBarSize) + 'px');
                 $list[0].css('width',  posX + 'px');
 
                 initSize = posX;
@@ -139,14 +179,11 @@ jui.defineUI('ui.splitter', [], function () {
                 var distY = e.clientY - $splitter.data('prevClientY');
                 var posY = parseFloat($splitter.css('top')) + distY;
 
-                if (posY < 0) {
-                    posY = 0;
-                } else if (posY > maxSize) {
-                    posY = maxSize;
-                }
+                posY = self.caculateMinSize(posY);
+
 
                 $splitter.css('top' , posY + 'px');
-                $list[1].css('top' , (posY) + 'px');
+                $list[1].css('top' , (posY + caculateBarSize) + 'px');
                 $list[0].css('height', posY + 'px');
                 initSize = posY;
 
@@ -166,6 +203,11 @@ jui.defineUI('ui.splitter', [], function () {
         }
 
         this.initEvent = function () {
+
+            // if fixed is true , it don't set splitter bar event
+            if (fixed === true) {
+                return;
+            }
 
             $el.on('mousedown', '> .' + this.options.splitterClass,  function (e) {
 
@@ -222,16 +264,74 @@ jui.defineUI('ui.splitter', [], function () {
 
     Splitter.setup = function () {
         return {
+            /**
+             * @cfg {String} [splitterClass='ui-splitter']
+             * set splitter's class for design
+             */
             splitterClass : 'ui-splitter',
+
+            /**
+             * @cfg {String} [hideClass='hide']
+             * set splitter's hide class for design
+             */
             hideClass: 'hide',
+
+            /**
+             * @cfg {Number} [barSize=4]
+             * set splitter's bar size
+             */
             barSize : 4,
+
+            /**
+             * @cfg {Object} [barSize={}]
+             * set custom splitter bar style
+             */
             barStyle : {
                 'background-color': '#f6f6f6',
                 'border-right': '1px solid #e4e4e4'
             },
+
+            /**
+             * @cfg {"vertical"/"horizontal"} [direction='vertical']
+             * set bar's direction
+             */
             direction : 'vertical',
+
+            /**
+             * @cfg {String/Number} [initSize='50%']
+             * set first panel's default width or height
+             */
             initSize : '50%',
-            items : []
+
+            /**
+             * @cfg {Number/Array} [minSize=30]
+             * set panel's minimum width or height
+             *
+             * if minSize is number , minSize is conver to array
+             *
+             * minSize[0] is first panel's minimum size
+             * minSize[1] is second panel's minimum size
+             *
+             */
+            minSize : 30,
+
+            /**
+             * @cfg {String} [items=[]]
+             *
+             * set items  to placed in vertical or horizontal
+             *
+             * support max two times
+             *
+             */
+            items : [],
+
+            /**
+             * @cfg {Boolean} [fixed=false]
+             *
+             * if fixed is true, panels can not resize.
+             *
+             */
+            fixed : false
         }
     };
 

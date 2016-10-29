@@ -1,6 +1,7 @@
 jui.defineUI("ui.layout", [ "jquery", "util.base" ], function($, _) {
 
     /**
+	 * @Deprecated  use ui.splitter instead.
      * @class ui.layout
      * Layout can split the screen into areas and each area will be resizable
      *
