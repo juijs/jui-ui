@@ -160,6 +160,78 @@
                 }
             });
 
+            jui.create("ui.property", '#complex-settings-for-window', {
+                items : [
+                    { type : 'group', title : 'Inner Property', description : 'it can be nested property view '},
+                    { type : 'checkbox', title : 'Controls', key : 'controls' , value : true, description : 'Display controls in the bottom right corner' },
+                    { type : 'checkbox', title : 'Progress', key : 'progress' , value : true, description : 'Display a presentation progress bar' },
+                    { type : 'checkbox', title : 'Slide Number', key : 'slideNumber' , value : false, description : 'Display the page number of the current slide' },
+                    { type : 'checkbox', title : 'History', key : 'history' , value : false, description : 'Push each slide change to the browser history' },
+                    { type : 'checkbox', title : 'Keyboard', key : 'keyboard' , value : true, description : 'Enable keyboard shortcuts for navigation' },
+                    { type : 'checkbox', title : 'Overview', key : 'overview' , value : true, description : 'Enable the slide overview mode' },
+                    { type : 'checkbox', title : 'Center', key : 'center' , value : true, description : 'Vertical centering of slides' },
+                    { type : 'checkbox', title : 'Touch', key : 'touch' , value : true, description : 'Enables touch navigation on devices with touch input' },
+                    { type : 'checkbox', title : 'Loop', key : 'loop' , value : false, description : 'Loop the presentation' },
+                    { type : 'checkbox', title : 'RTL', key : 'rtl' , value : false, description : 'Change the presentation direction to be RTL' },
+                    { type : 'checkbox', title : 'Shuffle', key : 'shuffle' , value : false, description : 'Randomizes the order of slides each time the presentation loads' },
+                    { type : 'checkbox', title : 'Fragments', key : 'fragments' , value : true, description : 'Turns fragments on and off globally' },
+                    { type : 'checkbox', title : 'Embedded', key : 'embedded' , value : false, description : 'Flags if the presentation is running in an embedded mode,\ni.e. contained within a limited portion of the screen ' },
+                    { type : 'checkbox', title : 'Help', key : 'help' , value : true, description : 'Flags if we should show a help overlay when the questionmark, key is pressed' },
+                    { type : 'checkbox', title : 'Show Notes', key : 'showNotes' , value : false, description : '' },
+                    { type : 'number', title : 'Auto Slide', key : 'autoSlide' , value : 0, description : '' },
+                    { type : 'checkbox', title : 'Auto Slide Stoppable', key : 'autoSlideStoppable' , value : true, description : 'Stop auto-sliding after user input' },
+                    { type : 'checkbox', title : 'Auto Slide Method', key : 'autoSlideMethod' , value : 'Reveal.navigateNext', description : 'Use this method for navigation when auto-sliding' },
+                    { type : 'checkbox', title : 'Mouse Wheel', key : 'mouseWheel' , value : false, description : 'Enable slide navigation via mouse wheel' },
+                    { type : 'checkbox', title : 'Hide Address Bar', key : 'hideAddressBar' , value : true, description : '' },
+                    { type : 'checkbox', title : 'Preview Links', key : 'previewLinks' , value : false, description : '' },
+                    { type : 'select', title : 'Transition style', key : 'transition' , value : 'default', items : ['default', 'none', 'fade', 'slide', 'convex', 'concave', 'zoom' ] },
+                    { type : 'select', title : 'Transition Speed', key : 'transitionSpeed' , value : 'default', items : ['default', 'fast', 'slow' ] },
+                    { type : 'select', title : 'Background Transition', key : 'backgroundTransition' , value : 'default', description : 'Transition style for full page slide backgrounds',  items : ['default', 'none', 'fade', 'slide', 'convex', 'concave', 'zoom' ] },
+                    { type : 'number', title : 'View Distance', key : 'viewDistance' , value : 3, description : 'Number of slides away from the current that are visible' },
+                    { type : 'group', title : 'Parallax'},
+                    { type : 'text', title : 'Background Image', key : 'parallaxBackgroundImage' , value : '', description : 'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg' },
+                    { type : 'text', title : 'Background Size', key : 'parallaxBackgroundSize' , value : '', description : 'CSS syntax, e.g. "2100px 900px"' },
+                    { type : 'text', title : 'Background Horizontal', key : 'parallaxBackgroundHorizontal' , value : '', description : '' },
+                    { type : 'text', title : 'Background Vertical', key : 'parallaxBackgroundVertical' , value : '', description : ''  }
+                ],
+                event : {
+                    change : function (item, newValue, oldValue) {
+                        console.log('item : ', item);
+                        console.log('all items', this.getValue());
+                    }
+                }
+            });
+
+            window.modal_1 = jui.create('ui.modal', "#modal_1");
+
+            jui.create("ui.property", '#default-settings', {
+                items : [
+                    { type : 'group', title : 'Inner Property', description : 'it can be nested property view '},
+                    { type : 'checkbox', title : 'Controls', key : 'controls' , value : true, description : 'Display controls in the bottom right corner' },
+                    { type : 'checkbox', title : 'Progress', key : 'progress' , value : true, description : 'Display a presentation progress bar' },
+                    { type : 'checkbox', title : 'Slide Number', key : 'slideNumber' , value : false, description : 'Display the page number of the current slide' },
+                    { type : 'checkbox', title : 'History', key : 'history' , value : false, description : 'Push each slide change to the browser history' },
+                    { type : 'checkbox', title : 'Keyboard', key : 'keyboard' , value : true, description : 'Enable keyboard shortcuts for navigation' },
+                ],
+                event : {
+                    change : function (item, newValue, oldValue) {
+                        console.log('item : ', item);
+                        console.log('all items', this.getValue());
+                    }
+                }
+            });
+
+            jui.create('ui.accordion', "#accordion_1", {
+                event: {
+                    open: function(index, e) {
+                        $(this.root).find(".title > i").attr("class", "icon-arrow1");
+                        $(e.target).find(".title > i").attr("class", "icon-arrow3");
+                    }
+                },
+                index: 0,
+                autoFold: true
+            });
+
         });
 
     </script>
@@ -206,10 +278,6 @@
             bottom:0px;
             top:0px;
             width:700px;
-            box-sizing:border-box;
-            border:1px solid #ececec;
-            margin:10px;
-            overflow:auto;
         }
     </style>
 </head>
@@ -228,11 +296,65 @@
 
 
 <div class="container">
+
     <div class="all">
-        <h3>Complex Settings</h3>
-        <div id="complex-settings" class="property"></div>
+        <div class="panel">
+            <div class="head">
+                <i class="icon-left"></i> <strong>Complex Settings with Panel</strong>
+            </div>
+            <div class="body has-property" style="height:300px;">
+                <div id="complex-settings" class="property"></div>
+            </div>
+        </div>
+
     </div>
 
+</div>
+
+<div>
+
+    <div >
+        <button class="btn large" onclick="modal_1.show();">Show property view with window</button>
+
+
+    </div>
+
+</div>
+
+<div >
+    <h3>Property view with Accordion</h3>
+    <div id="accordion_1" class="accordion">
+        <div class="title active">
+            Default Settings <i class="icon-arrow3"></i>
+        </div>
+        <div class="content has-property">
+            <div id="default-settings" class="property"></div>
+        </div>
+        <div class="title">
+            View Settings <i class="icon-arrow1"></i>
+        </div>
+        <div class="title">
+            Data Server Settings <i class="icon-arrow1"></i>
+        </div>
+    </div>
+</div>
+
+<div class="window" style="width: 500px;" id="modal_1">
+    <div class="head">
+        <div class="left">Property view inner window </div>
+        <div class="right">
+            <a href="javascript:alert('plus');"><i class="icon-plus"></i></a>
+            <a href="javascript:alert('search');"><i class="icon-search"></i></a>
+            <a href="#" class='close'><i class='icon-close'></i></a>
+        </div>
+    </div>
+    <div class="body has-property" style="height:300px;">
+        <div id="complex-settings-for-window" class="property"></div>
+    </div>
+    <div class="foot">
+        <a href="#" class="btn focus">Save</a>
+        <a href="#" class="btn">Close</a>
+    </div>
 </div>
 
 </body>

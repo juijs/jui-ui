@@ -2185,6 +2185,9 @@
   padding: 15px;
   word-break: break-all;
 }
+.jui .window > .body.has-property {
+  padding: 0px;
+}
 .jui .window > .foot {
   position: absolute;
   left: 0px;
@@ -3037,6 +3040,12 @@
 .jui .panel > .foot > .tab {
   margin-top: -2.5px;
 }
+.jui .panel > .body.has-property {
+  padding: 0px;
+}
+.jui .panel > .body > .property {
+  border-top: 0px;
+}
 .jui .panel.close > *:not(.head) {
   display: none !important;
 }
@@ -3498,6 +3507,9 @@
   padding-top: 15px;
   padding-bottom: 15px;
 }
+.jui .accordion > .content.has-property {
+  padding: 0px !important;
+}
 .jui .accordion.classic {
   border-width: 1px;
   -webkit-border-radius: 5px;
@@ -3556,6 +3568,9 @@
 .jui .accordion.normal > .content {
   padding-top: 15px;
   padding-bottom: 15px;
+}
+.jui .accordion.normal > .content.has-property {
+  padding: 0px !important;
 }
 .jui .accordion.large > .title {
   height: 46px;
