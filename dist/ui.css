@@ -4087,6 +4087,7 @@
   /* text */
   /* number */
   /* checkbox */
+  /* date */
   /* color */
   /* range */
 }
@@ -4169,6 +4170,15 @@
 .jui .property .property-item input[type=checkbox] + i {
   cursor: pointer;
   font-size: 20px;
+}
+.jui .property .property-item .datepicker-input i {
+  vertical-align: middle;
+  cursor: pointer;
+}
+.jui .property .property-item .datepicker-input .datepicker-value-text {
+  font-size: 13px;
+  vertical-align: middle;
+  margin-left: 10px;
 }
 .jui .property .property-item .color-input {
   cursor: pointer;

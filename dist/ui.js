@@ -7069,6 +7069,94 @@ jui.defineUI("ui.property", ['jquery', 'util.base'], function ($, _) {
             return $input;
         }
 
+        renderer.date = function ($dom, item) {
+            var $container = $propertyContainer;
+            var $input = $("<div class='datepicker-input' />");
+
+            var $valueText = $("<span class='datepicker-value-text'></span>").css({
+                cursor: 'pointer'
+            });
+
+            $input.on('click', function () {
+                var offset = $input.offset();
+                var containerOffset = $container.offset()
+                var maxWidth = $container.outerWidth();
+                var maxHeight = $container.outerHeight();
+
+                var left = offset.left - containerOffset.left;
+
+                if (left + $input.outerWidth() >= maxWidth)
+                {
+                    left = maxWidth - $input.outerWidth() - 20;
+                }
+
+                var top = offset.top -  containerOffset.top + 80;
+
+                if (top + $input.outerHeight() >= maxHeight)
+                {
+                    top = maxHeight - $input.outerHeight() - 20;
+                }
+
+
+                $datepicker.css({
+                    position: 'absolute',
+                    'z-index' : 100000,
+                    left: left,
+                    top: top
+                });
+                $datepicker.show();
+            });
+
+            var $icon = $("<i class='icon-calendar' />");
+
+            $input.html($icon);
+            $input.append($valueText);
+
+            var $datepicker = $("<div class='datepicker' />").css({
+                position: 'absolute',
+                top: '0px',
+                display: 'none'
+            });
+
+            var $datepicker_head = $("<div class='head' />");
+            var $datepicker_body = $("<table class='body' />");
+
+            $datepicker_head.html('<div class="prev"><i class="icon-chevron-left"></i></div><div class="title"></div><div class="next"><i class="icon-chevron-right"></i></div>');
+            $datepicker_body.html('<tr><th>SU</th><th>MO</th><th>TU</th><th>WE</th><th>TH</th><th>FR</th><th>SA</th></tr>');
+
+            $datepicker.append($datepicker_head);
+            $datepicker.append($datepicker_body);
+
+            $container.after($datepicker);
+
+            var datepicker = jui.create('ui.datepicker', $datepicker, {
+                date : item.value || (+new Date),
+                titleFormat: item.titleFormat || "yyyy. MM",
+                format: item.format || "yyyy/MM/dd",
+                tpl : {
+                    date : item.tpl_date || "<td><!= date !></td>"
+                },
+                event : {
+                    select: function(date, e) {
+                        $valueText.html(date);
+                        self.refreshValue($dom, date);
+                    }
+                }
+            });
+
+            $('body').on('click', function (e) {
+                var $c = $(e.target).closest('.datepicker');
+                var $c2 = $(e.target).closest($input);
+                if (!$c.length && !$c2.length) {
+                    $datepicker.hide();
+                }
+            });
+
+            $valueText.html(datepicker.getDate());
+
+            return $input;
+        }
+
         renderer.colors = function ($dom, item) {
 
             var colors = item.value;
