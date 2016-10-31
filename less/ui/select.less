@@ -1,0 +1,130 @@
+
+/* custom select box */
+.select {
+  display:inline-block;
+  position:relative;
+  vertical-align: middle;
+  .box-sizing(border-box);
+
+  .title {
+    border: 0px;
+    background-image: none;
+    border-radius:0px;
+    font-size:13px;
+    padding:5px;
+    line-height:17px;
+    box-sizing:border-box;
+    cursor:pointer;
+    text-decoration:none;
+    vertical-align:middle;
+    overflow:hidden;
+    min-width:100px;
+    z-index:4;
+    .user-select(none);
+
+    i {
+      float:right;
+    }
+
+    .title-content {
+      .item-view {
+        margin-right:5px;
+      }
+    }
+  }
+
+
+
+  .items {
+    display:none;
+    position:absolute;
+    border-width:1px;
+    border-style:solid;
+    z-index:1000;
+    box-sizing:border-box;
+    cursor:pointer;
+    min-width:150px;
+    max-height: 300px;
+    margin-left:-1px;
+    pointer-events:none;
+    opacity:0;
+    overflow:auto;
+    transition:opacity 0.3s ease-in-out;
+    -webkit-transition:opacity 0.3s ease-in-out;
+    padding-top:5px;
+    padding-bottom:5px;
+    text-align:left;
+
+    .item {
+      box-sizing:border-box;
+      padding:8px;
+      overflow:hidden;
+      font-size:13px;
+      .user-select(none);
+
+      &.divider {
+        border:0px;
+        border-top:1px solid #dfdfdf;
+        padding:0px;
+      }
+    }
+  }
+
+  &.multi {
+
+    .title {
+      .title-content {
+        .item-view {
+          border-bottom:1px solid #dfdfdf;
+        }
+      }
+    }
+
+    .items {
+      .item {
+        padding-left: 30px;
+        background-color:transparent;
+
+        &.option {
+
+          &.selected {
+
+            background-color:transparent;
+            color:inherit;
+
+            &:before {
+              content: "✔";
+              position:absolute;
+              left:10px;
+              color:#48cfad;
+              font-size:15px;
+            }
+          }
+
+        }
+
+        &.divider {
+          margin-left:0px;
+        }
+      }
+    }
+  }
+
+  &.select-bottom {
+    .items {
+      bottom:100%;
+    }
+  }
+
+  &.open {
+    .items {
+      display:inline-block;
+      pointer-events:auto;
+      opacity:1;
+    }
+  }
+
+  &.select-right .items {
+    right: 0px;
+  }
+}

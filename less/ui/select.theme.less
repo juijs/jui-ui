@@ -1,0 +1,39 @@
+
+/* custom select box */
+.select {
+
+  &.bordered {
+    border: 1px solid @selectTitleBorderColor;
+  }
+
+
+  .title {
+    background-color:@selectTitleBackgroundColor;
+    color: @selectTitleFontColor;
+    border-color: @selectTitleBorderColor;
+  }
+
+  .items {
+    border-color:@selectItemsBorderColor;
+    border-width:1px;
+    border-style:solid;
+    background-color: @selectItemsBackgroundColor;
+
+    .item {
+
+      &.option {
+        &:hover {
+          background-color: @selectItemHoverBackgroundColor;
+        }
+
+        &.selected
+        {
+          background-color:  @selectItemSelectedBackgroundColor;
+          color: @selectItemSelectedFontColor;
+        }
+      }
+    }
+  }
+
+
+}

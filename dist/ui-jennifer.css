@@ -1,5 +1,7 @@
 .jui {
   /* Icon color in Tab */
+  /* property */
+  /* custom select box */
 }
 .jui .clearfix {
   *zoom: 1;
@@ -1409,6 +1411,7 @@
   border-radius: 20px;
 }
 .jui .switch .area .bar {
+  border-radius: 20px;
   -webkit-transition: all 0.25s ease;
   -moz-transition: all 0.25s ease;
   -o-transition: all 0.25s ease;
@@ -2230,6 +2233,139 @@
   100% {
     transform: scale(1);
   }
+}
+.jui .property .property-header {
+  color: #48cfad;
+}
+.jui .property .property-item {
+  border-top: 1px solid #ececec;
+  border-bottom: 1px solid #ececec;
+  /* text */
+  /* number */
+  /* checkbox */
+  /* color */
+  /* range */
+}
+.jui .property .property-item.expanded {
+  border-bottom: 1px solid #fff !important;
+}
+.jui .property .property-item .property-title {
+  color: #404040;
+}
+.jui .property .property-item textarea,
+.jui .property .property-item .html[contenteditable] {
+  border: 1px solid #a4a4a4;
+}
+.jui .property .property-item textarea:focus,
+.jui .property .property-item .html[contenteditable]:focus {
+  border-color: #AB7CFF;
+}
+.jui .property .property-item select {
+  border-bottom: 1px solid #a4a4a4;
+}
+.jui .property .property-item select:focus {
+  border-color: #48cfad;
+}
+.jui .property .property-item input[type=text] {
+  border-bottom: 1px solid #a4a4a4;
+}
+.jui .property .property-item input[type=text]:focus {
+  border-color: #AB7CFF;
+}
+.jui .property .property-item input[type=number] {
+  border-bottom: 1px solid #AB7CFF;
+}
+.jui .property .property-item input[type=checkbox] + .icon-checkbox {
+  color: #AB7CFF;
+}
+.jui .property .property-item input[type=checkbox] + .icon-checkbox2 {
+  color: #b5b5b5;
+}
+.jui .property .property-item .color-input > span:first-child {
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+.jui .property .property-item .color-input > span:nth-child(2) {
+  color: #d5d5d5;
+}
+.jui .property .property-item .color-input > span.none-color {
+  color: rgba(150, 150, 150, 0.8);
+}
+.jui .property .property-item .color-input > span.none-color:hover {
+  color: #606060;
+}
+.jui .property .property-item input[type=range] + .range-progress {
+  background: #AB7CFF;
+}
+.jui .property .property-item input[type=range]::-webkit-slider-runnable-track {
+  box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+  background: rgba(67, 73, 84, 0.2);
+  border: 0px solid rgba(67, 73, 84, 0.2);
+}
+.jui .property .property-item input[type=range]::-webkit-slider-thumb {
+  box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+  border: 0px solid #000000;
+  background: #AB7CFF;
+}
+.jui .property .property-item input[type=range]::-moz-range-track {
+  box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+  background: rgba(67, 73, 84, 0.2);
+  border: 0px solid rgba(67, 73, 84, 0.1);
+}
+.jui .property .property-item input[type=range]::-moz-range-thumb {
+  box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+  border: 0px solid #000000;
+  background: #AB7CFF;
+}
+.jui .property .property-item input[type=range]::-ms-fill-lower {
+  background: rgba(67, 73, 84, 0.2);
+  border: 0px solid #000101;
+  box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+}
+.jui .property .property-item input[type=range]::-ms-fill-upper {
+  background: rgba(67, 73, 84, 0.2);
+  border: 0px solid #000101;
+  box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+}
+.jui .property .property-item input[type=range]::-ms-thumb {
+  box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+  border: 0px solid #000000;
+  background: #AB7CFF;
+}
+.jui .property .property-item input[type=range]:focus::-ms-fill-lower {
+  background: #AB7CFF;
+}
+.jui .property .property-item input[type=range]:focus::-ms-fill-upper {
+  background: #AB7CFF;
+}
+.jui .property .property-item .description {
+  color: #aaa;
+}
+.jui .property .property-item .description a {
+  color: #AB7CFF;
+}
+.jui .property .property-item small.description {
+  color: #aaa;
+}
+.jui .select.bordered {
+  border: 1px solid #dfdfdf;
+}
+.jui .select .title {
+  background-color: white;
+  color: black;
+  border-color: #dfdfdf;
+}
+.jui .select .items {
+  border-color: #dfdfdf;
+  border-width: 1px;
+  border-style: solid;
+  background-color: #ffffff;
+}
+.jui .select .items .item.option:hover {
+  background-color: #9fe6d5;
+}
+.jui .select .items .item.option.selected {
+  background-color: #48cfad;
+  color: #ffffff;
 }
 @font-face {
   font-family: "jennifer";
