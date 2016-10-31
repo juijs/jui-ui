@@ -937,11 +937,11 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
         function checkDate(y, m, d) {
             if(minDate) {
                 var minY = minDate.getFullYear(), minM = minDate.getMonth() + 1, minD = minDate.getDate();
-                if (y < minY || (y >= minY && m < minM)) return [minY, minM, minD];
+                if (y < minY || (y == minY && m < minM)) return [minY, minM, minD];
             }
             if(maxDate) {
                 var maxY = maxDate.getFullYear(),maxM = maxDate.getMonth() + 1, maxD = maxDate.getDate()
-                if (y > maxY || (y <= maxY && m > maxM)) return [maxY, maxM, maxD];
+                if (y > maxY || (y == maxY && m > maxM)) return [maxY, maxM, maxD];
             }
             return [y, m, d];
         }
@@ -1157,9 +1157,9 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
 
             if(opts.type == "daily") {
                 // 기본 날짜가 최소 날짜나 최대 날짜보다 작거나 큰 경우
-                if(opts.date < minDate) {
+                if(minDate && opts.date < minDate) {
                     opts.date = minDate;
-                } else if(opts.date < minDate) {
+                } else if(maxDate && opts.date > maxDate) {
                     opts.date = maxDate;
                 }
             }
