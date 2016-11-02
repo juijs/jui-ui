@@ -48,8 +48,11 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 
 			// Event
 			this.ui.addEvent($(self.element).children(".btn"), "click", function(e) {
-				self._setting("event", e);
+				if($(e.currentTarget).hasClass("disabled")) {
+					return false;
+				}
 
+				self._setting("event", e);
                 self.ui.emit("click", [ self.data, e ]);
 				self.ui.emit("change", [ self.data, e ]);
 
@@ -208,6 +211,20 @@ jui.defineUI("ui.button", [ "jquery", "util.base" ], function($, _) {
 		 */
 		this.reload = function() {
 			ui_list[this.options.type]._setting("init");
+		}
+
+		/**
+		 * @method enable
+		 * Enables the tab at a specified index
+		 *
+		 * @param {Boolean} isActive
+		 */
+		this.enable = function(isActive) {
+			if(isActive) {
+				$(this.root).find(".btn").removeClass("disabled");
+			} else {
+				$(this.root).find(".btn").addClass("disabled");
+			}
 		}
 	}
 
