@@ -488,6 +488,11 @@
   color: #a47afe;
   font-weight: bold;
 }
+.jui ul.tree li.hover > a,
+.jui ul.tree li.hover > span,
+.jui ul.tree li.hover > div {
+  background: #e9def5;
+}
 .jui ul.tree .drag.on {
   background: #4E4E4E;
 }

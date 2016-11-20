@@ -33,6 +33,12 @@ jui.ready([ "ui.tree" ], function(treeFunc) {
                 if(node.data.symbol == "file") {
                     return false;
                 }
+            },
+            dragover: function(node, e) {
+                console.log(node.data)
+                if(node.data.symbol == "file") {
+                    return false;
+                }
             }
         }
     });

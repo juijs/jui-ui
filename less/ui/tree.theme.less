@@ -12,6 +12,12 @@ ul.tree {
         font-weight: bold;
       }
     }
+
+    &.hover {
+      > a, > span, > div {
+        background: @treeHoverBackgroundColor;
+      }
+    }
   }
 
   .drag.on {

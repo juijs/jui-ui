@@ -5237,8 +5237,8 @@ jui.define("ui.tree.base", [ "jquery", "util.base", "ui.tree.node" ], function($
 
             var node = this.getNode(index),
                 tpNode = this.getNodeParent(targetIndex);
-            var indexList = iParser.getIndexList(targetIndex);
-            tNo = indexList[indexList.length - 1];
+            var indexList = iParser.getIndexList(targetIndex),
+                tNo = indexList[indexList.length - 1];
 
             if(!isRelative(node, tpNode)) {
                 // 기존의 데이터
@@ -5320,7 +5320,7 @@ jui.defineUI("ui.tree", [ "util.base", "ui.tree.base" ], function(_, Base) {
      *
      */
 	var UI = function() {
-		var dragIndex = { start: null, end: null },
+		var dragIndex = { start: null, end: null, clone: null },
             nodeIndex = null,
 			iParser = _.index();
 
@@ -5400,7 +5400,21 @@ jui.defineUI("ui.tree", [ "util.base", "ui.tree.base" ], function(_, Base) {
 				})(nodeList[i]);
 			}
 		}
-		
+
+		function resetEventDragNodeData(self, onlyStyle) {
+            if(!self.options.drag) return;
+
+            var root = self.uit.getRoot();
+
+            if(!onlyStyle) {
+                dragIndex.start = null;
+                dragIndex.end = null;
+                dragIndex.clone = null;
+            }
+
+            $(root.element).find("li.hover").removeClass("hover");
+		}
+
 		function setEventDragNodes(self, nodeList) {
 			if(!self.options.drag) return;
 			
@@ -5416,6 +5430,17 @@ jui.defineUI("ui.tree", [ "util.base", "ui.tree.base" ], function(_, Base) {
 						if(dragIndex.start == null) {
 						    if(self.emit("dragstart", [ node, e ]) !== false) {
                                 dragIndex.start = node.index;
+
+                                /*/
+                                dragIndex.clone = $(node.element).find(":eq(1)").clone();
+                                dragIndex.clone.css({
+                                    position: "absolute",
+                                    left: e.offsetX + "px",
+                                    top: e.offsetY + "px",
+                                    opacity: 0.3
+                                });
+                                $(self.root).append(dragIndex.clone);
+                                /**/
                             }
 						}
 						
@@ -5436,14 +5461,29 @@ jui.defineUI("ui.tree", [ "util.base", "ui.tree.base" ], function(_, Base) {
                                 }
 							}
 						}
-						
-						dragIndex.start = null;
-						dragIndex.end = null;
+
+                        resetEventDragNodeData(self);
 						
 						return false;
 					});
 
-					self.addEvent(root.element, "mouseup", function(e) {
+                    // 드래그시 마우스 오버 효과
+                    self.addEvent(node.element, "mouseover", function(e) {
+                        if(e.target.tagName == "I") return;
+
+                        if(self.options.dragChild !== false) {
+                            if(dragIndex.start && dragIndex.start != node.index) {
+                                if(self.emit("dragover", [ node, e ]) !== false) {
+                                    resetEventDragNodeData(self, true);
+                                    $(node.element).addClass("hover");
+                                }
+                            }
+                        }
+
+                        return false;
+                    });
+
+                    self.addEvent(root.element, "mouseup", function(e) {
 						if(e.target.tagName == "I") return;
 
 						if(self.options.dragChild !== false) {
@@ -5454,9 +5494,8 @@ jui.defineUI("ui.tree", [ "util.base", "ui.tree.base" ], function(_, Base) {
 								self.emit("dragend", [ self.get(endIndex), e ]);
 							}
 						}
-						
-						dragIndex.start = null;
-						dragIndex.end = null;
+
+                        resetEventDragNodeData(self);
 						
 						return false;
 					});
@@ -5468,12 +5507,12 @@ jui.defineUI("ui.tree", [ "util.base", "ui.tree.base" ], function(_, Base) {
 					self.move(dragIndex.start, dragIndex.end);
 					self.emit("dragend", [ self.get(dragIndex.end), e ]);
 				}
-				
-				dragIndex.start = null;
-				dragIndex.end = null;
-				
+
+                resetEventDragNodeData(self);
+
 				return false;
 			});
+
 		}
 		
 		function setDragNodes(self) {
@@ -5524,6 +5563,8 @@ jui.defineUI("ui.tree", [ "util.base", "ui.tree.base" ], function(_, Base) {
 				if(dragIndex.start) {
 					dragIndex.end = index;
 					$drag.addClass("on");
+
+                    resetEventDragNodeData(self, true);
 				}
 			});
 
@@ -5548,7 +5589,6 @@ jui.defineUI("ui.tree", [ "util.base", "ui.tree.base" ], function(_, Base) {
 				setEventNodes(self, [ self.uit.getRoot() ]);
 			}
 		}
-
 
 		this.init = function() {
 			var opts = this.options;

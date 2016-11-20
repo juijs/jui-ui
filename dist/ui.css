@@ -2589,6 +2589,13 @@
 .jui ul.tree li:disabled > div {
   cursor: not-allowed;
 }
+.jui ul.tree li.hover > a,
+.jui ul.tree li.hover > span,
+.jui ul.tree li.hover > div {
+  border-radius: 3px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
 .jui ul.tree li > a,
 .jui ul.tree li > span,
 .jui ul.tree li > div {
