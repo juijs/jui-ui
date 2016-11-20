@@ -7476,7 +7476,7 @@ jui.defineUI("ui.select", ['jquery', 'util.base'], function ($, _) {
                     value = [ value ];
                 }
                 for(var i = 0, len = value.length; i < len; i++) {
-                    $items.find("[value='"+value[i]+"']").addClass('selected');
+                    $items.find("[value='"+value[i]+"']").toggleClass('selected');
                 }
 
             } else {
