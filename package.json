@@ -5,11 +5,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "main": [
-    "dist/ui.min.js",
-    "dist/ui.min.css",
-    "dist/ui-jennifer.css"
-  ],
+  "main": "dist/ui.min.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/juijs/jui.git"
