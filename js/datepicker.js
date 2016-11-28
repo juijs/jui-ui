@@ -31,6 +31,14 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
             self.addEvent($head.children(".next"), "click", function(e) {
                 self.next(e);
             });
+
+            self.addEvent($head.children(".prev-year"), "click", function(e) {
+                self.prev(e, true);
+            });
+
+            self.addEvent($head.children(".next-year"), "click", function(e) {
+                self.next(e, true);
+            });
         }
 
         function setCalendarDate(self, no) {
@@ -324,13 +332,18 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
          * Outputs a calendar that fits the previous year/month
          *
          */
-        this.prev = function(e) {
+        this.prev = function(e, moveYear) {
             var opts = this.options;
 
             if(opts.type == "daily") {
-                var y = (month == 1) ? year - 1 : year,
-                    m = (month == 1) ? 12 : month - 1;
 
+                if (moveYear) {
+                    var y = year - 1, m = month;
+                } else {
+                    var y = (month == 1) ? year - 1 : year,
+                        m = (month == 1) ? 12 : month - 1;
+                }
+                
                 if(minDate && minDate.getFullYear() == year && minDate.getMonth() + 1 == month) {
                     return;
                 }
@@ -350,12 +363,17 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
          * Outputs a calendar that fits the next year/month
          *
          */
-        this.next = function(e) {
+        this.next = function(e, moveYear) {
             var opts = this.options;
 
             if(opts.type == "daily") {
-                var y = (month == 12) ? year + 1 : year,
-                    m = (month == 12) ? 1 : month + 1;
+
+               if (moveYear) {
+                   var y = year + 1, m = month;
+               } else {
+                   var y = (month == 12) ? year + 1 : year,
+                        m = (month == 12) ? 1 : month + 1;
+               }
 
                 if(maxDate && maxDate.getFullYear() == year && maxDate.getMonth() + 1 == month) {
                     return;

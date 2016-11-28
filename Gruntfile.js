@@ -44,7 +44,6 @@ module.exports = function(grunt) {
                     "js/tab.js",
                     "js/tree.js",
                     "js/window.js",
-                    "js/filedrop.js",
                     "js/property.js",
                     "js/select.js",
                     "js/splitter.js"
