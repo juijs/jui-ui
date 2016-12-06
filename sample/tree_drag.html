@@ -30,13 +30,12 @@ jui.ready([ "ui.tree" ], function(treeFunc) {
         },
         event: {
             dragend: function(node, e) {
-                if(node.data.symbol == "file") {
+                if(node && node.data.symbol == "file") {
                     return false;
                 }
             },
             dragover: function(node, e) {
-                console.log(node.data)
-                if(node.data.symbol == "file") {
+                if(node && node.data.symbol == "file") {
                     return false;
                 }
             }

@@ -5232,11 +5232,27 @@ jui.define("ui.tree.base", [ "jquery", "util.base", "ui.tree.node" ], function($
             if(index == null) this.getRoot().fold();
         }
 
+        function isFamily(index, targetIndex) {
+            var parentIndex = iParser.getParentIndex(targetIndex);
+
+            if(parentIndex == null) {
+                return false;
+            }
+
+            if(index == parentIndex) {
+                return true;
+            }
+
+            return isFamily(index, parentIndex);
+        }
+
         this.moveNode = function(index, targetIndex) {
             if(index == targetIndex) return;
+            if(isFamily(index, targetIndex)) return;
 
             var node = this.getNode(index),
                 tpNode = this.getNodeParent(targetIndex);
+
             var indexList = iParser.getIndexList(targetIndex),
                 tNo = indexList[indexList.length - 1];
 
@@ -5432,7 +5448,7 @@ jui.defineUI("ui.tree", [ "util.base", "ui.tree.base" ], function(_, Base) {
                                 dragIndex.start = node.index;
 
                                 /*/
-                                dragIndex.clone = $(node.element).find(":eq(1)").clone();
+                                dragIndex.clone = $(node.element).find(":feq(1)").clone();
                                 dragIndex.clone.css({
                                     position: "absolute",
                                     left: e.offsetX + "px",

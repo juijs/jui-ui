@@ -389,11 +389,27 @@ jui.define("ui.tree.base", [ "jquery", "util.base", "ui.tree.node" ], function($
             if(index == null) this.getRoot().fold();
         }
 
+        function isFamily(index, targetIndex) {
+            var parentIndex = iParser.getParentIndex(targetIndex);
+
+            if(parentIndex == null) {
+                return false;
+            }
+
+            if(index == parentIndex) {
+                return true;
+            }
+
+            return isFamily(index, parentIndex);
+        }
+
         this.moveNode = function(index, targetIndex) {
             if(index == targetIndex) return;
+            if(isFamily(index, targetIndex)) return;
 
             var node = this.getNode(index),
                 tpNode = this.getNodeParent(targetIndex);
+
             var indexList = iParser.getIndexList(targetIndex),
                 tNo = indexList[indexList.length - 1];
 
