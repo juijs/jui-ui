@@ -1,15 +1,11 @@
 {
   "name": "jui",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "JUI provide all kinds of UI components that are used in web pages. However, charts and grids are not included.",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "main": [
-    "dist/ui.min.js",
-    "dist/ui.min.css",
-    "dist/ui-jennifer.css"
-  ],
+  "main": "dist/ui.min.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/juijs/jui.git"

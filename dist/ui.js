@@ -737,6 +737,14 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
             self.addEvent($head.children(".next"), "click", function(e) {
                 self.next(e);
             });
+
+            self.addEvent($head.children(".prev-year"), "click", function(e) {
+                self.prev(e, true);
+            });
+
+            self.addEvent($head.children(".next-year"), "click", function(e) {
+                self.next(e, true);
+            });
         }
 
         function setCalendarDate(self, no) {
@@ -1030,13 +1038,18 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
          * Outputs a calendar that fits the previous year/month
          *
          */
-        this.prev = function(e) {
+        this.prev = function(e, moveYear) {
             var opts = this.options;
 
             if(opts.type == "daily") {
-                var y = (month == 1) ? year - 1 : year,
-                    m = (month == 1) ? 12 : month - 1;
 
+                if (moveYear) {
+                    var y = year - 1, m = month;
+                } else {
+                    var y = (month == 1) ? year - 1 : year,
+                        m = (month == 1) ? 12 : month - 1;
+                }
+                
                 if(minDate && minDate.getFullYear() == year && minDate.getMonth() + 1 == month) {
                     return;
                 }
@@ -1056,12 +1069,17 @@ jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
          * Outputs a calendar that fits the next year/month
          *
          */
-        this.next = function(e) {
+        this.next = function(e, moveYear) {
             var opts = this.options;
 
             if(opts.type == "daily") {
-                var y = (month == 12) ? year + 1 : year,
-                    m = (month == 12) ? 1 : month + 1;
+
+               if (moveYear) {
+                   var y = year + 1, m = month;
+               } else {
+                   var y = (month == 12) ? year + 1 : year,
+                        m = (month == 12) ? 1 : month + 1;
+               }
 
                 if(maxDate && maxDate.getFullYear() == year && maxDate.getMonth() + 1 == month) {
                     return;
@@ -6315,228 +6333,6 @@ jui.defineUI("ui.window", [ "jquery", "util.base", "ui.modal" ], function($, _, 
      */
 	
 	return UI;
-});
-jui.defineUI("ui.filedrop", ['jquery'], function ($) {
-    var FileDrop = function () {
-        var self, $root, _files;
-
-        this.init = function () {
-            self = this;
-            $root = $(this.root);
-
-            this.initEvent();
-        }
-
-        this.initEvent = function () {
-            $root.on('drop', function (e) {
-                e.preventDefault();
-
-                self.setFiles(e);
-                self.processFile();
-            });
-        }
-
-        this.setFiles = function (e) {
-            _files = e.originalEvent.dataTransfer.files;
-
-        }
-
-        this.getFiles = function () {
-            return _files;
-        }
-
-        this.getFile = function (i) {
-            return _files[i];
-        }
-
-        this.processFile = function (e) {
-            var files = _files;
-
-            if (this.options.url != '') {
-
-                if (this.options.isMultiFileUpload) {
-
-                    this.uploadFilesForSingleUpload(files);
-                } else {
-
-                    this.uploadFiles(files);
-                }
-
-            } else {
-                // upload 안하고 바로 파일을 사용할 경우 
-                this.emit("dropped.files");
-            }
-        }
-
-
-        this.uploadOneFile = function (file, index, callback) {
-            var formData = new FormData();
-
-            for(var k in this.options.params) {
-                var key = k;
-                var value = this.options.params[k];
-
-                if (typeof value == 'function') {
-                    formData.append(key, value.call(this));
-                } else {
-                    formData.append(key, value);
-                }
-            }
-
-            formData.append(this.options.name, file);
-
-            $.ajax({
-                url: this.options.file,
-                type: 'post',
-                data: formData,
-                dataType: 'json',
-                cache: false,
-                contentType: false,
-                processData: false,
-                xhr: function() {
-                    var xhr = new window.XMLHttpRequest();
-
-                    // set upload progress event 
-                    xhr.upload.addEventListener("progress", function(evt) {
-                        if (evt.lengthComputable) {
-
-                            var percentComplete = evt.loaded / evt.total;
-                            percentComplete = parseInt(percentComplete * 100);
-                            self.emit('file.progress.update', [index,  percentComplete, evt.loaded , evt.total] );
-
-                            if (percentComplete === 100) {
-                                self.emit('file.progress.complete', [ index ] );
-                            }
-
-                        }
-                    }, false);
-
-                    return xhr;
-                },
-                complete: function() {
-                    self.emit("file.complete", [index]);
-                },
-                success: function(data) {
-                    callback && callback (index, data);
-                    self.emit("file.success", [index, data]);
-                },
-                error: function() {
-                    self.emit("file.error", [index]);
-                    // Log the error, show an alert, whatever works for you
-                }
-            });
-
-        }
-
-
-        this.uploadFilesForSingleUpload = function (files) {
-
-            // TODO: 업로드 코드 
-            var max = files.length;
-            var count = 0;
-
-
-            var totalFileSize  = 0;
-            for(var i = 0, len = max; i < len; i++) {
-                totalFileSize += files[i].size;
-            }
-
-            var uploadedFileSize = 0;
-            for(var i = 0, len = max; i < len; i++) {
-
-                this.uploadOneFile(files[i], i, max, function (index) {
-                    count++;
-                    uploadedFileSize += files[index].size;
-
-                    var percentComplete = parseInt((uploadedFileSize/  totalFileSize) * 100);
-                    self.emit('progress.update', [ , uploadedFileSize, totalFileSize] );
-
-
-                    if (percentComplete == 100) {
-                        self.emit("progress.complete");
-                    }
-                    if (count == max) {
-                        self.emit("complete");
-                    }
-                });
-            }
-        }
-
-
-        this.uploadFiles = function (files) {
-
-            var formData = new FormData();
-
-            for(var k in this.options.params) {
-                var key = k;
-                var value = this.options.params[k];
-
-                if (typeof value == 'function') {
-                    formData.append(key, value.call(this));
-                } else {
-                    formData.append(key, value);
-                }
-            }
-
-            // TODO: 업로드 코드 
-            for(var i = 0, len = files.length; i < len; i++) {
-                var file = files[i];
-                formData.append(this.options.name, file);
-            }
-
-            $.ajax({
-                url: this.options.File,
-                type: 'post',
-                data: formData,
-                dataType: 'json',
-                cache: false,
-                contentType: false,
-                processData: false,
-                xhr: function() {
-                    var xhr = new window.XMLHttpRequest();
-
-                    // set upload progress event 
-                    xhr.upload.addEventListener("progress", function(evt) {
-                        if (evt.lengthComputable) {
-
-                            var percentComplete = evt.loaded / evt.total;
-                            percentComplete = parseInt(percentComplete * 100);
-                            self.emit('progress.update', [ percentComplete, evt.loaded , evt.total] );
-
-                            if (percentComplete === 100) {
-                                self.emit('progress.complete');
-                            }
-
-                        }
-                    }, false);
-
-                    return xhr;
-                },
-                complete: function() {
-                    self.emit("complete");
-                },
-                success: function(data) {
-                    self.emit("success", [data]);
-                },
-                error: function() {
-                    self.emit("error", []);
-                    // Log the error, show an alert, whatever works for you
-                }
-            });
-        }
-
-    };
-
-    FileDrop.setup = function () {
-        return {
-            name : 'files[]',
-            url : '/file/upload_file.php',
-            params : {},
-            isMultiFileUpload : true      // true 면 파일 업로드 개별로 함. 
-        }
-    }
-
-    return FileDrop;
 });
 jui.defineUI("ui.property", ['jquery', 'util.base'], function ($, _) {
     /**
