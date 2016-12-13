@@ -8,8 +8,8 @@
     > li {
       color: @dropdownFontColor;
 
-      &:hover:not(.divider):not(.title),
-      &:focus:not(.divider):not(.title),
+      &:hover:not(.divider):not(.title):not(.disabled),
+      &:focus:not(.divider):not(.title):not(.disabled),
       &.active {
         #gradient > .vertical(@dropdownActiveBackgroundColor1, @dropdownActiveBackgroundColor2);
         color: @dropdownActiveFontColor;
@@ -18,6 +18,11 @@
 
     > li.divider {
       .nav-divider(@dropdownDividerLineColor1, @dropdownDividerLineColor2);
+    }
+
+    > li.disabled {
+      opacity: @dropdownDisabledBackgroundOpacity;
+      cursor: not-allowed;
     }
 
     .webkit-scrollbar-simple();

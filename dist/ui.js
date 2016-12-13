@@ -1764,8 +1764,8 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
 			
 			// 클릭 이벤트 설정
 			self.addEvent($list, "click", function(e) {
-				if($(this).hasClass("divider") || $(this).hasClass("title")) return;
-				
+				if($(this).hasClass("divider") || $(this).hasClass("title") || $(this).hasClass("disabled")) return;
+
 				var index = getTargetIndex(this),
 					text = $(this).text(),
 					value = $(this).attr("value");

@@ -94,10 +94,10 @@
 .jui .dropdown ul > li {
   color: #D5D5D5;
 }
-.jui .dropup ul > li:hover:not(.divider):not(.title),
-.jui .dropdown ul > li:hover:not(.divider):not(.title),
-.jui .dropup ul > li:focus:not(.divider):not(.title),
-.jui .dropdown ul > li:focus:not(.divider):not(.title),
+.jui .dropup ul > li:hover:not(.divider):not(.title):not(.disabled),
+.jui .dropdown ul > li:hover:not(.divider):not(.title):not(.disabled),
+.jui .dropup ul > li:focus:not(.divider):not(.title):not(.disabled),
+.jui .dropdown ul > li:focus:not(.divider):not(.title):not(.disabled),
 .jui .dropup ul > li.active,
 .jui .dropdown ul > li.active {
   background-color: #865de1;
@@ -119,6 +119,11 @@
   overflow: hidden;
   background-color: #111111;
   border-bottom: 1px solid #343434;
+}
+.jui .dropup ul > li.disabled,
+.jui .dropdown ul > li.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 .jui .dropup ul::-webkit-scrollbar,
 .jui .dropdown ul::-webkit-scrollbar {
