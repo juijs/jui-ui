@@ -37,3 +37,176 @@ textarea.input {
   font-size: 12px !important;
   height: 22px !important;
 }
+
+
+// CHECKBOX/RADIO STYLES
+// -----------
+
+.checkbox,.radio {
+  position: relative;
+  display: inline-block;
+  float: left;
+
+  > i {
+    position: absolute;
+    z-index: 0;
+    border-style: solid;
+    border-radius: 1px;
+
+    font-family: "jennifer";
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    display: inline-block;
+
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    &:before {
+      position: absolute;
+    }
+  }
+
+  > input {
+    position: absolute;
+    opacity: 0;
+    z-index: 1;
+  }
+
+  > input+i {
+    &:before {
+      content: ""
+    }
+  }
+
+  > input:disabled {
+    cursor: not-allowed;
+  }
+}
+
+.checkbox {
+  > input:checked+i {
+    &:before {
+      content: "\e99c";
+    }
+  }
+
+  .checkbox.small;
+}
+.radio {
+  > input:checked+i {
+    &:before {
+      content: "\e99c";
+    }
+  }
+
+  .radio.small;
+}
+
+.checkbox.mini,.radio.mini {
+  > i {
+    border-width: 1px;
+    width: 14px;
+    height: 14px;
+  }
+
+  > input {
+    width: 14px;
+    height: 14px;
+  }
+
+  > input:checked+i {
+    &:before {
+      font-size: 10px;
+      top: 2px;
+      left: 2px;
+    }
+  }
+}
+.radio.mini {
+  > i {
+    border-radius: 14px;
+  }
+}
+
+.checkbox.small,.radio.small {
+  > i {
+    border-width: 2px;
+    width: 18px;
+    height: 18px;
+  }
+
+  > input {
+    width: 18px;
+    height: 18px;
+  }
+
+  > input:checked+i {
+    &:before {
+      font-size: 12px;
+      top: 3px;
+      left: 3px;
+    }
+  }
+}
+.radio.small {
+  > i {
+    border-radius: 18px;
+  }
+}
+
+.checkbox.normal,.radio.normal {
+  > i {
+    border-width: 2px;
+    width: 24px;
+    height: 24px;
+  }
+
+  > input {
+    width: 24px;
+    height: 24px;
+  }
+
+  > input:checked+i {
+    &:before {
+      font-size: 15px;
+      top: 5px;
+      left: 5px;
+    }
+  }
+}
+.radio.normal {
+  > i {
+    border-radius: 24px;
+  }
+}
+
+.checkbox.large,.radio.large {
+  > i {
+    border-width: 2px;
+    width: 30px;
+    height: 30px;
+  }
+
+  > input {
+    width: 30px;
+    height: 30px;
+  }
+
+  > input:checked+i {
+    &:before {
+      font-size: 20px;
+      top: 5px;
+      left: 5px;
+    }
+  }
+}
+.radio.large {
+  > i {
+    border-radius: 30px;
+  }
+}

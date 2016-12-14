@@ -31,3 +31,27 @@
     .box-shadow(@inputInvalidFocusBoxShadow);
   }
 }
+
+
+// CHECKBOX/RADIO STYLES
+// -----------
+
+.checkbox,.radio {
+  > input+i {
+    border-color: @inputCheckboxAndRadioUncheckedColor;
+  }
+
+  > input:checked+i {
+    border-color: @inputCheckboxAndRadioCheckedColor;
+    background: @inputCheckboxAndRadioCheckedColor;
+
+    &:before {
+      color: @inputCheckboxAndRadioCheckedIconColor;
+    }
+  }
+
+  > input:disabled+i {
+    border-color: @inputCheckboxAndRadioDisabledColor;
+    background: @inputCheckboxAndRadioDisabledColor;
+  }
+}

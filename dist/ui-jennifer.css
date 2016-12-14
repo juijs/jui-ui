@@ -1162,6 +1162,24 @@
   -moz-box-shadow: 0 0 6px #f8b9b7;
   box-shadow: 0 0 6px #f8b9b7;
 }
+.jui .checkbox > input + i,
+.jui .radio > input + i {
+  border-color: #8c8c8c;
+}
+.jui .checkbox > input:checked + i,
+.jui .radio > input:checked + i {
+  border-color: #9971e8;
+  background: #9971e8;
+}
+.jui .checkbox > input:checked + i:before,
+.jui .radio > input:checked + i:before {
+  color: #fff;
+}
+.jui .checkbox > input:disabled + i,
+.jui .radio > input:disabled + i {
+  border-color: #ccc;
+  background: #ccc;
+}
 .jui .label {
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
