@@ -1180,6 +1180,10 @@
   border-color: #ccc;
   background: #ccc;
 }
+.jui .checkbox > input:disabled + i:before,
+.jui .radio > input:disabled + i:before {
+  color: #fff;
+}
 .jui .label {
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;

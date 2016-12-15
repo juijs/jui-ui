@@ -76,7 +76,14 @@ textarea.input {
   }
 
   > input:disabled {
+    opacity: 0;
     cursor: not-allowed;
+  }
+
+  > input:disabled+i {
+    &:before {
+      opacity: 1;
+    }
   }
 }
 
@@ -92,19 +99,17 @@ textarea.input {
     border-width: 1px;
     width: inherit;
     height: inherit;
-  }
 
-  > input {
-    width: inherit;
-    height: inherit;
-  }
-
-  > input:checked+i {
     &:before {
       font-size: 10px;
       top: 2px;
       left: 2px;
     }
+  }
+
+  > input {
+    width: inherit;
+    height: inherit;
   }
 }
 .checkbox.mini {
@@ -125,19 +130,17 @@ textarea.input {
     border-width: 2px;
     width: inherit;
     height: inherit;
-  }
 
-  > input {
-    width: inherit;
-    height: inherit;
-  }
-
-  > input:checked+i {
     &:before {
       font-size: 12px;
       top: 3px;
       left: 3px;
     }
+  }
+
+  > input {
+    width: inherit;
+    height: inherit;
   }
 }
 .checkbox.small {
@@ -158,19 +161,17 @@ textarea.input {
     border-width: 2px;
     width: inherit;
     height: inherit;
-  }
 
-  > input {
-    width: inherit;
-    height: inherit;
-  }
-
-  > input:checked+i {
     &:before {
       font-size: 15px;
       top: 5px;
       left: 5px;
     }
+  }
+
+  > input {
+    width: inherit;
+    height: inherit;
   }
 }
 .checkbox.normal {
@@ -191,19 +192,17 @@ textarea.input {
     border-width: 2px;
     width: inherit;
     height: inherit;
-  }
 
-  > input {
-    width: inherit;
-    height: inherit;
-  }
-
-  > input:checked+i {
     &:before {
       font-size: 20px;
       top: 5px;
       left: 5px;
     }
+  }
+
+  > input {
+    width: inherit;
+    height: inherit;
   }
 }
 .checkbox.large {

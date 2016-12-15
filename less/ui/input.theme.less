@@ -38,20 +38,24 @@
 
 .checkbox,.radio {
   > input+i {
-    border-color: @inputCheckboxAndRadioUncheckedColor;
+    border-color: @inputCheckboxAndRadioUncheckedBorderColor;
   }
 
   > input:checked+i {
-    border-color: @inputCheckboxAndRadioCheckedColor;
-    background: @inputCheckboxAndRadioCheckedColor;
+    border-color: @inputCheckboxAndRadioCheckedBackgroundColor;
+    background: @inputCheckboxAndRadioCheckedBackgroundColor;
 
     &:before {
-      color: @inputCheckboxAndRadioCheckedIconColor;
+      color: @inputCheckboxAndRadioCheckedFontColor;
     }
   }
 
   > input:disabled+i {
-    border-color: @inputCheckboxAndRadioDisabledColor;
-    background: @inputCheckboxAndRadioDisabledColor;
+    border-color: @inputCheckboxAndRadioDisabledBackgroundColor;
+    background: @inputCheckboxAndRadioDisabledBackgroundColor;
+
+    &:before {
+      color: @inputCheckboxAndRadioDisabledFontColor;
+    }
   }
 }

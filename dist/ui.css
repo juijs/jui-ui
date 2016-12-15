@@ -170,7 +170,12 @@
 }
 .jui .checkbox > input:disabled,
 .jui .radio > input:disabled {
+  opacity: 0;
   cursor: not-allowed;
+}
+.jui .checkbox > input:disabled + i:before,
+.jui .radio > input:disabled + i:before {
+  opacity: 1;
 }
 .jui .checkbox {
   width: 18px;
@@ -181,14 +186,14 @@
   width: inherit;
   height: inherit;
 }
-.jui .checkbox > input {
-  width: inherit;
-  height: inherit;
-}
-.jui .checkbox > input:checked + i:before {
+.jui .checkbox > i:before {
   font-size: 12px;
   top: 3px;
   left: 3px;
+}
+.jui .checkbox > input {
+  width: inherit;
+  height: inherit;
 }
 .jui .radio {
   width: 18px;
@@ -199,14 +204,14 @@
   width: inherit;
   height: inherit;
 }
-.jui .radio > input {
-  width: inherit;
-  height: inherit;
-}
-.jui .radio > input:checked + i:before {
+.jui .radio > i:before {
   font-size: 12px;
   top: 3px;
   left: 3px;
+}
+.jui .radio > input {
+  width: inherit;
+  height: inherit;
 }
 .jui .radio > i {
   border-radius: 18px;
@@ -217,16 +222,16 @@
   width: inherit;
   height: inherit;
 }
+.jui .checkbox.mini > i:before,
+.jui .radio.mini > i:before {
+  font-size: 10px;
+  top: 2px;
+  left: 2px;
+}
 .jui .checkbox.mini > input,
 .jui .radio.mini > input {
   width: inherit;
   height: inherit;
-}
-.jui .checkbox.mini > input:checked + i:before,
-.jui .radio.mini > input:checked + i:before {
-  font-size: 10px;
-  top: 2px;
-  left: 2px;
 }
 .jui .checkbox.mini {
   width: 14px;
@@ -245,16 +250,16 @@
   width: inherit;
   height: inherit;
 }
+.jui .checkbox.small > i:before,
+.jui .radio.small > i:before {
+  font-size: 12px;
+  top: 3px;
+  left: 3px;
+}
 .jui .checkbox.small > input,
 .jui .radio.small > input {
   width: inherit;
   height: inherit;
-}
-.jui .checkbox.small > input:checked + i:before,
-.jui .radio.small > input:checked + i:before {
-  font-size: 12px;
-  top: 3px;
-  left: 3px;
 }
 .jui .checkbox.small {
   width: 18px;
@@ -273,16 +278,16 @@
   width: inherit;
   height: inherit;
 }
+.jui .checkbox.normal > i:before,
+.jui .radio.normal > i:before {
+  font-size: 15px;
+  top: 5px;
+  left: 5px;
+}
 .jui .checkbox.normal > input,
 .jui .radio.normal > input {
   width: inherit;
   height: inherit;
-}
-.jui .checkbox.normal > input:checked + i:before,
-.jui .radio.normal > input:checked + i:before {
-  font-size: 15px;
-  top: 5px;
-  left: 5px;
 }
 .jui .checkbox.normal {
   width: 24px;
@@ -301,16 +306,16 @@
   width: inherit;
   height: inherit;
 }
+.jui .checkbox.large > i:before,
+.jui .radio.large > i:before {
+  font-size: 20px;
+  top: 5px;
+  left: 5px;
+}
 .jui .checkbox.large > input,
 .jui .radio.large > input {
   width: inherit;
   height: inherit;
-}
-.jui .checkbox.large > input:checked + i:before,
-.jui .radio.large > input:checked + i:before {
-  font-size: 20px;
-  top: 5px;
-  left: 5px;
 }
 .jui .checkbox.large {
   width: 30px;
