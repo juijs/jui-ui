@@ -45,26 +45,12 @@ textarea.input {
 .checkbox,.radio {
   position: relative;
   display: inline-block;
-  float: left;
 
   > i {
     position: absolute;
     z-index: 0;
     border-style: solid;
     border-radius: 1px;
-
-    font-family: "jennifer";
-    speak: none;
-    font-style: normal;
-    font-weight: normal;
-    font-variant: normal;
-    text-transform: none;
-    line-height: 1;
-    display: inline-block;
-
-    /* Better Font Rendering =========== */
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
 
     &:before {
       position: absolute;
@@ -79,7 +65,13 @@ textarea.input {
 
   > input+i {
     &:before {
-      content: ""
+      opacity: 0;
+    }
+  }
+
+  > input:checked+i {
+    &:before {
+      opacity: 1;
     }
   }
 
@@ -89,34 +81,22 @@ textarea.input {
 }
 
 .checkbox {
-  > input:checked+i {
-    &:before {
-      content: "\e99c";
-    }
-  }
-
   .checkbox.small;
 }
 .radio {
-  > input:checked+i {
-    &:before {
-      content: "\e99c";
-    }
-  }
-
   .radio.small;
 }
 
 .checkbox.mini,.radio.mini {
   > i {
     border-width: 1px;
-    width: 14px;
-    height: 14px;
+    width: inherit;
+    height: inherit;
   }
 
   > input {
-    width: 14px;
-    height: 14px;
+    width: inherit;
+    height: inherit;
   }
 
   > input:checked+i {
@@ -127,7 +107,14 @@ textarea.input {
     }
   }
 }
+.checkbox.mini {
+  width: 14px;
+  height: 14px;
+}
 .radio.mini {
+  width: 14px;
+  height: 14px;
+
   > i {
     border-radius: 14px;
   }
@@ -136,13 +123,13 @@ textarea.input {
 .checkbox.small,.radio.small {
   > i {
     border-width: 2px;
-    width: 18px;
-    height: 18px;
+    width: inherit;
+    height: inherit;
   }
 
   > input {
-    width: 18px;
-    height: 18px;
+    width: inherit;
+    height: inherit;
   }
 
   > input:checked+i {
@@ -153,7 +140,14 @@ textarea.input {
     }
   }
 }
+.checkbox.small {
+  width: 18px;
+  height: 18px;
+}
 .radio.small {
+  width: 18px;
+  height: 18px;
+
   > i {
     border-radius: 18px;
   }
@@ -162,13 +156,13 @@ textarea.input {
 .checkbox.normal,.radio.normal {
   > i {
     border-width: 2px;
-    width: 24px;
-    height: 24px;
+    width: inherit;
+    height: inherit;
   }
 
   > input {
-    width: 24px;
-    height: 24px;
+    width: inherit;
+    height: inherit;
   }
 
   > input:checked+i {
@@ -179,7 +173,14 @@ textarea.input {
     }
   }
 }
+.checkbox.normal {
+  width: 24px;
+  height: 24px;
+}
 .radio.normal {
+  width: 24px;
+  height: 24px;
+
   > i {
     border-radius: 24px;
   }
@@ -188,13 +189,13 @@ textarea.input {
 .checkbox.large,.radio.large {
   > i {
     border-width: 2px;
-    width: 30px;
-    height: 30px;
+    width: inherit;
+    height: inherit;
   }
 
   > input {
-    width: 30px;
-    height: 30px;
+    width: inherit;
+    height: inherit;
   }
 
   > input:checked+i {
@@ -205,7 +206,14 @@ textarea.input {
     }
   }
 }
+.checkbox.large {
+  width: 30px;
+  height: 30px;
+}
 .radio.large {
+  width: 30px;
+  height: 30px;
+
   > i {
     border-radius: 30px;
   }

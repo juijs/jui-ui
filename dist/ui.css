@@ -142,7 +142,6 @@
 .jui .radio {
   position: relative;
   display: inline-block;
-  float: left;
 }
 .jui .checkbox > i,
 .jui .radio > i {
@@ -150,17 +149,6 @@
   z-index: 0;
   border-style: solid;
   border-radius: 1px;
-  font-family: "jennifer";
-  speak: none;
-  font-style: normal;
-  font-weight: normal;
-  font-variant: normal;
-  text-transform: none;
-  line-height: 1;
-  display: inline-block;
-  /* Better Font Rendering =========== */
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 .jui .checkbox > i:before,
 .jui .radio > i:before {
@@ -174,40 +162,46 @@
 }
 .jui .checkbox > input + i:before,
 .jui .radio > input + i:before {
-  content: "";
+  opacity: 0;
+}
+.jui .checkbox > input:checked + i:before,
+.jui .radio > input:checked + i:before {
+  opacity: 1;
 }
 .jui .checkbox > input:disabled,
 .jui .radio > input:disabled {
   cursor: not-allowed;
 }
-.jui .checkbox > input:checked + i:before {
-  content: "\e99c";
+.jui .checkbox {
+  width: 18px;
+  height: 18px;
 }
 .jui .checkbox > i {
   border-width: 2px;
-  width: 18px;
-  height: 18px;
+  width: inherit;
+  height: inherit;
 }
 .jui .checkbox > input {
-  width: 18px;
-  height: 18px;
+  width: inherit;
+  height: inherit;
 }
 .jui .checkbox > input:checked + i:before {
   font-size: 12px;
   top: 3px;
   left: 3px;
 }
-.jui .radio > input:checked + i:before {
-  content: "\e99c";
+.jui .radio {
+  width: 18px;
+  height: 18px;
 }
 .jui .radio > i {
   border-width: 2px;
-  width: 18px;
-  height: 18px;
+  width: inherit;
+  height: inherit;
 }
 .jui .radio > input {
-  width: 18px;
-  height: 18px;
+  width: inherit;
+  height: inherit;
 }
 .jui .radio > input:checked + i:before {
   font-size: 12px;
@@ -220,13 +214,13 @@
 .jui .checkbox.mini > i,
 .jui .radio.mini > i {
   border-width: 1px;
-  width: 14px;
-  height: 14px;
+  width: inherit;
+  height: inherit;
 }
 .jui .checkbox.mini > input,
 .jui .radio.mini > input {
-  width: 14px;
-  height: 14px;
+  width: inherit;
+  height: inherit;
 }
 .jui .checkbox.mini > input:checked + i:before,
 .jui .radio.mini > input:checked + i:before {
@@ -234,19 +228,27 @@
   top: 2px;
   left: 2px;
 }
+.jui .checkbox.mini {
+  width: 14px;
+  height: 14px;
+}
+.jui .radio.mini {
+  width: 14px;
+  height: 14px;
+}
 .jui .radio.mini > i {
   border-radius: 14px;
 }
 .jui .checkbox.small > i,
 .jui .radio.small > i {
   border-width: 2px;
-  width: 18px;
-  height: 18px;
+  width: inherit;
+  height: inherit;
 }
 .jui .checkbox.small > input,
 .jui .radio.small > input {
-  width: 18px;
-  height: 18px;
+  width: inherit;
+  height: inherit;
 }
 .jui .checkbox.small > input:checked + i:before,
 .jui .radio.small > input:checked + i:before {
@@ -254,19 +256,27 @@
   top: 3px;
   left: 3px;
 }
+.jui .checkbox.small {
+  width: 18px;
+  height: 18px;
+}
+.jui .radio.small {
+  width: 18px;
+  height: 18px;
+}
 .jui .radio.small > i {
   border-radius: 18px;
 }
 .jui .checkbox.normal > i,
 .jui .radio.normal > i {
   border-width: 2px;
-  width: 24px;
-  height: 24px;
+  width: inherit;
+  height: inherit;
 }
 .jui .checkbox.normal > input,
 .jui .radio.normal > input {
-  width: 24px;
-  height: 24px;
+  width: inherit;
+  height: inherit;
 }
 .jui .checkbox.normal > input:checked + i:before,
 .jui .radio.normal > input:checked + i:before {
@@ -274,25 +284,41 @@
   top: 5px;
   left: 5px;
 }
+.jui .checkbox.normal {
+  width: 24px;
+  height: 24px;
+}
+.jui .radio.normal {
+  width: 24px;
+  height: 24px;
+}
 .jui .radio.normal > i {
   border-radius: 24px;
 }
 .jui .checkbox.large > i,
 .jui .radio.large > i {
   border-width: 2px;
-  width: 30px;
-  height: 30px;
+  width: inherit;
+  height: inherit;
 }
 .jui .checkbox.large > input,
 .jui .radio.large > input {
-  width: 30px;
-  height: 30px;
+  width: inherit;
+  height: inherit;
 }
 .jui .checkbox.large > input:checked + i:before,
 .jui .radio.large > input:checked + i:before {
   font-size: 20px;
   top: 5px;
   left: 5px;
+}
+.jui .checkbox.large {
+  width: 30px;
+  height: 30px;
+}
+.jui .radio.large {
+  width: 30px;
+  height: 30px;
 }
 .jui .radio.large > i {
   border-radius: 30px;
@@ -1712,524 +1738,530 @@
     transform: scale(1);
   }
 }
-.jui .icon-layout3:before {
-  content: "\e9ac";
-}
-.jui .icon-tool:before {
+.jui .icon-time:before {
   content: "\e900";
 }
-.jui .icon-screenshot:before {
+.jui .icon-dot:before {
   content: "\e901";
 }
-.jui .icon-server:before {
+.jui .icon-check:before {
   content: "\e902";
 }
-.jui .icon-slider:before {
+.jui .icon-download:before {
   content: "\e903";
 }
-.jui .icon-statistics:before {
+.jui .icon-upload:before {
   content: "\e904";
 }
-.jui .icon-themes:before {
+.jui .icon-layout3:before {
   content: "\e905";
 }
-.jui .icon-was:before {
+.jui .icon-tool:before {
   content: "\e906";
 }
-.jui .icon-realtime:before {
+.jui .icon-screenshot:before {
   content: "\e907";
 }
-.jui .icon-report-link:before {
+.jui .icon-server:before {
   content: "\e908";
 }
-.jui .icon-report2:before {
+.jui .icon-slider:before {
   content: "\e909";
 }
-.jui .icon-resize:before {
+.jui .icon-statistics:before {
   content: "\e90a";
 }
-.jui .icon-return:before {
+.jui .icon-themes:before {
   content: "\e90b";
 }
-.jui .icon-label:before {
+.jui .icon-was:before {
   content: "\e90c";
 }
-.jui .icon-mail:before {
+.jui .icon-realtime:before {
   content: "\e90d";
 }
-.jui .icon-message:before {
+.jui .icon-report-link:before {
   content: "\e90e";
 }
-.jui .icon-monitoring:before {
+.jui .icon-report2:before {
   content: "\e90f";
 }
-.jui .icon-grip1:before {
+.jui .icon-resize:before {
   content: "\e910";
 }
-.jui .icon-grip2:before {
+.jui .icon-return:before {
   content: "\e911";
 }
-.jui .icon-grip3:before {
+.jui .icon-label:before {
   content: "\e912";
 }
-.jui .icon-dashboard:before {
+.jui .icon-mail:before {
   content: "\e913";
 }
-.jui .icon-domain:before {
+.jui .icon-message:before {
   content: "\e914";
 }
-.jui .icon-edit:before {
+.jui .icon-monitoring:before {
   content: "\e915";
 }
-.jui .icon-etc:before {
+.jui .icon-grip1:before {
   content: "\e916";
 }
-.jui .icon-chart-candle:before {
+.jui .icon-grip2:before {
   content: "\e917";
 }
-.jui .icon-chart-gauge:before {
+.jui .icon-grip3:before {
   content: "\e918";
 }
-.jui .icon-arrow2:before {
+.jui .icon-dashboard:before {
   content: "\e919";
 }
-.jui .icon-arrow4:before {
+.jui .icon-domain:before {
   content: "\e91a";
 }
-.jui .icon-bell:before {
+.jui .icon-edit:before {
   content: "\e91b";
 }
-.jui .icon-info:before {
+.jui .icon-etc:before {
   content: "\e91c";
 }
-.jui .icon-tumblr:before {
+.jui .icon-chart-candle:before {
   content: "\e91d";
 }
-.jui .icon-kakao:before {
+.jui .icon-chart-gauge:before {
   content: "\e91e";
 }
-.jui .icon-googleplus2:before {
+.jui .icon-arrow2:before {
   content: "\e91f";
 }
-.jui .icon-close2:before {
+.jui .icon-arrow4:before {
   content: "\e920";
 }
-.jui .icon-facebook2:before {
+.jui .icon-bell:before {
   content: "\e921";
 }
-.jui .icon-github2:before {
+.jui .icon-info:before {
   content: "\e922";
 }
-.jui .icon-hierarchy:before {
+.jui .icon-tumblr:before {
   content: "\e923";
 }
-.jui .icon-loveit:before {
+.jui .icon-kakao:before {
   content: "\e924";
 }
-.jui .icon-return2:before {
+.jui .icon-googleplus2:before {
   content: "\e925";
 }
-.jui .icon-theme:before {
+.jui .icon-close2:before {
   content: "\e926";
 }
-.jui .icon-line-merge:before {
+.jui .icon-facebook2:before {
   content: "\e927";
 }
-.jui .icon-line-separate:before {
+.jui .icon-github2:before {
   content: "\e928";
 }
-.jui .icon-enter:before {
+.jui .icon-hierarchy:before {
   content: "\e929";
 }
-.jui .icon-ws:before {
+.jui .icon-loveit:before {
   content: "\e92a";
 }
-.jui .icon-clip:before {
+.jui .icon-return2:before {
   content: "\e92b";
 }
-.jui .icon-scissors:before {
+.jui .icon-theme:before {
   content: "\e92c";
 }
-.jui .icon-topology:before {
+.jui .icon-line-merge:before {
   content: "\e92d";
 }
-.jui .icon-equalizer:before {
+.jui .icon-line-separate:before {
   content: "\e92e";
 }
-.jui .icon-idea:before {
+.jui .icon-enter:before {
   content: "\e92f";
 }
-.jui .icon-tag:before {
+.jui .icon-ws:before {
   content: "\e930";
 }
-.jui .icon-all:before {
+.jui .icon-clip:before {
   content: "\e931";
 }
-.jui .icon-cursor1:before {
+.jui .icon-scissors:before {
   content: "\e932";
 }
-.jui .icon-roundsquare:before {
+.jui .icon-topology:before {
   content: "\e933";
 }
-.jui .icon-paintbucket:before {
+.jui .icon-equalizer:before {
   content: "\e934";
 }
-.jui .icon-square:before {
+.jui .icon-idea:before {
   content: "\e935";
 }
-.jui .icon-circle:before {
+.jui .icon-tag:before {
   content: "\e936";
 }
-.jui .icon-eraser:before {
+.jui .icon-all:before {
   content: "\e937";
 }
-.jui .icon-paintbrush:before {
+.jui .icon-cursor1:before {
   content: "\e938";
 }
-.jui .icon-pen:before {
+.jui .icon-roundsquare:before {
   content: "\e939";
 }
-.jui .icon-eyedropper:before {
+.jui .icon-paintbucket:before {
   content: "\e93a";
 }
-.jui .icon-x-mark:before {
+.jui .icon-square:before {
   content: "\e93b";
 }
-.jui .icon-server2:before {
+.jui .icon-circle:before {
   content: "\e93c";
 }
-.jui .icon-server1:before {
+.jui .icon-eraser:before {
   content: "\e93d";
 }
-.jui .icon-unhappy:before {
+.jui .icon-paintbrush:before {
   content: "\e93e";
 }
-.jui .icon-layout2:before {
+.jui .icon-pen:before {
   content: "\e93f";
 }
-.jui .icon-layout1:before {
+.jui .icon-eyedropper:before {
   content: "\e940";
 }
-.jui .icon-3d:before {
+.jui .icon-x-mark:before {
   content: "\e941";
 }
-.jui .icon-cursor:before {
+.jui .icon-server2:before {
   content: "\e942";
 }
-.jui .icon-feed:before {
+.jui .icon-server1:before {
   content: "\e943";
 }
-.jui .icon-filter:before {
+.jui .icon-unhappy:before {
   content: "\e944";
 }
-.jui .icon-column:before {
+.jui .icon-layout2:before {
   content: "\e945";
 }
-.jui .icon-analysis:before {
+.jui .icon-layout1:before {
   content: "\e946";
 }
-.jui .icon-wireless:before {
+.jui .icon-d:before {
   content: "\e947";
 }
-.jui .icon-network:before {
+.jui .icon-cursor:before {
   content: "\e948";
 }
-.jui .icon-cloud:before {
+.jui .icon-feed:before {
   content: "\e949";
 }
-.jui .icon-checkbox:before {
+.jui .icon-filter:before {
   content: "\e94a";
 }
-.jui .icon-checkbox2:before {
+.jui .icon-column:before {
   content: "\e94b";
 }
-.jui .icon-stop:before {
+.jui .icon-analysis:before {
   content: "\e94c";
 }
-.jui .icon-link2:before {
+.jui .icon-wireless:before {
   content: "\e94d";
 }
-.jui .icon-minus2:before {
+.jui .icon-network:before {
   content: "\e94e";
 }
-.jui .icon-more:before {
+.jui .icon-cloud:before {
   content: "\e94f";
 }
-.jui .icon-zip:before {
+.jui .icon-checkbox:before {
   content: "\e950";
 }
-.jui .icon-mobile:before {
+.jui .icon-checkbox2:before {
   content: "\e951";
 }
-.jui .icon-tablet:before {
+.jui .icon-stop:before {
   content: "\e952";
 }
-.jui .icon-share2:before {
+.jui .icon-link2:before {
   content: "\e953";
 }
-.jui .icon-caution3:before {
+.jui .icon-minus2:before {
   content: "\e954";
 }
-.jui .icon-lock:before {
+.jui .icon-more:before {
   content: "\e955";
 }
-.jui .icon-script:before {
+.jui .icon-zip:before {
   content: "\e956";
 }
-.jui .icon-business:before {
+.jui .icon-mobile:before {
   content: "\e957";
 }
-.jui .icon-build:before {
+.jui .icon-tablet:before {
   content: "\e958";
 }
-.jui .icon-themes2:before {
+.jui .icon-share2:before {
   content: "\e959";
 }
-.jui .icon-download:before {
+.jui .icon-caution3:before {
   content: "\e95a";
 }
-.jui .icon-upload:before {
+.jui .icon-lock:before {
   content: "\e95b";
 }
-.jui .icon-pin:before {
+.jui .icon-script:before {
   content: "\e95c";
 }
-.jui .icon-template:before {
+.jui .icon-business:before {
   content: "\e95d";
 }
-.jui .icon-line-height:before {
+.jui .icon-build:before {
   content: "\e95e";
 }
-.jui .icon-outdent:before {
+.jui .icon-themes2:before {
   content: "\e95f";
 }
-.jui .icon-indent:before {
+.jui .icon-pin:before {
   content: "\e960";
 }
-.jui .icon-like:before {
+.jui .icon-template:before {
   content: "\e961";
 }
-.jui .icon-blogger:before {
+.jui .icon-line-height:before {
   content: "\e962";
 }
-.jui .icon-github:before {
+.jui .icon-outdent:before {
   content: "\e963";
 }
-.jui .icon-facebook:before {
+.jui .icon-indent:before {
   content: "\e964";
 }
-.jui .icon-googleplus:before {
+.jui .icon-like:before {
   content: "\e965";
 }
-.jui .icon-share:before {
+.jui .icon-blogger:before {
   content: "\e966";
 }
-.jui .icon-twitter:before {
+.jui .icon-github:before {
   content: "\e967";
 }
-.jui .icon-image:before {
+.jui .icon-facebook:before {
   content: "\e968";
 }
-.jui .icon-refresh2:before {
+.jui .icon-googleplus:before {
   content: "\e969";
 }
-.jui .icon-connection:before {
+.jui .icon-share:before {
   content: "\e96a";
 }
-.jui .icon-analysis2:before {
+.jui .icon-twitter:before {
   content: "\e96b";
 }
-.jui .icon-chart-scatter:before {
+.jui .icon-image:before {
   content: "\e96c";
 }
-.jui .icon-chart-radar:before {
+.jui .icon-refresh2:before {
   content: "\e96d";
 }
-.jui .icon-chart-area:before {
+.jui .icon-connection:before {
   content: "\e96e";
 }
-.jui .icon-chart-column:before {
+.jui .icon-analysis2:before {
   content: "\e96f";
 }
-.jui .icon-chart-bar:before {
+.jui .icon-chart-scatter:before {
   content: "\e970";
 }
-.jui .icon-chart-line:before {
+.jui .icon-chart-radar:before {
   content: "\e971";
 }
-.jui .icon-info-message:before {
+.jui .icon-chart-area:before {
   content: "\e972";
 }
-.jui .icon-report:before {
+.jui .icon-chart-column:before {
   content: "\e973";
 }
-.jui .icon-menu:before {
+.jui .icon-chart-bar:before {
   content: "\e974";
 }
-.jui .icon-report-build:before {
+.jui .icon-chart-line:before {
   content: "\e975";
 }
-.jui .icon-jennifer-server:before {
+.jui .icon-info-message:before {
   content: "\e976";
 }
-.jui .icon-user:before {
+.jui .icon-report:before {
   content: "\e977";
 }
-.jui .icon-rule:before {
+.jui .icon-menu:before {
   content: "\e978";
 }
-.jui .icon-profile:before {
+.jui .icon-report-build:before {
   content: "\e979";
 }
-.jui .icon-device:before {
+.jui .icon-jennifer-server:before {
   content: "\e97a";
 }
-.jui .icon-caution2:before {
+.jui .icon-user:before {
   content: "\e97b";
 }
-.jui .icon-db:before {
+.jui .icon-rule:before {
   content: "\e97c";
 }
-.jui .icon-minus:before {
+.jui .icon-profile:before {
   content: "\e97d";
 }
-.jui .icon-checkmark:before {
+.jui .icon-device:before {
   content: "\e97e";
 }
-.jui .icon-stoppage:before {
+.jui .icon-caution2:before {
   content: "\e97f";
 }
-.jui .icon-align-right:before {
+.jui .icon-db:before {
   content: "\e980";
 }
-.jui .icon-caution:before {
+.jui .icon-minus:before {
   content: "\e981";
 }
-.jui .icon-loading:before {
+.jui .icon-checkmark:before {
   content: "\e982";
 }
-.jui .icon-plus:before {
+.jui .icon-stoppage:before {
   content: "\e983";
 }
-.jui .icon-pause:before {
+.jui .icon-align-right:before {
   content: "\e984";
 }
-.jui .icon-play:before {
+.jui .icon-caution:before {
   content: "\e985";
 }
-.jui .icon-right:before {
+.jui .icon-loading:before {
   content: "\e986";
 }
-.jui .icon-left:before {
+.jui .icon-plus:before {
   content: "\e987";
 }
-.jui .icon-bold:before {
+.jui .icon-pause:before {
   content: "\e988";
 }
-.jui .icon-chart:before {
+.jui .icon-play:before {
   content: "\e989";
 }
-.jui .icon-document:before {
+.jui .icon-right:before {
   content: "\e98a";
 }
-.jui .icon-link:before {
+.jui .icon-left:before {
   content: "\e98b";
 }
-.jui .icon-arrow3:before {
+.jui .icon-bold:before {
   content: "\e98c";
 }
-.jui .icon-arrow1:before {
+.jui .icon-chart:before {
   content: "\e98d";
 }
-.jui .icon-textcolor:before {
+.jui .icon-document:before {
   content: "\e98e";
 }
-.jui .icon-text:before {
+.jui .icon-link:before {
   content: "\e98f";
 }
-.jui .icon-refresh:before {
+.jui .icon-arrow3:before {
   content: "\e990";
 }
-.jui .icon-chevron-right:before {
+.jui .icon-arrow1:before {
   content: "\e991";
 }
-.jui .icon-chevron-left:before {
+.jui .icon-textcolor:before {
   content: "\e992";
 }
-.jui .icon-align-center:before {
+.jui .icon-text:before {
   content: "\e993";
 }
-.jui .icon-align-left:before {
+.jui .icon-refresh:before {
   content: "\e994";
 }
-.jui .icon-preview:before {
+.jui .icon-chevron-right:before {
   content: "\e995";
 }
-.jui .icon-close:before {
+.jui .icon-chevron-left:before {
   content: "\e996";
 }
-.jui .icon-exit:before {
+.jui .icon-align-center:before {
   content: "\e997";
 }
-.jui .icon-dashboardlist:before {
+.jui .icon-align-left:before {
   content: "\e998";
 }
-.jui .icon-add-dir:before {
+.jui .icon-preview:before {
   content: "\e999";
 }
-.jui .icon-add-dir2:before {
+.jui .icon-close:before {
   content: "\e99a";
 }
-.jui .icon-calendar:before {
+.jui .icon-exit:before {
   content: "\e99b";
 }
-.jui .icon-check:before {
+.jui .icon-dashboardlist:before {
   content: "\e99c";
 }
-.jui .icon-gear:before {
+.jui .icon-add-dir:before {
   content: "\e99d";
 }
-.jui .icon-help:before {
+.jui .icon-add-dir2:before {
   content: "\e99e";
 }
-.jui .icon-hide:before {
+.jui .icon-calendar:before {
   content: "\e99f";
 }
-.jui .icon-home:before {
+.jui .icon-gear:before {
   content: "\e9a0";
 }
-.jui .icon-html:before {
+.jui .icon-help:before {
   content: "\e9a1";
 }
-.jui .icon-italic:before {
+.jui .icon-hide:before {
   content: "\e9a2";
 }
-.jui .icon-new-window:before {
+.jui .icon-home:before {
   content: "\e9a3";
 }
-.jui .icon-orderedlist:before {
+.jui .icon-html:before {
   content: "\e9a4";
 }
-.jui .icon-printer:before {
+.jui .icon-italic:before {
   content: "\e9a5";
 }
-.jui .icon-save:before {
+.jui .icon-new-window:before {
   content: "\e9a6";
 }
-.jui .icon-search:before {
+.jui .icon-orderedlist:before {
   content: "\e9a7";
 }
-.jui .icon-table:before {
+.jui .icon-printer:before {
   content: "\e9a8";
 }
-.jui .icon-trashcan:before {
+.jui .icon-save:before {
   content: "\e9a9";
 }
-.jui .icon-underline:before {
+.jui .icon-search:before {
   content: "\e9aa";
 }
-.jui .icon-unorderedlist:before {
+.jui .icon-table:before {
   content: "\e9ab";
+}
+.jui .icon-trashcan:before {
+  content: "\e9ac";
+}
+.jui .icon-underline:before {
+  content: "\e9ad";
+}
+.jui .icon-unorderedlist:before {
+  content: "\e9ae";
 }
 .jui .navbar {
   padding: 5px 15px 5px 15px;
