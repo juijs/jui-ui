@@ -178,43 +178,43 @@
   opacity: 1;
 }
 .jui .checkbox {
-  width: 18px;
-  height: 18px;
+  width: 14px;
+  height: 14px;
 }
 .jui .checkbox > i {
-  border-width: 2px;
+  border-width: 1px;
   width: inherit;
   height: inherit;
 }
 .jui .checkbox > i:before {
-  font-size: 12px;
-  top: 3px;
-  left: 3px;
+  font-size: 10px;
+  top: 2px;
+  left: 2px;
 }
 .jui .checkbox > input {
   width: inherit;
   height: inherit;
 }
 .jui .radio {
-  width: 18px;
-  height: 18px;
+  width: 14px;
+  height: 14px;
 }
 .jui .radio > i {
-  border-width: 2px;
+  border-width: 1px;
   width: inherit;
   height: inherit;
 }
 .jui .radio > i:before {
-  font-size: 12px;
-  top: 3px;
-  left: 3px;
+  font-size: 10px;
+  top: 2px;
+  left: 2px;
 }
 .jui .radio > input {
   width: inherit;
   height: inherit;
 }
 .jui .radio > i {
-  border-radius: 18px;
+  border-radius: 14px;
 }
 .jui .checkbox.mini > i,
 .jui .radio.mini > i {
