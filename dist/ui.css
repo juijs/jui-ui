@@ -1743,6 +1743,9 @@
     transform: scale(1);
   }
 }
+.jui .icon-tool2:before {
+  content: "\e9af";
+}
 .jui .icon-time:before {
   content: "\e900";
 }
