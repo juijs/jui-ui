@@ -10,15 +10,16 @@ jui.defineUI("ui.accordion", [ "jquery", "util.base" ], function($, _) {
         var activeIndex = 0;
 
         var $title = null,
-            $content = null;
+            $contents = null;
 
         function showTitle(index) {
             $title.each(function(i) {
                 if(index == i) {
                     $(this).addClass("active");
-                    $content.insertAfter(this).show();
+                    $(this).next().show();
                 } else {
                     $(this).removeClass("active");
+                    $(this).next().hide();
                 }
             });
         }
@@ -28,7 +29,7 @@ jui.defineUI("ui.accordion", [ "jquery", "util.base" ], function($, _) {
                 self.addEvent(this, "click", function(e) {
                     if($(this).hasClass("active") && self.options.autoFold) {
                         $(this).removeClass("active");
-                        $content.hide();
+                        $(this).next().hide();
                         self.emit("fold", [ i, e ] );
                     } else {
                         showTitle(i);
@@ -42,16 +43,16 @@ jui.defineUI("ui.accordion", [ "jquery", "util.base" ], function($, _) {
             var opts = this.options;
 
             $title = $(this.root).find(".title");
-            $content = $(this.root).find(".content");
+            $contents = $(this.root).find(".content");
 
             if(_.typeCheck("integer", opts.index)) {
                 showTitle(opts.index);
             } else {
-                $content.hide();
+                $contents.hide();
             }
 
             setTitleEvent(this);
-        }
+        };
 
         /**
          * @method activeIndex
