@@ -19,7 +19,7 @@ jui.defineUI("ui.accordion", [ "jquery", "util.base" ], function($, _) {
                     $(this).addClass("active");
 
                     if (self.options.multipanel) {
-                        $(this).next().show();
+                        $(this).next('.content').show();
                     }  else {
                         $contents.insertAfter(this).show();
                     }
@@ -27,7 +27,7 @@ jui.defineUI("ui.accordion", [ "jquery", "util.base" ], function($, _) {
                     $(this).removeClass("active");
 
                     if (self.options.multipanel) {
-                        $(this).next().hide();
+                        $(this).next('.content').hide();
                     }
 
                 }
@@ -41,7 +41,7 @@ jui.defineUI("ui.accordion", [ "jquery", "util.base" ], function($, _) {
                         $(this).removeClass("active");
 
                         if (self.options.multipanel) {
-                            $(this).next().hide();
+                            $(this).next('.content').hide();
                         } else {
                             $contents.hide();
                         }
