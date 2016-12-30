@@ -3497,18 +3497,29 @@ jui.defineUI("ui.accordion", [ "jquery", "util.base" ], function($, _) {
      * @requires jquery
      */
     var UI = function() {
+        var self;
         var activeIndex = 0;
 
         var $title = null,
-            $content = null;
+            $contents = null;
 
         function showTitle(index) {
             $title.each(function(i) {
                 if(index == i) {
                     $(this).addClass("active");
-                    $content.insertAfter(this).show();
+
+                    if (self.options.multipanel) {
+                        $(this).next().show();
+                    }  else {
+                        $contents.insertAfter(this).show();
+                    }
                 } else {
                     $(this).removeClass("active");
+
+                    if (self.options.multipanel) {
+                        $(this).next().hide();
+                    }
+
                 }
             });
         }
@@ -3518,7 +3529,12 @@ jui.defineUI("ui.accordion", [ "jquery", "util.base" ], function($, _) {
                 self.addEvent(this, "click", function(e) {
                     if($(this).hasClass("active") && self.options.autoFold) {
                         $(this).removeClass("active");
-                        $content.hide();
+
+                        if (self.options.multipanel) {
+                            $(this).next().hide();
+                        } else {
+                            $contents.hide();
+                        }
                         self.emit("fold", [ i, e ] );
                     } else {
                         showTitle(i);
@@ -3529,19 +3545,22 @@ jui.defineUI("ui.accordion", [ "jquery", "util.base" ], function($, _) {
         }
 
         this.init = function() {
+            self = this;
             var opts = this.options;
 
             $title = $(this.root).find(".title");
-            $content = $(this.root).find(".content");
+            $contents = $(this.root).find(".content");
 
             if(_.typeCheck("integer", opts.index)) {
                 showTitle(opts.index);
             } else {
-                $content.hide();
+                $contents.hide();
             }
 
             setTitleEvent(this);
-        }
+
+            this.emit('init');
+        };
 
         /**
          * @method activeIndex
@@ -3566,7 +3585,13 @@ jui.defineUI("ui.accordion", [ "jquery", "util.base" ], function($, _) {
              * @cfg {Boolean} [autoFold=false]
              * When you click on a node, the node folding
              */
-            autoFold: false
+            autoFold: false,
+
+            /**
+             * @cfg {Boolean} [multipanel=false]
+             *
+             */
+            multipanel : false
         }
     }
 
@@ -3588,6 +3613,7 @@ jui.defineUI("ui.accordion", [ "jquery", "util.base" ], function($, _) {
 
     return UI;
 });
+
 jui.defineUI("ui.switch", [ "jquery", "util.base" ], function($, _) {
 
 

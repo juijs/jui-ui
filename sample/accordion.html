@@ -26,6 +26,20 @@
             },
             index: 1
         });
+
+        accordion("#accordion_1", {
+            multipanel : true,
+            event: {
+                init : function () {
+                    console.log('accordian initialized.');
+                },
+                open: function(index, e) {
+                    $(this.root).find(".title > i").attr("class", "icon-arrow1");
+                    $(e.target).find("i").attr("class", "icon-arrow3");
+                }
+            },
+            index: 1
+        });
     });
 </script>
 </head>
@@ -108,6 +122,30 @@
             </div>
             <div class="title">
                 Group Item #3
+            </div>
+        </div>
+    </div>
+    <div class="col col-3">
+        <p>Support Multi Panel</p>
+
+        <div id="accordion_1" class="accordion">
+            <div class="title active">
+                Group Item #1 <i class="icon-arrow3"></i>
+            </div>
+            <div class="content">
+                First Accordion
+            </div>
+            <div class="title">
+                Group Item #2 <i class="icon-arrow1"></i>
+            </div>
+            <div class="content">
+                Second Accordion
+            </div>
+            <div class="title">
+                Group Item #3 <i class="icon-arrow1"></i>
+            </div>
+            <div class="content">
+                Three Accordion
             </div>
         </div>
     </div>
