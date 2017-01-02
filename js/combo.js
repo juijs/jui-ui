@@ -2,23 +2,23 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 
 	var hideAll = function() {
 		var call_list = jui.get("ui.combo");
-		
+
 		for(var i = 0; i < call_list.length; i++) {
 			var ui_list = call_list[i];
-			
+
 			for(var j = 0; j < ui_list.length; j++) {
 				if(ui_list[j].type == "open") ui_list[j].fold();
 			}
 		}
 	}
-	
-	$(function() { 
+
+	$(function() {
 		document.addEventListener("click", function(e) {
 			hideAll();
 		});
 	});
-	
-	
+
+
 	/**
 	 * @class ui.combo
 	 * @extends core
@@ -46,78 +46,78 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 					value = text;
 					$(elem).attr("value", value);
 				}
-				
+
 				if((type == "index" && data == i) || (type == "value" && data == value)) {
 					ui_data = { index: i, value: value, text: text };
-					
+
 					$combo_root.attr("value", value);
 					$combo_text.html(text);
-					
+
 					if ($combo_root.select && $combo_root.select[0] ) {
 						$combo_root.select[0].selectedIndex = i;
 					}
 				}
 			});
-			
-			if($combo_list.size() == 0) {
+
+			if($combo_list.length == 0) {
 				ui_data = null;
 			}
 		}
-		
+
 		function getElement(target) { // 드롭다운 메뉴 타겟
-			return ($(target).children("a").size() > 0) ? $(target).children("a")[0] : target;
+			return ($(target).children("a").length > 0) ? $(target).children("a")[0] : target;
 		}
-		
+
 		function setEventKeydown(self) {
 			if(!self.options.keydown) return;
 
             // 기본 상태 처리
             index = self.options.index;
             selectItem(self);
-			
+
 			self.addEvent(window, "keydown", function(e) {
 				if(self.type == "fold") return;
 				var $list = ui_list["drop"].children("li");
-				
+
 				if(e.which == 38) { // up
-					if(index < 1) index = $list.size() - 1;
+					if(index < 1) index = $list.length - 1;
 					else index--;
-					
+
 					selectItem(self, function() {
 						index--;
 						selectItem(self);
 					});
-					
+
 					return false;
 				}
-				
+
 				if(e.which == 40) { // down
-					if(index < $list.size() - 1) index++;
+					if(index < $list.length - 1) index++;
 					else index = 0;
-					
+
 					selectItem(self, function() {
 						index++;
 						selectItem(self);
 					});
-					
+
 					return false;
 				}
-				
+
 				if(e.which == 13) { // enter
 					$list.eq(index).trigger("click");
 				}
 			});
 		}
-		
+
 		function selectItem(self, callback) {
 			var $list = ui_list["drop"].children("li"),
 				$target = $list.eq(index);
-			
+
 			$list.removeClass("active");
 
 			if($target.val() != "" || $target.html() != "") {
 				$target.addClass("active");
-				
+
 				if(self.options.height > 0) {
 					ui_list["drop"].scrollTop(index * $target.outerHeight());
 				}
@@ -127,12 +127,12 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 				}
 			}
 		}
-		
+
 		function makeSelectTouch(self) {
 			if(!_.isTouch) return;
-			
+
 			var $combo_root = ui_list["root"];
-			
+
 			if ($combo_root.select && $combo_root.select[0]) {
 				var $select = $combo_root.select;
 				$select.empty();
@@ -141,21 +141,21 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 					position: "absolute",
 					opacity : 0.01
 				});
-				
-				$combo_root.find("ul").after($select);					
-				
+
+				$combo_root.find("ul").after($select);
+
 				self.addEvent($select, "change", function(e) {
 					var elem = $(e.currentTarget).find("option:selected").data("elem");
 					self.addTrigger(elem, "touchstart");
 				});
-				
+
 				$combo_root.select = $select;
 			}
 
 			$combo_root.find("ul > li").each(function(i, elem) {
 				var value = $(elem).data('value');
 				var text = $(elem).text();
-				
+
 				$select.append($("<option></option>").val(value).text(text).data("elem", elem));
 			});
 		}
@@ -173,16 +173,16 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 
 		this.init = function() {
 			var self = this, opts = this.options;
-			
+
 			var $combo_root 	= $(this.root),
 				$combo_text 	= $combo_root.children(".btn").not(".toggle"),
 				$combo_toggle 	= $combo_root.children(".toggle"),
 				$combo_click	= $combo_root.children(".btn"),
 				$combo_drop 	= $combo_root.children("ul");
-			
+
 			//-- 드롭다운은 중앙으로 위치 (그룹 스타일 좌/우 라운드 효과)
 			$combo_drop.insertAfter($combo_text);
-			
+
 			// Width
 			if(opts.width > 0) {
 				$combo_text.outerWidth(opts.width - $combo_toggle.outerWidth() + 1);
@@ -192,7 +192,7 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 					"white-space": "nowrap"
 				});
 			}
-			
+
 			// Height
 			if(opts.height > 0) {
 				$combo_drop.css({
@@ -208,14 +208,14 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 					$combo_root.select.focus();
 				} else {
 					if(self.type == "open") return;
-					
+
 					hideAll();
-					self.open(e);					
+					self.open(e);
 				}
-				
+
 				return false;
 			});
-			
+
 			// Select
 			this.addEvent($combo_drop, "click", "li:not(.divider)", function(e) {
 				hideAll();
@@ -223,7 +223,7 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
                 var elem = getElement(this),
                     value = $(elem).attr("value"),
                     text = $(elem).text();
-					
+
 				ui_data = { value: value, text: text, element: elem };
 				$combo_text.html(text);
 				$combo_root.attr("value", value);
@@ -233,13 +233,13 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 
 				e.preventDefault();
 			});
-			
+
 			// Init
 			ui_list = { root: $combo_root, text: $combo_text, drop: $combo_drop, toggle: $combo_toggle };
 
 			this.type = "fold"; // 기본 타입 설정
 			this.reload();
-			
+
 			//  Key up/down event
 			setEventKeydown(this);
 		}
@@ -306,7 +306,7 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 
 			if(this.options.position == "top") {
 				var h = ui_list["drop"].outerHeight();
-				
+
 				ui_list["drop"].animate({
 				    top: "-" + h,
 				    height: "toggle"
@@ -334,11 +334,11 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 		this.fold = function() {
 			ui_list["drop"].hide();
 			ui_list["toggle"].removeClass("active");
-			
+
 			if(this.options.position == "top") {
 				ui_list["drop"].css("top", 0);
 			}
-			
+
 			this.emit("fold");
 			this.type = "fold";
 		}
@@ -353,9 +353,9 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 			} else {
 				load("index", this.options.index);
 			}
-			
+
 			makeSelectTouch(this);
-			
+
 			this.emit("reload", ui_data);
 		}
 	}
@@ -431,6 +431,6 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 	 * @event fold
 	 * Event which occurs when folding a combo box
 	 */
-	
+
 	return UI;
 });
