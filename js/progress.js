@@ -64,12 +64,12 @@ jui.defineUI("ui.progress", [ "jquery", "util.base" ], function($, _) {
             $area = $root.find(".area");
             $bar = $root.find(".bar");
 
-            if($area.size() == 0) {
+            if($area.length == 0) {
                 $area = $("<div class='area' />");
                 $root.html($area);
             }
 
-            if($bar.size() == 0) {
+            if($bar.length == 0) {
                 $bar = $("<div class='bar' />");
                 $area.html($bar);
             }
