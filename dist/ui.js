@@ -272,23 +272,23 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 
 	var hideAll = function() {
 		var call_list = jui.get("ui.combo");
-		
+
 		for(var i = 0; i < call_list.length; i++) {
 			var ui_list = call_list[i];
-			
+
 			for(var j = 0; j < ui_list.length; j++) {
 				if(ui_list[j].type == "open") ui_list[j].fold();
 			}
 		}
 	}
-	
-	$(function() { 
+
+	$(function() {
 		document.addEventListener("click", function(e) {
 			hideAll();
 		});
 	});
-	
-	
+
+
 	/**
 	 * @class ui.combo
 	 * @extends core
@@ -316,78 +316,78 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 					value = text;
 					$(elem).attr("value", value);
 				}
-				
+
 				if((type == "index" && data == i) || (type == "value" && data == value)) {
 					ui_data = { index: i, value: value, text: text };
-					
+
 					$combo_root.attr("value", value);
 					$combo_text.html(text);
-					
+
 					if ($combo_root.select && $combo_root.select[0] ) {
 						$combo_root.select[0].selectedIndex = i;
 					}
 				}
 			});
-			
-			if($combo_list.size() == 0) {
+
+			if($combo_list.length == 0) {
 				ui_data = null;
 			}
 		}
-		
+
 		function getElement(target) { // 드롭다운 메뉴 타겟
-			return ($(target).children("a").size() > 0) ? $(target).children("a")[0] : target;
+			return ($(target).children("a").length > 0) ? $(target).children("a")[0] : target;
 		}
-		
+
 		function setEventKeydown(self) {
 			if(!self.options.keydown) return;
 
             // 기본 상태 처리
             index = self.options.index;
             selectItem(self);
-			
+
 			self.addEvent(window, "keydown", function(e) {
 				if(self.type == "fold") return;
 				var $list = ui_list["drop"].children("li");
-				
+
 				if(e.which == 38) { // up
-					if(index < 1) index = $list.size() - 1;
+					if(index < 1) index = $list.length - 1;
 					else index--;
-					
+
 					selectItem(self, function() {
 						index--;
 						selectItem(self);
 					});
-					
+
 					return false;
 				}
-				
+
 				if(e.which == 40) { // down
-					if(index < $list.size() - 1) index++;
+					if(index < $list.length - 1) index++;
 					else index = 0;
-					
+
 					selectItem(self, function() {
 						index++;
 						selectItem(self);
 					});
-					
+
 					return false;
 				}
-				
+
 				if(e.which == 13) { // enter
 					$list.eq(index).trigger("click");
 				}
 			});
 		}
-		
+
 		function selectItem(self, callback) {
 			var $list = ui_list["drop"].children("li"),
 				$target = $list.eq(index);
-			
+
 			$list.removeClass("active");
 
 			if($target.val() != "" || $target.html() != "") {
 				$target.addClass("active");
-				
+
 				if(self.options.height > 0) {
 					ui_list["drop"].scrollTop(index * $target.outerHeight());
 				}
@@ -397,12 +397,12 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 				}
 			}
 		}
-		
+
 		function makeSelectTouch(self) {
 			if(!_.isTouch) return;
-			
+
 			var $combo_root = ui_list["root"];
-			
+
 			if ($combo_root.select && $combo_root.select[0]) {
 				var $select = $combo_root.select;
 				$select.empty();
@@ -411,21 +411,21 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 					position: "absolute",
 					opacity : 0.01
 				});
-				
-				$combo_root.find("ul").after($select);					
-				
+
+				$combo_root.find("ul").after($select);
+
 				self.addEvent($select, "change", function(e) {
 					var elem = $(e.currentTarget).find("option:selected").data("elem");
 					self.addTrigger(elem, "touchstart");
 				});
-				
+
 				$combo_root.select = $select;
 			}
 
 			$combo_root.find("ul > li").each(function(i, elem) {
 				var value = $(elem).data('value');
 				var text = $(elem).text();
-				
+
 				$select.append($("<option></option>").val(value).text(text).data("elem", elem));
 			});
 		}
@@ -443,16 +443,16 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 
 		this.init = function() {
 			var self = this, opts = this.options;
-			
+
 			var $combo_root 	= $(this.root),
 				$combo_text 	= $combo_root.children(".btn").not(".toggle"),
 				$combo_toggle 	= $combo_root.children(".toggle"),
 				$combo_click	= $combo_root.children(".btn"),
 				$combo_drop 	= $combo_root.children("ul");
-			
+
 			//-- 드롭다운은 중앙으로 위치 (그룹 스타일 좌/우 라운드 효과)
 			$combo_drop.insertAfter($combo_text);
-			
+
 			// Width
 			if(opts.width > 0) {
 				$combo_text.outerWidth(opts.width - $combo_toggle.outerWidth() + 1);
@@ -462,7 +462,7 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 					"white-space": "nowrap"
 				});
 			}
-			
+
 			// Height
 			if(opts.height > 0) {
 				$combo_drop.css({
@@ -478,14 +478,14 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 					$combo_root.select.focus();
 				} else {
 					if(self.type == "open") return;
-					
+
 					hideAll();
-					self.open(e);					
+					self.open(e);
 				}
-				
+
 				return false;
 			});
-			
+
 			// Select
 			this.addEvent($combo_drop, "click", "li:not(.divider)", function(e) {
 				hideAll();
@@ -493,7 +493,7 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
                 var elem = getElement(this),
                     value = $(elem).attr("value"),
                     text = $(elem).text();
-					
+
 				ui_data = { value: value, text: text, element: elem };
 				$combo_text.html(text);
 				$combo_root.attr("value", value);
@@ -503,13 +503,13 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 
 				e.preventDefault();
 			});
-			
+
 			// Init
 			ui_list = { root: $combo_root, text: $combo_text, drop: $combo_drop, toggle: $combo_toggle };
 
 			this.type = "fold"; // 기본 타입 설정
 			this.reload();
-			
+
 			//  Key up/down event
 			setEventKeydown(this);
 		}
@@ -576,7 +576,7 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 
 			if(this.options.position == "top") {
 				var h = ui_list["drop"].outerHeight();
-				
+
 				ui_list["drop"].animate({
 				    top: "-" + h,
 				    height: "toggle"
@@ -604,11 +604,11 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 		this.fold = function() {
 			ui_list["drop"].hide();
 			ui_list["toggle"].removeClass("active");
-			
+
 			if(this.options.position == "top") {
 				ui_list["drop"].css("top", 0);
 			}
-			
+
 			this.emit("fold");
 			this.type = "fold";
 		}
@@ -623,9 +623,9 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 			} else {
 				load("index", this.options.index);
 			}
-			
+
 			makeSelectTouch(this);
-			
+
 			this.emit("reload", ui_data);
 		}
 	}
@@ -701,9 +701,10 @@ jui.defineUI("ui.combo", [ "jquery", "util.base" ], function($, _) {
 	 * @event fold
 	 * Event which occurs when folding a combo box
 	 */
-	
+
 	return UI;
 });
+
 jui.defineUI("ui.datepicker", [ "jquery", "util.base" ], function($, _) {
 
     function getStartDate(date) {
@@ -1721,30 +1722,30 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
 
 	var hideAll = function() {
 		var dd = getDropdown();
-		
+
 		if(dd != null) {
 			dd.hide();
 		}
 	}
-	
+
 	var getDropdown = function() {
 		var call_list = jui.get("ui.dropdown");
-		
+
 		for(var i = 0; i < call_list.length; i++) {
 			var ui_list = call_list[i];
-			
+
 			for(var j = 0; j < ui_list.length; j++) {
 				if(ui_list[j].type == "show") return ui_list[j];
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 	$(function() {
 		document.addEventListener("click", function(e) {
 			var tn = e.target.tagName;
-			
+
 			if(tn != "LI" && tn != "INPUT" && tn != "A" && tn != "BUTTON" && tn != "I") {
 				hideAll();
 			}
@@ -1752,7 +1753,7 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
 
 		window.addEventListener("keydown", function(e) {
 			var dd = getDropdown();
-			
+
 			if(dd != null) {
 				dd.wheel(e.which, function() {
 					e.preventDefault();
@@ -1773,13 +1774,13 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
      */
 	var UI = function() {
 		var ui_list = null, index = -1;
-		
+
 		function setEventNodes(self) {
 			var $list = $(ui_list.menu).find("li");
-			
+
 			// 이벤트 걸린거 초기화
 			$list.off("click").off("hover");
-			
+
 			// 클릭 이벤트 설정
 			self.addEvent($list, "click", function(e) {
 				if($(this).hasClass("divider") || $(this).hasClass("title") || $(this).hasClass("disabled")) return;
@@ -1787,32 +1788,32 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
 				var index = getTargetIndex(this),
 					text = $(this).text(),
 					value = $(this).attr("value");
-				
+
 				self.emit("change", [ { index: index, value: value, text: text }, e ]);
-				
+
 				// close가 true일 경우, 전체 드롭다운 숨기기
 				if(self.options.close) hideAll();
-				
+
 				// A 태그일 경우에는 이벤트 막기
 				if(e.target.tagName == "A") {
 					e.preventDefault();
 				}
 			});
-			
+
 			// 마우스 오버시 hover 클래스 제거
 			self.addEvent($list, "hover", function(e) {
 				$list.removeClass("active");
 			});
-			
+
 			function getTargetIndex(elem) {
 				var result = 0;
-				
+
 				$list.each(function(i) {
 					if(elem == this) {
 						result = i;
 					}
 				});
-				
+
 				return result;
 			}
 		}
@@ -1820,12 +1821,12 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
 		function selectItem(self, callback) {
 			var $list = ui_list.menu.find("li"),
 				$target = $list.eq(index);
-			
+
 			$list.removeClass("active");
-			
+
 			if($target.val() != "" || $target.html() != "") {
 				$target.addClass("active");
-				
+
 				if(self.options.height > 0) {
 					ui_list.menu.scrollTop(index * $target.outerHeight());
 				}
@@ -1835,33 +1836,33 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
 				}
 			}
 		}
-		
+
 		this.init = function() {
 			var opts = this.options;
-			
+
 			var $dd_root = $(this.root),
 				$dd_menu = $dd_root.find("ul"),
 				$dd_anchor = $dd_root.find(".anchor");
-			
+
 			// 메인 설정, 없을 경우에는 root가 메인이 됨
-			$dd_menu = ($dd_menu.size() == 0) ? $dd_root : $dd_menu;
-			
+			$dd_menu = ($dd_menu.length == 0) ? $dd_root : $dd_menu;
+
 			// UI 객체 추가
 			ui_list = { root: $dd_root, menu: $dd_menu, anchor: $dd_anchor };
 
 			// Size
 			ui_list.root.outerWidth(ui_list.menu.outerWidth());
-			
+
 			// Width
 			if(opts.width > 0) {
 				$dd_menu.outerWidth(opts.width);
 			}
-			
+
 			// Height
 			if(opts.height > 0) {
 				$dd_menu.css({ "maxHeight": opts.height, "overflow": "auto" });
 			}
-			
+
 			// Left
 			if(opts.left > 0) {
 				$dd_root.css("left", opts.left);
@@ -1871,11 +1872,11 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
 			if(opts.top > 0) {
 				$dd_root.css("top", opts.top);
 			}
-			
+
 			// Default Styles
 			$dd_menu.css({ "display": "block" });
 			$dd_root.css({ "position": "absolute", "display": "none" });
-			
+
 			// 드롭다운 목록 갱신
 			if(opts.nodes.length > 0) {
 				this.update(opts.nodes);
@@ -1894,13 +1895,13 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
          */
 		this.update = function(nodes) {
 			if(!this.tpl.node) return;
-			
+
 			$(ui_list.menu).empty();
-			
+
 			for(var i = 0; i < nodes.length; i++) {
 				$(ui_list.menu).append(this.tpl.node(nodes[i]));
 			}
-			
+
 			setEventNodes(this);
 		}
 
@@ -1910,7 +1911,7 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
          */
 		this.hide = function() {
 			ui_list.root.hide();
-			
+
 			this.emit("hide");
 			this.type = "hide";
 		}
@@ -1924,18 +1925,18 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
          */
 		this.show = function(x, y) {
 			hideAll();
-			
+
 			ui_list.root.show();
-			
+
 			// Anchor 옵션 처리
-			if(ui_list.anchor.size() > 0) 
+			if(ui_list.anchor.length > 0)
 				ui_list.root.css("margin-top", "10px");
-			
+
 			// x, y 값이 있을 경우
 			if(arguments.length == 2) {
 				this.move(x, y);
 			}
-			
+
 			this.emit("show");
 			this.type = "show";
 		}
@@ -1961,7 +1962,7 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
          */
 		this.wheel = function(key, callback) {
 			if(!this.options.keydown) return;
-			
+
 			var self = this,
 				$list = ui_list.menu.find("li");
 
@@ -1970,35 +1971,35 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
 				this.hide();
 				return;
 			}
-			
+
 			if(key == 38 || key == -1) { // up
-				if(index < 1) index = $list.size() - 1;
+				if(index < 1) index = $list.length - 1;
 				else index--;
-				
+
 				selectItem(this, function() {
 					index--;
 					selectItem(self);
 				});
-				
+
 				if(callback) callback();
 			}
-			
+
 			if(key == 40 || key == 1) { // down
-				if(index < $list.size() - 1) index++;
+				if(index < $list.length - 1) index++;
 				else index = 0;
-				
+
 				selectItem(self, function() {
 					index++;
 					selectItem(self);
 				});
-				
+
 				if(callback) callback();
 			}
-			
+
 			if(key == 13 || key == 0 || !key) { // enter
 				self.addTrigger($list.eq(index), "click");
 				index = -1;
-				
+
 				if(callback) callback();
 			}
 		}
@@ -2081,9 +2082,10 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
      * @event reload
      * Event that occurs when a dropdown is reloaded
      */
-	
+
 	return UI;
 });
+
 jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 
 	var win_width = 0;
@@ -2560,25 +2562,25 @@ jui.defineUI("ui.paging", [ "jquery" ], function($) {
 				self.prev();
 				return false;
 			});
-			
+
 			self.addEvent($(self.root).find(".next"), "click", function(e) {
 				self.next();
 				return false;
 			});
 		}
-		
+
 		function setEventPage(self) {
 			self.addEvent($main.find(".page"), "click", function(e) {
 				var page = parseInt($(e.currentTarget).text());
 				self.page(page);
-				
+
 				return false;
 			});
 		}
-		
+
 		function setPageStyle(self, page) {
 			var $list = $main.find(".page");
-			
+
 			$list.each(function(i) {
 				if($(this).text() == page) {
 					$(this).addClass("active");
@@ -2587,46 +2589,46 @@ jui.defineUI("ui.paging", [ "jquery" ], function($) {
 				}
 			});
 		}
-		
+
 		function changePage(self, pNo) {
-			var pages = [], 
+			var pages = [],
 				end = (lastPage < self.options.screenCount) ? lastPage : self.options.screenCount,
 				start = pNo - Math.ceil(end / 2) + 1,
 				start = (start < 1) ? 1 : start;
-			
+
 			activePage = (pNo > lastPage) ? lastPage : pNo;
 			activePage = (pNo < 1) ? 1 : pNo;
-			
+
 			if(lastPage < start + end) {
 				for(var i = lastPage - end + 1; i < lastPage + 1; i++) {
 					pages.push(i);
 				}
-				
+
 				if(activePage > lastPage) activePage = lastPage;
 			} else {
 				for(var i = start; i < start + end; i++) {
 					pages.push(i);
 				}
 			}
-			
+
 			// 템플릿 적용
 			$main.html(self.tpl["pages"]({ pages: pages, lastPage: lastPage }));
-			
+
 			setEventAction(self);
 			setEventPage(self);
 			setPageStyle(self, activePage);
 		}
-		
+
 		this.init = function() {
 			var self = this, opts = this.options;
-			
+
 			// 페이징 메인 설정, 없을 경우에는 root가 메인이 됨
 			$main = $(self.root).find(".list");
-			$main = ($main.size() == 0) ? $(self.root) : $main;
-			
+			$main = ($main.length == 0) ? $(self.root) : $main;
+
 			// 페이지 리로드
 			this.reload();
-			
+
 			return this;
 		}
 
@@ -2638,10 +2640,10 @@ jui.defineUI("ui.paging", [ "jquery" ], function($) {
          */
 		this.reload = function(count) {
 			var count = (!count) ? this.options.count : count;
-			
+
 			activePage = 1;
 			lastPage = Math.ceil(count / this.options.pageCount);
-			
+
 			changePage(this, activePage);
 			this.emit("reload");
 		}
@@ -2654,7 +2656,7 @@ jui.defineUI("ui.paging", [ "jquery" ], function($) {
          */
 		this.page = function(pNo) {
 			if(!pNo) return activePage;
-			
+
 			changePage(this, pNo);
 			this.emit("page", [ activePage ]);
 		}
@@ -2725,9 +2727,10 @@ jui.defineUI("ui.paging", [ "jquery" ], function($) {
      * @event reload
      * Event that occurs when the page is reloaded
      */
-	
+
 	return UI;
 });
+
 jui.defineUI("ui.tooltip", [ "jquery" ], function($) {
 
     /**
@@ -4203,12 +4206,12 @@ jui.defineUI("ui.progress", [ "jquery", "util.base" ], function($, _) {
             $area = $root.find(".area");
             $bar = $root.find(".bar");
 
-            if($area.size() == 0) {
+            if($area.length == 0) {
                 $area = $("<div class='area' />");
                 $root.html($area);
             }
 
-            if($bar.size() == 0) {
+            if($bar.length == 0) {
                 $bar = $("<div class='bar' />");
                 $area.html($bar);
             }
@@ -4275,6 +4278,7 @@ jui.defineUI("ui.progress", [ "jquery", "util.base" ], function($, _) {
 
     return UI;
 });
+
 jui.defineUI("ui.autocomplete", [ "jquery", "util.base", "ui.dropdown" ], function($, _, dropdown) {
 	
 	/**
@@ -4429,45 +4433,45 @@ jui.defineUI("ui.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _, 
 	var UI = function() {
 		var ui_menu = null,
 			$anchor = null;
-			
+
 		var menuIndex = -1, // menu index
 			activeIndex = 0;
-		
+
 		function hideAll(self) {
 			var $list = $(self.root).children("li");
 			$list.removeClass("active");
 		}
-		
+
 		function showMenu(self, elem) {
 			var pos = $(elem).offset();
-			
+
 			$(elem).addClass("checked");
 			ui_menu.show(pos.left, pos.top + $(self.root).height());
 		}
-		
+
 		function hideMenu(self) {
 			var $list = $(self.root).children("li"),
 				$menuTab = $list.eq(menuIndex);
-			
+
 			$menuTab.removeClass("checked");
 		}
-		
+
 		function changeTab(self, index) {
 			hideAll(self);
-			
+
 			var $list = $(self.root).children("li"),
 				$tab = $list.eq(index).addClass("active");
-			
+
 			$anchor.appendTo($tab);
 			showTarget(self.options.target, $tab[0]);
 		}
-		
+
 		function showTarget(target, elem, isInit) {
 			var hash = $(elem).find("[href*=\#]").attr("href");
-			
+
 			$(target).children("*").each(function(i) {
 				var self = this;
-				
+
 				if(("#" + self.id) == hash) {
 					$(self).show();
 				} else {
@@ -4475,14 +4479,14 @@ jui.defineUI("ui.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _, 
 				}
 			});
 		}
-		
+
 		function setEventNodes(self) {
 			$(self.root).children("li").each(function(i) {
 				// 메뉴 설정
 				if($(this).hasClass("menu")) {
 					menuIndex = i;
 				}
-			
+
 				// 이벤트 설정
 				self.addEvent(this, [ "click", "contextmenu" ], function(e) {
 					if($(this).hasClass("disabled")) {
@@ -4512,40 +4516,40 @@ jui.defineUI("ui.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _, 
 						self.emit("menu", [ { index: i, text: text }, e ]);
 						if(ui_menu.type != "show") showMenu(self, this);
 					}
-					
+
 					return false;
 				});
 			});
-			
+
 			setActiveNode(self);
 			setEventDragNodes(self);
 		}
-		
+
 		function setEventDragNodes(self) {
 			if(!self.options.drag) return;
-			
+
 			var $tabs = $(self.root).children("li"),
 				$origin = null,
 				$clone = null;
-			
+
 			var index = null,
 				targetIndex = null;
-			
+
 			$tabs.each(function(i) {
 				self.addEvent(this, "mousedown", function(e) {
 					$origin = $(this);
 					$clone = $origin.clone().css("opacity", "0.5");
-					
+
 					index = i;
 					self.emit("dragstart", [ index, e ]);
-					
+
 					return false;
 				});
 
 				self.addEvent(this, "mousemove", function(e) {
 					if(index == null) return;
 					targetIndex = i;
-					
+
 					if(index > targetIndex) { // move 로직과 동일
 						if(targetIndex == 0) {
 							$clone.insertBefore($tabs.eq(0));
@@ -4553,21 +4557,21 @@ jui.defineUI("ui.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _, 
 							$clone.insertAfter($tabs.eq(targetIndex - 1));
 						}
 					} else {
-						if(targetIndex == $tabs.size() - 1) {
+						if(targetIndex == $tabs.length - 1) {
 							$clone.insertAfter($tabs.eq(targetIndex));
 						} else {
 							$clone.insertBefore($tabs.eq(targetIndex + 1));
 						}
 					}
-					
+
 					$origin.hide();
 				});
 			});
-			
+
 			self.addEvent(self.root, "mouseup", function(e) {
 				if($origin != null) $origin.show();
 				if($clone != null) $clone.remove();
-				
+
 				if(index != null && targetIndex != null) {
 					self.move(index, targetIndex);
 					self.emit("dragend", [ targetIndex, e ]);
@@ -4577,44 +4581,44 @@ jui.defineUI("ui.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _, 
 				targetIndex =  null;
 			});
 		}
-		
+
 		function setActiveNode(self) {
 			var $list = $(self.root).children("li"),
 				$markupNode = $list.filter(".active"),
 				$indexNode = $list.eq(activeIndex),
-				$node = ($markupNode.size() == 1) ? $markupNode : $indexNode;
-			
+				$node = ($markupNode.length == 1) ? $markupNode : $indexNode;
+
 			// 노드가 없거나 disabled 상태일 때, 맨 첫번째 노드를 활성화
-			if($node.hasClass("disabled") || $node.size() == 0) {
+			if($node.hasClass("disabled") || $node.length == 0) {
 				$node = $list.eq(0);
 				activeIndex = 0;
 			}
-			
+
 			$anchor.appendTo($node);
 			changeTab(self, $list.index($node));
 		}
-		
+
 		this.init = function() {
 			var self = this, opts = this.options;
-			
+
 			// 활성화 인덱스 설정
 			activeIndex = opts.index;
-			
+
 			// 컴포넌트 요소 세팅
 			$anchor = $("<div class='anchor'></div>");
-			
+
 			// 탭 목록 갱신 및 이벤트 설정
 			if(opts.nodes.length > 0) {
 				this.update(opts.nodes);
 			} else {
 				setEventNodes(this);
 			}
-			
-			// 드롭다운 메뉴 
+
+			// 드롭다운 메뉴
 			if(this.tpl.menu) {
 				var $menu = $(this.tpl.menu());
 				$("body").append($menu);
-				
+
 				ui_menu = dropdown($menu, {
 					event: {
 						change: function(data, e) {
@@ -4627,7 +4631,7 @@ jui.defineUI("ui.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _, 
 					}
 				});
 			}
-			
+
 			return this;
 		}
 
@@ -4639,9 +4643,9 @@ jui.defineUI("ui.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _, 
          */
 		this.update = function(nodes) {
 			if(!this.tpl.node) return;
-			
+
 			$(this.root).empty();
-			
+
 			for(var i = 0; i < nodes.length; i++) {
 				$(this.root).append(this.tpl.node(nodes[i]));
 			}
@@ -4658,11 +4662,11 @@ jui.defineUI("ui.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _, 
          */
 		this.insert = function(index, node) {
 			if(!this.tpl.node) return;
-			
+
 			var html = this.tpl.node(node),
 				$list = $(this.root).children("li");
-			
-			if(index == $list.size()) {
+
+			if(index == $list.length) {
 				$(html).insertAfter($list.eq(index - 1));
 			} else {
 				$(html).insertBefore($list.eq(index));
@@ -4681,14 +4685,14 @@ jui.defineUI("ui.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _, 
 			if(!this.tpl.node) return;
 
 			var html = this.tpl.node(node);
-			
+
 			if(menuIndex != -1) {
 				$(html).insertBefore($(this.root).find(".menu"));
 				menuIndex++;
 			} else {
 				$(this.root).append(html);
 			}
-			
+
 			setEventNodes(this);
 		}
 
@@ -4725,10 +4729,10 @@ jui.defineUI("ui.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _, 
          */
 		this.move = function(index, targetIndex) {
 			if(index == targetIndex) return;
-			
+
 			var $tabs = $(this.root).children("li"),
 				$target = $tabs.eq(index);
-			
+
 			if(index > targetIndex) {
 				if(targetIndex == 0) {
 					$target.insertBefore($tabs.eq(0));
@@ -4736,13 +4740,13 @@ jui.defineUI("ui.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _, 
 					$target.insertAfter($tabs.eq(targetIndex - 1));
 				}
 			} else {
-				if(targetIndex == $tabs.size() - 1) {
+				if(targetIndex == $tabs.length - 1) {
 					$target.insertAfter($tabs.eq(targetIndex));
 				} else {
 					$target.insertBefore($tabs.eq(targetIndex + 1));
 				}
 			}
-			
+
 			activeIndex = targetIndex;
 			setEventNodes(this);
 		}
@@ -4761,8 +4765,8 @@ jui.defineUI("ui.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _, 
 
 			activeIndex = index;
 
-			this.emit("change", [{ 
-				index: index, 
+			this.emit("change", [{
+				index: index,
 				text: $.trim($target.text()),
                 value: $target.val()
 			}]);
@@ -4882,9 +4886,10 @@ jui.defineUI("ui.tab", [ "jquery", "util.base", "ui.dropdown" ], function($, _, 
      * @param {Integer} index
      * @param {EventObject} e The event object
      */
-	
+
 	return UI;
 });
+
 jui.define("ui.tree.node", [ "jquery" ], function($) {
 
     /**
