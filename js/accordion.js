@@ -61,7 +61,7 @@ jui.defineUI("ui.accordion", [ "jquery", "util.base" ], function($, _) {
             $title = $(this.root).find(".title");
             $contents = $(this.root).find(".content");
 
-            if (!opts.index) {
+            if (opts.index == null) {
                 for(var i=0; i < $title.length; i++) {
                     if ($($title[i]).hasClass("active")) {
                         opts.index = i;
