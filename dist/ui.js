@@ -3554,6 +3554,14 @@ jui.defineUI("ui.accordion", [ "jquery", "util.base" ], function($, _) {
             $title = $(this.root).find(".title");
             $contents = $(this.root).find(".content");
 
+            if (!opts.index) {
+                for(var i=0; i < $title.length; i++) {
+                    if ($($title[i]).hasClass("active")) {
+                        opts.index = i;
+                    }
+                }
+            }
+
             if(_.typeCheck("integer", opts.index)) {
                 showTitle(opts.index);
             } else {
@@ -3574,7 +3582,7 @@ jui.defineUI("ui.accordion", [ "jquery", "util.base" ], function($, _) {
         this.activeIndex = function() {
             return activeIndex;
         }
-    }
+    };
 
     UI.setup = function() {
         return {
@@ -3596,7 +3604,7 @@ jui.defineUI("ui.accordion", [ "jquery", "util.base" ], function($, _) {
              */
             multipanel : false
         }
-    }
+    };
 
     /**
      * @event open
