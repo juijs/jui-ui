@@ -12,7 +12,7 @@ jui.defineUI("ui.window", [ "jquery", "util.base", "ui.modal" ], function($, _, 
      *
      */
 	var UI = function() {
-		var z_index = 2000,
+		var z_index = null,
 			target = null,
 			move = {},
 			resize = {},
@@ -37,7 +37,10 @@ jui.defineUI("ui.window", [ "jquery", "util.base", "ui.modal" ], function($, _, 
 				opts.move = false;
 				opts.resize = false;
 			}
-				
+
+			// z-index 설정
+			z_index = opts.layerIndex;
+
 			// UI 객체 추가
 			info = { $root: $win_root, $head: $win_head, $body: $win_body, $foot: $win_foot };
 			
@@ -283,6 +286,12 @@ jui.defineUI("ui.window", [ "jquery", "util.base", "ui.modal" ], function($, _, 
              * Determines the z-index property of a modal UI
              */
 			modalIndex: 0,
+
+            /**
+             * @cfg {Integer} [layerIndex=2000]
+             * Determines the z-index property of a modal UI
+             */
+            layerIndex: 2000,
 
             /**
              * @cfg {Boolean} [animate=false]
