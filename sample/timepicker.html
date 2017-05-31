@@ -6,12 +6,23 @@
 
 <link rel="stylesheet" href="../dist/ui.css" />
 <link rel="stylesheet" href="../dist/ui-jennifer.css" />
+<script src="../lib/jquery-1.8.0.min.js"></script>
+<script src="../lib/core.js"></script>
+<script src="../dist/ui.js"></script>
 
 <style>
     .col {
         padding: 50px;
     }
 </style>
+
+<script>
+    var ui = null;
+
+    jui.ready([ "ui.timepicker" ], function(timepicker) {
+        ui = timepicker("#timepicker");
+    });
+</script>
 </head>
 <body class="jui">
 
@@ -46,9 +57,9 @@
         <p>Classic, Small</p>
 
         <div class="row">
-            <div class="timepicker small">
-                <input type="input" class="hours" maxlength="2" value="00" /> :
-                <input type="input" class="minutes" maxlength="2" value="00" />
+            <div id="timepicker" class="timepicker small">
+                <input type="input" class="hours" /> :
+                <input type="input" class="minutes" />
                 <i class="icon-arrow7"></i>
             </div>
         </div>

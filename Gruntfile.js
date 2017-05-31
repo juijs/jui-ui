@@ -46,7 +46,8 @@ module.exports = function(grunt) {
                     "js/window.js",
                     "js/property.js",
                     "js/select.js",
-                    "js/splitter.js"
+                    "js/splitter.js",
+                    "js/timepicker.js"
                 ],
                 dest : "dist/ui.js"
             }
