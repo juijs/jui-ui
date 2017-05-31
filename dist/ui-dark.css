@@ -2409,3 +2409,22 @@
   font-weight: normal;
   font-style: normal;
 }
+.jui .timepicker {
+  color: #D5D5D5;
+  background-color: #1A1A1A;
+  border: 1px solid #606060;
+  text-shadow: none;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  -webkit-box-shadow: "0 4px 5px -5px rgba(0,0,0,0.6) inset";
+  -moz-box-shadow: "0 4px 5px -5px rgba(0,0,0,0.6) inset";
+  box-shadow: "0 4px 5px -5px rgba(0,0,0,0.6) inset";
+}
+.jui .timepicker > input {
+  color: #D5D5D5;
+}
+.jui .timepicker > input:focus,
+.jui .timepicker > input.focus {
+  background-color: #835acc;
+}

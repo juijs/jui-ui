@@ -1,0 +1,16 @@
+.timepicker {
+  color: @inputFontColor;
+  background-color: @inputBackgroundColor;
+  border: 1px solid @inputBorderColor;
+  text-shadow: @inputTextShadow;
+  .border-radius(@inputBorderRadius);
+  .box-shadow(@inputBoxShadow);
+
+  > input {
+    color: @inputFontColor;
+
+    &:focus, &.focus {
+      background-color: @inputTimepickerBackgroundColor;
+    }
+  }
+}
