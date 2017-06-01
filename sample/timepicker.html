@@ -20,7 +20,13 @@
     var ui = null;
 
     jui.ready([ "ui.timepicker" ], function(timepicker) {
-        ui = timepicker("#timepicker");
+        ui = timepicker("#timepicker", {
+            event: {
+                change: function(hours, minutes) {
+                    console.log(hours, minutes);
+                }
+            }
+        });
     });
 </script>
 </head>
