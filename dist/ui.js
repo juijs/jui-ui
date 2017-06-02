@@ -7803,38 +7803,41 @@ jui.defineUI("ui.timepicker", [ "jquery" ], function($) {
         }
 
         function updateNumberValue(elem, min, max) {
-            setTimeout(function() {
-                var val = parseInt($(elem).val());
+            var val = parseInt($(elem).val());
 
-                if(!isNaN(val)) {
-                    if(val > max) $(elem).val(max);
-                    if(val < 0) $(elem).val(min);
-                }
-            }, 100);
+            if(!isNaN(val)) {
+                if(val > max) $(elem).val(max);
+                if(val < 0) $(elem).val(min);
+            } else {
+                $(elem).val("00");
+            }
         }
 
-        function updateUpDownValue(elem, e) {
-            if(e.which == 8 || e.which == 16 || e.which == 37 || e.which == 39) return;
+        function updateUpDownValue(elem, dist) {
+            var val = parseInt($(elem).val());
 
-            var val = parseInt($(elem).val()),
-                dist = 0;
+            var res = val + (dist || 0);
+            if(res < 0) res = 0;
+
+            $(elem).val(res < 10 ? "0" + res : res);
+        }
+
+        function updateBtnValue(elem, dist, focusout) {
+            if(!focusout) $(elem).focus();
+
+            updateUpDownValue(elem, dist);
+            updateNumberValue(elem, 0, $(elem).hasClass("hours") ? 23 : 59);
+        }
+
+        function settingKeyUpEvent(e) {
+            var dist = 0;
 
             if(e.which == 38) dist = 1;
             else if(e.which == 40) dist = -1;
 
-            var res = val + dist;
-            if(res < 0) res = 0;
-
-            setTimeout(function() {
-                $(elem).val(res < 10 ? "0" + res : res);
-            }, 100);
-        }
-
-        function updateBtnValue(elem, e) {
-            $(elem).focus();
-
-            updateUpDownValue(elem, e);
-            updateNumberValue(elem, 0, $(elem).hasClass("hours") ? 23 : 59);
+            if(dist != 0) {
+                updateBtnValue(e.target, dist);
+            }
         }
 
         function initInputElements(self) {
@@ -7845,20 +7848,18 @@ jui.defineUI("ui.timepicker", [ "jquery" ], function($) {
                 $minutes = $(self.root).children(".minutes").attr("maxlength", 2);
 
             $hours.on("keypress", validNumberType);
-            $hours.on("keyup", function(e) {
-                updateUpDownValue(this, e);
-                updateNumberValue(this, 0, 23);
-                self.emit("change", [ self.getHours(), self.getMinutes() ]);
+            $hours.on("keyup", settingKeyUpEvent);
+            $hours.on("focusout", function(e) {
+                updateBtnValue(this, 0, true);
             });
             $hours.on("focus", function(e) {
                 $focus = $hours;
             });
 
             $minutes.on("keypress", validNumberType);
-            $minutes.on("keyup", function(e) {
-                updateUpDownValue(this, e);
-                updateNumberValue(this, 0, 59);
-                self.emit("change", [ self.getHours(), self.getMinutes() ]);
+            $minutes.on("keyup", settingKeyUpEvent);
+            $minutes.on("focusout", function(e) {
+                updateBtnValue(this, 0, true);
             });
             $minutes.on("focus", function(e) {
                 $focus = $minutes;
@@ -7891,14 +7892,10 @@ jui.defineUI("ui.timepicker", [ "jquery" ], function($) {
             $down.css($.extend({ top: height/2 + "px" }, styles));
 
             $up.on("click", function(e) {
-                e.which = 38;
-                updateBtnValue($focus[0], e);
-                self.emit("change", [ self.getHours(), self.getMinutes() ]);
+                updateBtnValue($focus[0], 1);
             });
             $down.on("click", function(e) {
-                e.which = 40;
-                updateBtnValue($focus[0], e);
-                self.emit("change", [ self.getHours(), self.getMinutes() ]);
+                updateBtnValue($focus[0], -1);
             });
 
             $(self.root).append($up);
@@ -7914,7 +7911,7 @@ jui.defineUI("ui.timepicker", [ "jquery" ], function($) {
 
         this.setHours = function(hours) {
             var $hours = $(this.root).children(".hours").val(hours);
-            updateBtnValue($hours[0], {});
+            updateBtnValue($hours[0], 0);
         }
 
         this.getHours = function() {
@@ -7923,7 +7920,7 @@ jui.defineUI("ui.timepicker", [ "jquery" ], function($) {
 
         this.setMinutes = function(minutes) {
             var $minutes = $(this.root).children(".minutes").val(minutes);
-            updateBtnValue($minutes[0], {});
+            updateBtnValue($minutes[0], 0);
         }
 
         this.getMinutes = function() {
