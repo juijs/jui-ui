@@ -7,10 +7,15 @@
   .box-shadow(@inputBoxShadow);
 
   > input {
-    color: @inputFontColor;
+    text-shadow: 0px 0px 0px @inputFontColor;
 
     &:focus, &.focus {
       background-color: @inputTimepickerBackgroundColor;
+    }
+
+    &::-webkit-input-placeholder {
+      text-shadow: none;
+      -webkit-text-fill-color: initial;
     }
   }
 }

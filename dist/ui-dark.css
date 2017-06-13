@@ -2422,9 +2422,13 @@
   box-shadow: "0 4px 5px -5px rgba(0,0,0,0.6) inset";
 }
 .jui .timepicker > input {
-  color: #D5D5D5;
+  text-shadow: 0px 0px 0px #D5D5D5;
 }
 .jui .timepicker > input:focus,
 .jui .timepicker > input.focus {
   background-color: #835acc;
+}
+.jui .timepicker > input::-webkit-input-placeholder {
+  text-shadow: none;
+  -webkit-text-fill-color: initial;
 }

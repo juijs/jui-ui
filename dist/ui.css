@@ -4735,6 +4735,8 @@
   border: 0px;
   width: 100%;
   background-color: transparent;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
 }
 .jui .timepicker > input:focus,
 .jui .timepicker > input.focus {

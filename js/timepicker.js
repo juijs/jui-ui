@@ -78,6 +78,7 @@ jui.defineUI("ui.timepicker", [ "jquery" ], function($) {
             });
             $hours.on("focus", function(e) {
                 $focus = $hours;
+                $focus.select();
             });
 
             $minutes.on("keypress", validNumberType);
@@ -87,6 +88,7 @@ jui.defineUI("ui.timepicker", [ "jquery" ], function($) {
             });
             $minutes.on("focus", function(e) {
                 $focus = $minutes;
+                $focus.select();
             });
 
             $hours.val(hours < 10 ? "0" + hours : hours);
