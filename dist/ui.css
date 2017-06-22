@@ -4723,13 +4723,24 @@
   width: 80px;
   height: 28px;
 }
+.jui .timepicker.calendar {
+  width: 124px !important;
+}
 .jui .timepicker > input {
   width: 18px !important;
   height: 16px !important;
 }
+.jui .timepicker > input.year {
+  width: 35px !important;
+}
 .jui .timepicker > i {
-  right: 2px !important;
   top: 6px !important;
+}
+.jui .timepicker > i.icon-arrow7 {
+  right: 2px !important;
+}
+.jui .timepicker > i.icon-calendar {
+  right: 7px !important;
 }
 .jui .timepicker > input {
   border: 0px;
@@ -4743,6 +4754,9 @@
   outline: 0;
   border-radius: 1px;
 }
+.jui .timepicker > input.year {
+  text-align: center;
+}
 .jui .timepicker > i {
   position: absolute;
 }
@@ -4752,13 +4766,24 @@
   width: 94px !important;
   height: 38px !important;
 }
+.jui .timepicker.large.calendar {
+  width: 149px !important;
+}
 .jui .timepicker.large > input {
   width: 22px !important;
   height: 18px !important;
 }
+.jui .timepicker.large > input.year {
+  width: 42px !important;
+}
 .jui .timepicker.large > i {
-  right: 2px !important;
   top: 10px !important;
+}
+.jui .timepicker.large > i.icon-arrow7 {
+  right: 2px !important;
+}
+.jui .timepicker.large > i.icon-calendar {
+  right: 10px !important;
 }
 .jui .timepicker.normal {
   font-size: 14px;
@@ -4766,26 +4791,48 @@
   width: 80px;
   height: 28px;
 }
+.jui .timepicker.normal.calendar {
+  width: 124px !important;
+}
 .jui .timepicker.normal > input {
   width: 18px !important;
   height: 16px !important;
 }
+.jui .timepicker.normal > input.year {
+  width: 35px !important;
+}
 .jui .timepicker.normal > i {
-  right: 2px !important;
   top: 6px !important;
+}
+.jui .timepicker.normal > i.icon-arrow7 {
+  right: 2px !important;
+}
+.jui .timepicker.normal > i.icon-calendar {
+  right: 7px !important;
 }
 .jui .timepicker.small {
   font-size: 12px !important;
   width: 70px !important;
   height: 24px !important;
 }
+.jui .timepicker.small.calendar {
+  width: 110px !important;
+}
 .jui .timepicker.small > input {
   width: 16px !important;
   height: 14px !important;
 }
+.jui .timepicker.small > input.year {
+  width: 29px !important;
+}
 .jui .timepicker.small > i {
-  right: 2px !important;
   top: 5px !important;
+}
+.jui .timepicker.small > i.icon-arrow7 {
+  right: 2px !important;
+}
+.jui .timepicker.small > i.icon-calendar {
+  right: 6px !important;
 }
 .jui .timepicker.mini {
   font-size: 11px !important;
@@ -4793,11 +4840,22 @@
   width: 64px !important;
   height: 22px !important;
 }
+.jui .timepicker.mini.calendar {
+  width: 98px !important;
+}
 .jui .timepicker.mini > input {
   width: 15px !important;
   height: 12px !important;
 }
+.jui .timepicker.mini > input.year {
+  width: 27px !important;
+}
 .jui .timepicker.mini > i {
-  right: 2px !important;
   top: 5px !important;
+}
+.jui .timepicker.mini > i.icon-arrow7 {
+  right: 2px !important;
+}
+.jui .timepicker.mini > i.icon-calendar {
+  right: 5px !important;
 }

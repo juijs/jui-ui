@@ -17,16 +17,12 @@
 </style>
 
 <script>
-    var ui = null;
+    var ui_date = null,
+        ui_time = null;
 
     jui.ready([ "ui.timepicker" ], function(timepicker) {
-        ui = timepicker("#timepicker", {
-            event: {
-                change: function(hours, minutes) {
-                    console.log(hours, minutes);
-                }
-            }
-        });
+        ui_date = timepicker("#timepicker_date");
+        ui_time = timepicker("#timepicker_time");
     });
 </script>
 </head>
@@ -41,6 +37,11 @@
         <p>Classic, Large</p>
 
         <div class="row">
+            <div class="timepicker calendar large">
+                <input type="input" class="year" maxlength="4" value="2017" />-<input type="input" class="month" maxlength="2" value="05" />-<input type="input" class="date" maxlength="2" value="01" />
+                <i class="icon-calendar"></i>
+            </div>
+
             <div class="timepicker large">
                 <input type="input" class="hours" maxlength="2" value="00" /> :
                 <input type="input" class="minutes" maxlength="2" value="00" />
@@ -52,6 +53,11 @@
         <p>Classic, Normal</p>
 
         <div class="row">
+            <div class="timepicker calendar normal">
+                <input type="input" class="year" maxlength="4" value="2017" />-<input type="input" class="month" maxlength="2" value="05" />-<input type="input" class="date" maxlength="2" value="01" />
+                <i class="icon-calendar"></i>
+            </div>
+
             <div class="timepicker normal">
                 <input type="input" class="hours" maxlength="2" value="00" /> :
                 <input type="input" class="minutes" maxlength="2" value="00" />
@@ -63,9 +69,14 @@
         <p>Classic, Small</p>
 
         <div class="row">
-            <div id="timepicker" class="timepicker small">
-                <input type="input" class="hours" /> :
-                <input type="input" class="minutes" />
+            <div id="timepicker_date" class="timepicker calendar small">
+                <input type="input" class="year" maxlength="4" />-<input type="input" class="month" maxlength="2" />-<input type="input" class="date" maxlength="2" />
+                <i class="icon-calendar"></i>
+            </div>
+
+            <div id="timepicker_time" class="timepicker small">
+                <input type="input" class="hours" maxlength="2" value="00" /> :
+                <input type="input" class="minutes" maxlength="2" value="00" />
                 <i class="icon-arrow7"></i>
             </div>
         </div>
@@ -74,6 +85,11 @@
         <p>Classic, Mini</p>
 
         <div class="row">
+            <div class="timepicker calendar mini">
+                <input type="input" class="year" maxlength="4" value="2017" />-<input type="input" class="month" maxlength="2" value="05" />-<input type="input" class="date" maxlength="2" value="01" />
+                <i class="icon-calendar"></i>
+            </div>
+
             <div class="timepicker mini">
                 <input type="input" class="hours" maxlength="2" value="00" /> :
                 <input type="input" class="minutes" maxlength="2" value="00" />
