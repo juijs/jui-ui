@@ -7792,14 +7792,14 @@ jui.defineUI("ui.timepicker", [ "jquery" ], function($) {
 
             var rangeMap = {
                 min: {
-                    year: 1,
+                    year: 2015,
                     month: 1,
                     date: 1,
                     hours: 0,
                     minutes: 0
                 },
                 max: {
-                    year: 2100,
+                    year: 2020,
                     month: 12,
                     date: lastDate.getDate(),
                     hours: 23,
@@ -7887,7 +7887,7 @@ jui.defineUI("ui.timepicker", [ "jquery" ], function($) {
             $year.on("keypress", validNumberType);
             $year.on("keyup", settingKeyUpEvent);
             $year.on("focusout", function(e) {
-                updateBtnValue(this, 0, 1, 2100, true);
+                updateBtnValue(this, 0, 2015, 2020, true);
             });
             $year.on("focus", function(e) {
                 $focus = $year;
@@ -7998,7 +7998,7 @@ jui.defineUI("ui.timepicker", [ "jquery" ], function($) {
 
         this.setYear = function(year) {
             var $year = $(this.root).children(".year").val(year);
-            updateBtnValue($year[0], 0, 1, 2100);
+            updateBtnValue($year[0], 0, 2015, 2020);
         }
 
         this.getYear = function() {
