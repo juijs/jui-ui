@@ -415,6 +415,10 @@ jui.defineUI("ui.property", ['jquery', 'util.base'], function ($, _) {
             }).attr({
                 placeholder : 'Type here'
             });
+
+            if (item.readonly) {
+                $input.attr('readonly', true);
+            }
             $text.val(item.value);
 
             $text.on('input', debounce(function () {
@@ -434,6 +438,11 @@ jui.defineUI("ui.property", ['jquery', 'util.base'], function ($, _) {
             }).attr({
                 placeholder : 'Type here'
             });
+
+            if (item.readonly) {
+                $input.attr('readonly', true);
+            }
+
             $input.val(item.value);
 
             $input.on('input', debounce(function () {
@@ -450,10 +459,13 @@ jui.defineUI("ui.property", ['jquery', 'util.base'], function ($, _) {
             var $input = $("<div class='html' contenteditable=true />").css({
                 width: '100%',
                 height: item.height || 100
-            }).attr({
-                placeholder : 'Type here'
             });
-            $input.val(item.value);
+
+            if (item.readonly) {
+                $input.attr('contenteditable', false);
+            }
+
+            $input.html(item.value);
 
             $input.on('input', debounce(function () {
                 var value = $(this).html();
