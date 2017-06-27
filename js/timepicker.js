@@ -60,7 +60,7 @@ jui.defineUI("ui.timepicker", [ "jquery" ], function($) {
                 if(val > max) $(elem).val(max);
                 if(val < min) $(elem).val(printLowNumber(min));
             } else {
-                $(elem).val("00");
+                $(elem).val(printLowNumber(min));
             }
         }
 
