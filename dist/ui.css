@@ -4275,7 +4275,6 @@
   float: left;
   width: 0%;
   height: 100%;
-  transition: all 0.7s linear;
 }
 .jui .progress .area .bar:not(:first-child) {
   border-top-left-radius: 0px;
