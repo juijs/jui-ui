@@ -1743,6 +1743,12 @@
     transform: scale(1);
   }
 }
+.jui .icon-iframe:before {
+  content: "\e9be";
+}
+.jui .icon-textbox:before {
+  content: "\e9bf";
+}
 .jui .icon-arrow5:before {
   content: "\e905";
 }
@@ -1785,7 +1791,7 @@
 .jui .icon-report-link:before {
   content: "\e90d";
 }
-.jui .icon-chevron-left:before {
+.jui .icon-chevron-leftSelection-(189):before {
   content: "\e90e";
 }
 .jui .icon-chevron-right:before {
