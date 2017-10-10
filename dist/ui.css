@@ -1743,6 +1743,9 @@
     transform: scale(1);
   }
 }
+.jui .icon-chevron-left:before {
+  content: "\e90e";
+}
 .jui .icon-iframe:before {
   content: "\e9be";
 }
@@ -1790,9 +1793,6 @@
 }
 .jui .icon-report-link:before {
   content: "\e90d";
-}
-.jui .icon-chevron-left:before {
-  content: "\e90e";
 }
 .jui .icon-chevron-right:before {
   content: "\e90f";
