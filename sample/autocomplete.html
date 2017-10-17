@@ -51,7 +51,7 @@ jui.ready([ "ui.autocomplete" ], function(autocomplete) {
     	words: ac_words,
     	event: {
     		change: function(text) {
-    			alert(text);
+    			$("#tt").val("asdf");
     		}
     	},
         showAll: true
@@ -75,7 +75,7 @@ jui.ready([ "ui.autocomplete" ], function(autocomplete) {
 		아래 키워드 중에 입력한 문자가 포함되어 있으면, 드롭다운 메뉴에 키워드 목록이 나타납니다.&nbsp;
 		<span class="ac group">
 			<label class="label small"><i class="icon-search"></i></label>
-			<input type="text" class="input small" style="width: 100px" />
+			<input id="tt"  type="text" class="input small" style="width: 100px" />
 		</span>
 
 	</p>

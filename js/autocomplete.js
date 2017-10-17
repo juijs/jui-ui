@@ -21,10 +21,10 @@ jui.defineUI("ui.autocomplete", [ "jquery", "util.base", "ui.dropdown" ], functi
 				if(ddUi) $(ddUi.root).remove();
 			}
 			
-			var pos = $(self.root).offset(),
+			var pos = $(self.root).position(),
 				$ddObj = $(self.tpl.words({ words: words }));
 
-			$("body").append($ddObj);
+			$(self.options.parent).append($ddObj);
 			
 			ddUi = dropdown($ddObj, {
 				keydown: true,
@@ -38,8 +38,12 @@ jui.defineUI("ui.autocomplete", [ "jquery", "util.base", "ui.dropdown" ], functi
 					}
 				}
 			});
-			
-			ddUi.show();
+
+			if(self.options.dx > 0 || self.options.dy > 0) {
+                ddUi.show(self.options.dx, self.options.dy);
+			} else {
+				ddUi.show();
+			}
 		}
 		
 		function getFilteredWords(word) {
@@ -127,6 +131,8 @@ jui.defineUI("ui.autocomplete", [ "jquery", "util.base", "ui.dropdown" ], functi
 
     UI.setup = function() {
         return {
+        	parent: "body",
+
             /**
              * @cfg {String/DOMElement} [target=null]
              * Designates a target selector when an autofill route is not a target
@@ -143,7 +149,10 @@ jui.defineUI("ui.autocomplete", [ "jquery", "util.base", "ui.dropdown" ], functi
 			 * @cfg {Boolean} showAll
 			 * When 'focus' event occur, show all words
              */
-            showAll: false
+            showAll: false,
+
+			dx: 0,
+			dy: 0
         }
     }
 
