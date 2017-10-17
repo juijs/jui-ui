@@ -4358,6 +4358,17 @@ jui.defineUI("ui.autocomplete", [ "jquery", "util.base", "ui.dropdown" ], functi
 
 				return false;
 			});
+
+            if(self.options.showAll) {
+                self.addEvent(target, "focus", function(e) {
+					if($(this).val() == "") {
+                        list = words;
+                        createDropdown(self, list);
+
+                        return false;
+					}
+                });
+            }
 		}
 
 		this.init = function() {
@@ -4415,7 +4426,13 @@ jui.defineUI("ui.autocomplete", [ "jquery", "util.base", "ui.dropdown" ], functi
              * @cfg {Array} words
              * Designates words subject to autofill
              */
-			words: []
+			words: [],
+
+            /**
+			 * @cfg {Boolean} showAll
+			 * When 'focus' event occur, show all words
+             */
+            showAll: false
         }
     }
 
