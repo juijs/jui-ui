@@ -48,6 +48,7 @@ jui.ready([ "ui.autocomplete" ], function(autocomplete) {
     // 자동완성 
     ac_1 = autocomplete(".ac", {
     	target: "input[type=text]",
+		height: 100,
     	words: ac_words,
     	event: {
     		change: function(text) {

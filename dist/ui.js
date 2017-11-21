@@ -4318,6 +4318,7 @@ jui.defineUI("ui.autocomplete", [ "jquery", "util.base", "ui.dropdown" ], functi
 			ddUi = dropdown($ddObj, {
 				keydown: true,
 				width: $(self.root).outerWidth(),
+				height: self.options.height,
 				left: pos.left,
 				top: pos.top + $(self.root).outerHeight(),
 				event: {
@@ -4441,7 +4442,8 @@ jui.defineUI("ui.autocomplete", [ "jquery", "util.base", "ui.dropdown" ], functi
             showAll: false,
 
 			dx: 0,
-			dy: 0
+			dy: 0,
+			height: "auto"
         }
     }
 
