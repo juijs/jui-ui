@@ -7999,18 +7999,17 @@ jui.defineUI("ui.timepicker", [ "jquery" ], function($) {
             // 년/월/일 모드일 때, 위/아래 숫자 변경은 사용하지 않는다.
             if($year.size() > 0) return;
 
-            var width = $icon.outerWidth(),
-                height = $(self.root).outerHeight(),
+            var size = $(self.root).outerHeight() / 2,
                 styles = {
                     position: "absolute",
-                    width: width,
-                    height: height/2,
+                    width: size,
+                    height: size,
                     cursor: "pointer",
                     right: $icon.css("right")
                 };
 
             $up.css($.extend({ top: "0px" }, styles));
-            $down.css($.extend({ top: height/2 + "px" }, styles));
+            $down.css($.extend({ top: size + "px" }, styles));
 
             $up.on("click", function(e) {
                 var focusKey = $focus.attr("class"),
