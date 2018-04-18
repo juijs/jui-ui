@@ -8108,8 +8108,6 @@ jui.defineUI("ui.numberchecker", [ "jquery" ], function($) {
      *
      */
     var UI = function() {
-        var $focus = null;
-
         function validNumberType(value, isInt) {
             var regex = isInt ? /^[-]?\d+$/ : /^[-]?\d+(?:[.]\d+)?$/;
 
