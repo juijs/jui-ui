@@ -73,12 +73,16 @@ jui.defineUI("ui.numberchecker", [ "jquery" ], function($) {
                         $(element).addClass("invalid").val("").attr("placeholder", message);
                     }
                 } else {
-                    if(opts.min !== "" && parseInt(value) < parseInt(opts.min)) {
-                        $(element).val(opts.min);
-                    }
+                    var value = (isInt) ? parseInt(value) : parseFloat(value),
+                        min = (isInt) ? parseInt(opts.min) : parseFloat(opts.min),
+                        max = (isInt) ? parseInt(opts.max) : parseFloat(opts.max);
 
-                    if(opts.max !== "" && parseInt(value) > parseInt(opts.max)) {
-                        $(element).val(opts.max);
+                    if(opts.min !== "" && value < min) {
+                        $(element).val(min);
+                    } else if(opts.max !== "" && value > max) {
+                        $(element).val(max);
+                    } else {
+                        $(element).val(value);
                     }
                 }
             });
