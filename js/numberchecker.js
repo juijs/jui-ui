@@ -12,7 +12,7 @@ jui.defineUI("ui.numberchecker", [ "jquery" ], function($) {
         var $focus = null;
 
         function validNumberType(value, isInt) {
-            var regex = isInt ? /^\d+$/ : /^[-]?\d+(?:[.]\d+)?$/;
+            var regex = isInt ? /^[-]?\d+$/ : /^[-]?\d+(?:[.]\d+)?$/;
 
             if(!regex.test(value)) {
                 return false;
@@ -25,7 +25,7 @@ jui.defineUI("ui.numberchecker", [ "jquery" ], function($) {
             var $element = $(self.root);
 
             var opts = self.options,
-                isInt = opts.int,
+                isInt = opts.integer,
                 step = $element.attr("step") || "",
                 min = $element.attr("min") || "",
                 max = $element.attr("max") || "",
@@ -47,7 +47,8 @@ jui.defineUI("ui.numberchecker", [ "jquery" ], function($) {
 
         this.init = function() {
             var element = this.root,
-                isInt = this.options.int,
+                isInt = this.options.integer,
+                empty = this.options.empty,
                 message = this.options.message,
                 opts = getDefaultValue(this);
 
@@ -68,7 +69,19 @@ jui.defineUI("ui.numberchecker", [ "jquery" ], function($) {
                 var value = $(this).val();
 
                 if(!validNumberType(value, isInt)) {
-                    $(element).addClass("invalid").val("").attr("placeholder", message);
+                    if(empty != null) {
+                        $(element).val(opts[empty]);
+                    } else {
+                        $(element).addClass("invalid").val("").attr("placeholder", message);
+                    }
+                } else {
+                    if(opts.min !== "" && parseInt(value) < parseInt(opts.min)) {
+                        $(element).val(opts.min);
+                    }
+
+                    if(opts.max !== "" && parseInt(value) > parseInt(opts.max)) {
+                        $(element).val(opts.max);
+                    }
                 }
             });
 
@@ -78,7 +91,8 @@ jui.defineUI("ui.numberchecker", [ "jquery" ], function($) {
 
     UI.setup = function() {
         return {
-            int: true,
+            integer: true,
+            empty: null, // min or max or value
             min: null,
             max: null,
             value: null,

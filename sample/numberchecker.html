@@ -19,8 +19,11 @@
 <script>
     jui.ready([ "ui.numberchecker" ], function(numberchecker) {
         var list = numberchecker("input[type=number]", {
-            int: true,
-            value: 100
+            integer: true,
+            value: 100,
+            min: 0,
+            max: 100,
+            empty: "max"
         });
     });
 </script>
