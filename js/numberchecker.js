@@ -39,9 +39,9 @@ jui.defineUI("ui.numberchecker", [ "jquery" ], function($) {
 
             return {
                 step: step,
-                min: opts.min ? opts.min : min,
-                max: opts.max ? opts.max : max,
-                value: opts.value ? opts.value : value,
+                min: opts.min != null ? opts.min : min,
+                max: opts.max != null? opts.max : max,
+                value: opts.value != null? opts.value : value
             }
         }
 
