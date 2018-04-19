@@ -2089,22 +2089,24 @@ jui.defineUI("ui.dropdown", [ "jquery" ], function($) {
 jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 
 	var win_width = 0;
-	
+    var win_height = 0;
+
 	_.resize(function() {
-		if(win_width == $(window).width()) return; 
-		
+		if(win_width == $(window).width() && win_height == $(window).height()) return;
+
 		var call_list = jui.get("ui.modal");
 		for(var i = 0; i < call_list.length; i++) {
 			var ui_list = call_list[i];
-			
+
 			for(var j = 0; j < ui_list.length; j++) {
 				if(ui_list[j].type == "show") {
 					ui_list[j].resize();
 				}
 			}
 		}
-		
+
 		win_width = $(window).width();
+        win_height = $(window).height();
 	}, 300);
 
     /**
@@ -2121,16 +2123,16 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 		var $modal = {}, $clone = null;
 		var uiObj = null, uiTarget = null;
 		var z_index = 5000;
-		
+
 		function setPrevStatus(self) {
-			uiObj = { 
+			uiObj = {
 				"position": $(self.root).css("position"),
 				"left": $(self.root).css("left"),
 				"top": $(self.root).css("top"),
 				"z-index": $(self.root).css("z-index"),
 				"display": $(self.root).css("display")
 			};
-			
+
 			uiTarget = {
 				"position": $(self.options.target).css("position")
 			};
@@ -2147,14 +2149,14 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 				}
 			}
 		}
-		
+
 		function getModalInfo(self) {
 			var target = self.options.target,
 				hTarget = (target == "body") ? window : target,
 				pos = (target == "body") ? "fixed" : "absolute",
 				tPos = getInnerModalPosition(target),
                 sLeft = $(target).scrollLeft();
-			
+
 			var x = (($(hTarget).width() / 2) - ($(self.root).width() / 2)) + $(target).scrollLeft(),
 				y = ($(hTarget).height() / 2) - ($(self.root).height() / 2);
 
@@ -2164,7 +2166,7 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 			// inner modal일 경우
 			if(tPos != null) {
 				var sh = $(hTarget)[0].scrollHeight;
-				
+
 				h = (sh > h) ? sh : h;
 				y = y + $(hTarget).scrollTop();
 
@@ -2174,31 +2176,31 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 
 				h = (h > sh) ? h : sh;
 			}
-			
+
 			return {
 				x: x, y: y, pos: pos, tPos: tPos, w: w, h: h
 			}
 		}
-		
+
 		function createModal(self, w, h) {
 			var mi = self.timestamp;
-			
+
 			if( $modal[mi] != null) return;
-			
-			$modal[mi] = $("<div id='MODAL_" + self.timestamp + "'></div>").css({ 
+
+			$modal[mi] = $("<div id='MODAL_" + self.timestamp + "'></div>").css({
 				position: "absolute",
 				width: w,
 				height: h,
 				left: 0,
 				top: 0,
-				opacity: self.options.opacity, 
+				opacity: self.options.opacity,
 				"background-color": self.options.color,
 				"z-index": (z_index + self.options.index) - 1
 			});
-		
+
 			// 모달 추가
 			$(self.options.target).append($modal[mi]);
-			
+
 			// 루트 모달 옆으로 이동
 			$(self.root).insertAfter($modal[mi]);
 
@@ -2207,7 +2209,7 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 				if(self.options.autoHide) {
 					self.hide();
 				}
-				
+
 				return false;
 			});
 		}
@@ -2237,15 +2239,15 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 				$clone.remove();
 				$clone = null;
 			}
-			
+
 			$(opts.target).css("position", uiTarget.position);
 			$(this.root).css(uiObj);
-			
+
 			if($modal[mi]) {
 				$modal[mi].remove();
-				delete $modal[mi]; 
+				delete $modal[mi];
 			}
-			
+
 			this.type = "hide";
 		}
 
@@ -2334,7 +2336,7 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
 			autoHide: true
         }
     }
-	
+
 	return UI;
 });
 
