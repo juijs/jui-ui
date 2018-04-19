@@ -26,12 +26,12 @@ jui.defineUI("ui.numberchecker", [ "jquery" ], function($) {
                 isInt = opts.integer,
                 min = $element.attr("min") || "",
                 max = $element.attr("max") || "",
-                value = $element.val();
+                value = $element.val() || "";
 
             return {
                 min: opts.min != null ? opts.min : min,
                 max: opts.max != null? opts.max : max,
-                value: opts.value != null ? opts.value : value
+                value: value
             }
         }
 
@@ -41,9 +41,9 @@ jui.defineUI("ui.numberchecker", [ "jquery" ], function($) {
                 max = (isInt) ? parseInt(max) : parseFloat(max);
 
             return {
-                value: value,
                 min: min,
-                max: max
+                max: max,
+                value: value
             }
         }
 
@@ -127,7 +127,6 @@ jui.defineUI("ui.numberchecker", [ "jquery" ], function($) {
             empty: null, // min or max or value
             min: null,
             max: null,
-            value: null,
             message: "Invalid number"
         };
     }
