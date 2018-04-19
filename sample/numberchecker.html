@@ -21,8 +21,6 @@
         var list = numberchecker("input[type=number]", {
             integer: true,
             value: 100,
-            min: 0,
-            max: 100,
             empty: "value"
         });
     });
@@ -35,9 +33,9 @@
 </div>
 
 <div class="row">
-    <input class="input" type="number" value="1" step="100" min="0" max="1000" style="width: 200px;" />
-    <input class="input" type="number" value="2" />
-    <input class="input" type="number" value="3" />
+    <input class="input" type="number" value="1" step="5" max="1000" style="width: 200px;" />
+    <input class="input" type="number" value="2" step="10" />
+    <input class="input" type="number" value="3" step="100" />
 </div>
 </body>
 </html>

@@ -24,22 +24,26 @@ jui.defineUI("ui.numberchecker", [ "jquery" ], function($) {
 
             var opts = self.options,
                 isInt = opts.integer,
-                step = $element.attr("step") || "",
                 min = $element.attr("min") || "",
                 max = $element.attr("max") || "",
                 value = $element.val();
 
-            if(!isInt && step != "any") {
-                step = "any";
-            } else if(isInt && step == "any") {
-                step = "";
-            }
-
             return {
-                step: step,
                 min: opts.min != null ? opts.min : min,
                 max: opts.max != null? opts.max : max,
-                value: opts.value != null? opts.value : value
+                value: opts.value != null ? opts.value : value
+            }
+        }
+
+        function getValidData(value, min, max, isInt) {
+            var value = (isInt) ? parseInt(value) : parseFloat(value),
+                min = (isInt) ? parseInt(min) : parseFloat(min),
+                max = (isInt) ? parseInt(max) : parseFloat(max);
+
+            return {
+                value: value,
+                min: min,
+                max: max
             }
         }
 
@@ -57,19 +61,32 @@ jui.defineUI("ui.numberchecker", [ "jquery" ], function($) {
                 $(element).addClass("invalid").val("").attr("placeholder", message);
             }
 
-            $(element).attr({
-                step: opts.step,
-                min: opts.min,
-                max: opts.max
-            });
+            if(!isInt) {
+                $(element).attr("step", "any");
+            }
+
+            $(element).attr("min", opts.min);
+            $(element).attr("max", opts.max);
 
             // 입력된 값이 유효하면 value를 변경한다. 차후에 유효성 검사 실패시 초기값으로 사용함.
             $(element).on("input", function(e) {
                 var value = $(element).val();
 
                 if(validNumberType(value, isInt)) {
-                    if(value >= opts.min && value <= opts.max) {
-                        opts.value = value;
+                    var data = getValidData(value, opts.min, opts.max, isInt);
+
+                    if(opts.min !== "" && opts.max !== "") {
+                        if(value >= data.min && value <= data.max) {
+                            opts.value = data.value;
+                        }
+                    }
+
+                    if(opts.min !== "" && opts.max === "") {
+                        if(value >= data.min) opts.value = data.value;
+                    }
+
+                    if(opts.min === "" && opts.max !== "") {
+                        if(value <= data.max) opts.value = data.value;
                     }
                 }
             });
@@ -88,16 +105,14 @@ jui.defineUI("ui.numberchecker", [ "jquery" ], function($) {
                         $(element).addClass("invalid").val("").attr("placeholder", message);
                     }
                 } else {
-                    var value = (isInt) ? parseInt(value) : parseFloat(value),
-                        min = (isInt) ? parseInt(opts.min) : parseFloat(opts.min),
-                        max = (isInt) ? parseInt(opts.max) : parseFloat(opts.max);
+                    var data = getValidData(value, opts.min, opts.max, isInt);
 
-                    if(opts.min !== "" && value < min) {
-                        $(element).val(min);
-                    } else if(opts.max !== "" && value > max) {
-                        $(element).val(max);
+                    if(opts.min !== "" && data.value < data.min) {
+                        $(element).val(data.min);
+                    } else if(opts.max !== "" && data.value > data.max) {
+                        $(element).val(data.max);
                     } else {
-                        $(element).val(value);
+                        $(element).val(data.value);
                     }
                 }
             });
