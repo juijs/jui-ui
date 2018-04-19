@@ -57,14 +57,29 @@ jui.defineUI("ui.numberchecker", [ "jquery" ], function($) {
                 $(element).addClass("invalid").val("").attr("placeholder", message);
             }
 
-            $(element).attr(opts);
+            $(element).attr({
+                step: opts.step,
+                min: opts.min,
+                max: opts.max
+            });
+
+            // 입력된 값이 유효하면 value를 변경한다. 차후에 유효성 검사 실패시 초기값으로 사용함.
+            $(element).on("input", function(e) {
+                var value = $(element).val();
+
+                if(validNumberType(value, isInt)) {
+                    if(value >= opts.min && value <= opts.max) {
+                        opts.value = value;
+                    }
+                }
+            });
 
             $(element).on("focus", function(e) {
                 $(element).removeClass("invalid").attr("placeholder", "");
             });
 
             $(element).on("focusout", function(e) {
-                var value = $(this).val();
+                var value = $(element).val();
 
                 if(!validNumberType(value, isInt)) {
                     if(empty != null) {
