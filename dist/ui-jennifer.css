@@ -216,7 +216,7 @@
   color: #333;
 }
 .jui .datepicker > table.body td.none {
-  color: transparent;
+  color: #e5e5e5;
 }
 .jui .datepicker > table.body td.now {
   color: #740CD2;
