@@ -18,9 +18,9 @@ As the script works only with jQuery 1.8 or higher, it is necessary to load the 
 
 #### Installing in command
 ```
-npm install jui
-bower install jui
-jamjs install jui
+npm install juijs-ui
+bower install juijs-ui
+jamjs install juijs-ui
 ```
 
 #### To build the project

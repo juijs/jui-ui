@@ -1,6 +1,6 @@
 {
-  "name": "jui",
-  "version": "2.0.4",
+  "name": "juijs-ui",
+  "version": "2.1.0",
   "main": [
     "dist/ui.min.js",
     "dist/ui.min.css",

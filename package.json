@@ -1,6 +1,6 @@
 {
-  "name": "jui",
-  "version": "2.0.4",
+  "name": "juijs-ui",
+  "version": "2.1.0",
   "description": "JUI provide all kinds of UI components that are used in web pages. However, charts and grids are not included.",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -72,7 +72,7 @@
       "deps": [
         "jquery"
       ],
-      "exports": "jui"
+      "exports": "juijs-ui"
     }
   }
 }
