@@ -19,12 +19,14 @@
 <script>
     jui.ready([ "ui.stringchecker" ], function(stringchecker) {
         var list = stringchecker("input[type=text]", {
-            pattern: "email",
             event: {
                 invalid: function(type, value) {
                     console.log(type, value);
+
+                    return type;
                 }
-            }
+            },
+            validBlank: true
         });
     });
 </script>

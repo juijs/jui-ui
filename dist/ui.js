@@ -8259,10 +8259,16 @@ jui.defineUI("ui.stringchecker", [ "jquery" ], function($) {
                     JSON.parse(jsonStr);
                 } catch (e) {
                     if(event) {
-                        self.emit("invalid", [ "json", value ]);
+                        updatePlaceholder(self, self.emit("invalid", [ "json", value ]));
                     }
 
                     return false;
+                }
+            }
+
+            if(opts.validBlank) {
+                if(value == "") {
+                    updatePlaceholder(self, self.emit("invalid", [ "blank" ]));
                 }
             }
 
@@ -8277,7 +8283,7 @@ jui.defineUI("ui.stringchecker", [ "jquery" ], function($) {
                     }
 
                     if(!result && event) {
-                        self.emit("invalid", [ type, value ]);
+                        updatePlaceholder(self, self.emit("invalid", [ type, value ]));
                     }
 
                     return result;
@@ -8285,10 +8291,22 @@ jui.defineUI("ui.stringchecker", [ "jquery" ], function($) {
                     var result = regex.test(value);
 
                     if(!result && event) {
-                        self.emit("invalid", [ "regex", value ]);
+                        updatePlaceholder(self, self.emit("invalid", [ "regex", value ]));
                     }
 
                     return result;
+                }
+            }
+
+            if(opts.minLength != -1) {
+                if(value.length < opts.minLength) {
+                    updatePlaceholder(self, self.emit("invalid", [ "min", value ]));
+                }
+            }
+
+            if(opts.maxLength != -1) {
+                if(value.length > opts.maxLength) {
+                    updatePlaceholder(self, self.emit("invalid", [ "max", value ]));
                 }
             }
 
@@ -8304,6 +8322,9 @@ jui.defineUI("ui.stringchecker", [ "jquery" ], function($) {
             return {
                 value: value,
                 validJson: opts.validJson,
+                validBlank: opts.validBlank,
+                minLength: opts.minLength,
+                maxLength: opts.maxLength,
                 pattern: opts.pattern
             }
         }
@@ -8316,18 +8337,19 @@ jui.defineUI("ui.stringchecker", [ "jquery" ], function($) {
             }
         }
 
+        function updatePlaceholder(self, message) {
+            if(typeof(message) == "string" && message != "") {
+                $(self.root).attr("placeholder", message);
+            }
+
+            $(self.root).addClass("invalid").val("");
+        }
+
         this.init = function() {
             var self = this,
                 element = this.root,
                 message = this.options.message,
                 opts = getDefaultValue(this);
-
-            // 초기 값 유효성 검사
-            if(validStringType(self, opts.value, opts, true)) {
-                $(element).val(opts.value);
-            } else {
-                $(element).addClass("invalid").val("").attr("placeholder", message);
-            }
 
             // 입력된 값이 유효하면 value를 변경한다. 차후에 유효성 검사 실패시 초기값으로 사용함.
             $(element).on("input", function(e) {
@@ -8335,7 +8357,6 @@ jui.defineUI("ui.stringchecker", [ "jquery" ], function($) {
 
                 if(validStringType(self, value, opts, false)) {
                     var data = getValidData(value);
-
                     opts.value = data.value;
                 }
             });
@@ -8348,13 +8369,22 @@ jui.defineUI("ui.stringchecker", [ "jquery" ], function($) {
                 var value = $(element).val();
 
                 if(!validStringType(self, value, opts, true)) {
-                    $(element).addClass("invalid").val("").attr("placeholder", message);
+                    updatePlaceholder(self, message);
                 } else {
                     var data = getValidData(value);
-
                     $(element).val(data.value);
                 }
             });
+
+            // 초기 값 유효성 검사
+            setTimeout(function() {
+                if(validStringType(self, opts.value, opts, true)) {
+                    $(element).val(opts.value);
+                } else {
+                    updatePlaceholder(self, message);
+                }
+
+            }, 100);
 
             return this;
         }
@@ -8363,8 +8393,11 @@ jui.defineUI("ui.stringchecker", [ "jquery" ], function($) {
     UI.setup = function() {
         return {
             validJson: true,
+            validBlank: false,
+            minLength: -1,
+            maxLength: -1,
             pattern: null, // regex or string type (email, url, color, ...)
-            message: "Invalid string"
+            message: null
         };
     }
 
