@@ -17,11 +17,14 @@
 </style>
 
 <script>
-    jui.ready([ "ui.numberchecker" ], function(numberchecker) {
-        var list = numberchecker("input", {
-            integer: true,
-            empty: "min",
-            min: 0
+    jui.ready([ "ui.stringchecker" ], function(stringchecker) {
+        var list = stringchecker("input[type=text]", {
+            pattern: "email",
+            event: {
+                invalid: function(type, value) {
+                    console.log(type, value);
+                }
+            }
         });
     });
 </script>
@@ -29,13 +32,13 @@
 <body class="jui">
 
 <div class="page-header">
-    <h1>Timepicker</h1>
+    <h1>String Checker</h1>
 </div>
 
 <div class="row">
-    <input class="input" type="number" value="1" step="5" max="1000" style="width: 200px;" />
-    <input class="input" type="number" value="2" step="10" />
-    <input class="input" type="text" />
+    <input class="input" type="text" value="1" />
+    <input class="input" type="text" value="2" />
+    <input class="input" type="text" value="3" />
 </div>
 </body>
 </html>
