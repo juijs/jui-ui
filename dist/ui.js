@@ -8340,6 +8340,12 @@ jui.defineUI("ui.stringchecker", [ "jquery" ], function($) {
         function updatePlaceholder(self, message) {
             if(typeof(message) == "string" && message != "") {
                 $(self.root).attr("placeholder", message);
+            } else {
+                var optMessage = self.options.message;
+
+                if(typeof(optMessage) == "string" && optMessage != "") {
+                    $(self.root).attr("placeholder", optMessage);
+                }
             }
 
             $(self.root).addClass("invalid").val("");
@@ -8348,7 +8354,6 @@ jui.defineUI("ui.stringchecker", [ "jquery" ], function($) {
         this.init = function() {
             var self = this,
                 element = this.root,
-                message = this.options.message,
                 opts = getDefaultValue(this);
 
             // 입력된 값이 유효하면 value를 변경한다. 차후에 유효성 검사 실패시 초기값으로 사용함.
@@ -8369,7 +8374,7 @@ jui.defineUI("ui.stringchecker", [ "jquery" ], function($) {
                 var value = $(element).val();
 
                 if(!validStringType(self, value, opts, true)) {
-                    updatePlaceholder(self, message);
+                    updatePlaceholder(self, null);
                 } else {
                     var data = getValidData(value);
                     $(element).val(data.value);
@@ -8381,7 +8386,7 @@ jui.defineUI("ui.stringchecker", [ "jquery" ], function($) {
                 if(validStringType(self, opts.value, opts, true)) {
                     $(element).val(opts.value);
                 } else {
-                    updatePlaceholder(self, message);
+                    updatePlaceholder(self, null);
                 }
 
             }, 100);
