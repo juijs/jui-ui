@@ -31,7 +31,7 @@ jui.defineUI("ui.stringchecker", [ "jquery" ], function($) {
             }
 
             if(opts.validBlank) {
-                if(value == "") {
+                if($.trim(value) == "") {
                     updatePlaceholder(self, self.emit("invalid", [ "blank" ]));
                 }
             }
