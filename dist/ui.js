@@ -1299,6 +1299,16 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
             { rgb : '#ff00ff', start : .83 },
             { rgb : '#ff0000', start : 1 }
         ];
+        // TODO: 차후에 컬러픽커 사이즈 변경 고려!!!
+        var size = {
+            color_width: 226,
+            color_height: 145,
+            hue_width: 157,
+            opacity_width: 119,
+            dragBar_width: 12,
+            hueContainer_width: 157,
+            opacityDragBar_width: 12
+        };
 
         var $root, $hue, $color, $value, $saturation, $drag_pointer, $drag_bar,
             $control, $controlPattern, $controlColor, $hueContainer, $opacity, $opacityContainer,
@@ -1349,8 +1359,8 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
 
         function setMainColor(e) {
             var offset = $color.offset();
-            var w = $color.width();
-            var h = $color.height();
+            var w = size.color_width;
+            var h = size.color_height;
 
             var x = e.clientX - offset.left;
             var y = e.clientY - offset.top;
@@ -1391,7 +1401,7 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
 
         function setHueColor(e) {
             var min = $hueContainer.offset().left;
-            var max = min + $hueContainer.width();
+            var max = min + size.hueContainer_width;
             var current = pos(e).clientX;
 
             if (current < min) {
@@ -1402,10 +1412,10 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
                 dist = (current - min) / (max - min) * 100;
             }
 
-            var x = ($hue.width() * (dist/100));
+            var x = (size.hue_width * (dist/100));
 
             $drag_bar.css({
-                left: (x -Math.ceil($drag_bar.width()/2)) + 'px'
+                left: (x -Math.ceil(size.dragBar_width/2)) + 'px'
             }).data('pos', { x : x});
 
             var hueColor = checkHueColor(dist/100);
@@ -1416,7 +1426,7 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
 
         function setOpacity(e) {
             var min = $opacity.offset().left;
-            var max = min + $opacity.width();
+            var max = min + size.opacity_width;
             var current = pos(e).clientX;
 
             if (current < min) {
@@ -1427,10 +1437,10 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
                 dist = (current - min) / (max - min) * 100;
             }
 
-            var x = ($opacity.width() * (dist/100));
+            var x = (size.opacity_width * (dist/100));
 
             $opacity_drag_bar.css({
-                left: (x -Math.ceil($opacity_drag_bar.width()/2)) + 'px'
+                left: (x -Math.ceil(size.opacityDragBar_width/2)) + 'px'
             }).data('pos', { x : x});
 
             setInputColor();
@@ -1438,7 +1448,7 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
 
         function caculateOpacity() {
             var opacityPos = $opacity_drag_bar.data('pos') || { x : 0 };
-            var a = Math.round((opacityPos.x / $opacity.width()) * 100) / 100;
+            var a = Math.round((opacityPos.x / size.opacity_width) * 100) / 100;
 
             return a;
         }
@@ -1447,10 +1457,10 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
             var pos = $drag_pointer.data('pos') || { x : 0, y : 0 };
             var huePos = $drag_bar.data('pos') || { x : 0 };
 
-            var width = $color.width();
-            var height = $color.height();
+            var width = size.color_width;
+            var height = size.color_height;
 
-            var h = (huePos.x / $hue.width()) * 360;
+            var h = (huePos.x / size.hue_width) * 360;
             var s = (pos.x / width);
             var v = ((height - pos.y) / height);
 
@@ -1521,22 +1531,25 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
 
             $color.css("background-color", c);
 
-            var hsv = color.RGBtoHSV(rgb.r, rgb.g, rgb.b),
-                x = $color.width() * hsv.s,
-                y = $color.height() * (1-hsv.v);
+            console.log("initColor", rgb);
 
+            var hsv = color.RGBtoHSV(rgb.r, rgb.g, rgb.b),
+                x = size.color_width * hsv.s,
+                y = size.color_height * (1-hsv.v);
+
+            console.log("initColor2", hsv);
             $drag_pointer.css({
                 left : x - 5,
                 top : y - 5
             }).data('pos', { x  : x, y : y });
 
-            var hueX = $hue.width() * (hsv.h / 360);
+            var hueX = size.hue_width * (hsv.h / 360);
 
             $drag_bar.css({
                 left : hueX - 7.5
             }).data('pos', { x : hueX });
 
-            var opacityX = $opacity.width() * (rgb.a || 0);
+            var opacityX = size.opacity_width * (rgb.a || 0);
 
             $opacity_drag_bar.css({
                 left : opacityX - 7.5
@@ -1583,8 +1596,11 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
             self.addEvent($informationInput1, 'keyup', function(e) {
                 var code = $(this).val();
 
-                if(code.charAt(0) == '#' && code.length == 7) {
-                    initColor(code, 'hex');
+                if(e.which == 13) {
+                    if (code.charAt(0) == '#' && (code.length == 7 || code.length == 4)) {
+                        initColor(code, 'hex');
+                        self.emit('enter', [ code, color.rgb(code) ]);
+                    }
                 }
             });
 

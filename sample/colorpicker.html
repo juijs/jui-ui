@@ -19,6 +19,9 @@
             event : {
                 "change" : function(c, rgb) {
                     console.log(c, rgb);
+                },
+                "enter" : function(c, rgb) {
+                    console.log("enter", c, rgb);
                 }
             }
         });
@@ -28,7 +31,7 @@
 </head>
 <body class="jui" style="background: #1c1c1c;">
 
-<div id="colorpicker1" class="colorpicker">
+<div id="colorpicker1" class="colorpicker" style="display: none;">
 
 </div>
 
