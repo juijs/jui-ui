@@ -252,13 +252,10 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
 
             $color.css("background-color", c);
 
-            console.log("initColor", rgb);
-
             var hsv = color.RGBtoHSV(rgb.r, rgb.g, rgb.b),
                 x = size.color_width * hsv.s,
                 y = size.color_height * (1-hsv.v);
 
-            console.log("initColor2", hsv);
             $drag_pointer.css({
                 left : x - 5,
                 top : y - 5
