@@ -7841,21 +7841,21 @@ jui.defineUI("ui.timepicker", [ "jquery" ], function($) {
      *
      */
     var UI = function() {
-        var $focus = null;
+        var $focus = null, minYear, maxYear;
 
         function getRangeMap(year, month) {
             var lastDate = new Date(year, month, 0);
 
             var rangeMap = {
                 min: {
-                    year: 2015,
+                    year: minYear,
                     month: 1,
                     date: 1,
                     hours: 0,
                     minutes: 0
                 },
                 max: {
-                    year: 2020,
+                    year: maxYear,
                     month: 12,
                     date: lastDate.getDate(),
                     hours: 23,
@@ -7943,7 +7943,7 @@ jui.defineUI("ui.timepicker", [ "jquery" ], function($) {
             $year.on("keypress", validNumberType);
             $year.on("keyup", settingKeyUpEvent);
             $year.on("focusout", function(e) {
-                updateBtnValue(this, 0, 2015, 2020, true);
+                updateBtnValue(this, 0, minYear, maxYear, true);
             });
             $year.on("focus", function(e) {
                 $focus = $year;
@@ -8045,6 +8045,9 @@ jui.defineUI("ui.timepicker", [ "jquery" ], function($) {
         }
 
         this.init = function() {
+            minYear = this.options.minYear;
+            maxYear = this.options.maxYear;
+
             initInputElements(this);
             initBtnElements(this);
 
@@ -8053,7 +8056,7 @@ jui.defineUI("ui.timepicker", [ "jquery" ], function($) {
 
         this.setYear = function(year) {
             var $year = $(this.root).children(".year").val(year);
-            updateBtnValue($year[0], 0, 2015, 2020);
+            updateBtnValue($year[0], 0, minYear, maxYear);
         }
 
         this.getYear = function() {
@@ -8107,7 +8110,10 @@ jui.defineUI("ui.timepicker", [ "jquery" ], function($) {
             month: now.getMonth() + 1,
             date: now.getDate(),
             hours: now.getHours(),
-            minutes: now.getMinutes()
+            minutes: now.getMinutes(),
+
+            minYear: 2015,
+            maxYear: 2020
         };
     }
 
