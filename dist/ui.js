@@ -1300,6 +1300,17 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
             { rgb : '#ff0000', start : 1 }
         ];
 
+        // TODO: 차후에 컬러픽커 사이즈 변경 고려!!!
+        var size = {
+            color_width: 226,
+            color_height: 145,
+            hue_width: 157,
+            opacity_width: 119,
+            dragBar_width: 12,
+            hueContainer_width: 157,
+            opacityDragBar_width: 12
+        };
+
         var $root, $hue, $color, $value, $saturation, $drag_pointer, $drag_bar,
             $control, $controlPattern, $controlColor, $hueContainer, $opacity, $opacityContainer,
             $opacityInput, $opacity_drag_bar, $information, $informationTitle1, $informationTitle2,
@@ -1349,8 +1360,8 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
 
         function setMainColor(e) {
             var offset = $color.offset();
-            var w = $color.width();
-            var h = $color.height();
+            var w = size.color_width;
+            var h = size.color_height;
 
             var x = e.clientX - offset.left;
             var y = e.clientY - offset.top;
@@ -1391,7 +1402,7 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
 
         function setHueColor(e) {
             var min = $hueContainer.offset().left;
-            var max = min + $hueContainer.width();
+            var max = min + size.hueContainer_width;
             var current = pos(e).clientX;
 
             if (current < min) {
@@ -1402,10 +1413,10 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
                 dist = (current - min) / (max - min) * 100;
             }
 
-            var x = ($hue.width() * (dist/100));
+            var x = (size.hue_width * (dist/100));
 
             $drag_bar.css({
-                left: (x -Math.ceil($drag_bar.width()/2)) + 'px'
+                left: (x -Math.ceil(size.dragBar_width/2)) + 'px'
             }).data('pos', { x : x});
 
             var hueColor = checkHueColor(dist/100);
@@ -1416,7 +1427,7 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
 
         function setOpacity(e) {
             var min = $opacity.offset().left;
-            var max = min + $opacity.width();
+            var max = min + size.opacity_width;
             var current = pos(e).clientX;
 
             if (current < min) {
@@ -1427,10 +1438,10 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
                 dist = (current - min) / (max - min) * 100;
             }
 
-            var x = ($opacity.width() * (dist/100));
+            var x = (size.opacity_width * (dist/100));
 
             $opacity_drag_bar.css({
-                left: (x -Math.ceil($opacity_drag_bar.width()/2)) + 'px'
+                left: (x -Math.ceil(size.opacityDragBar_width/2)) + 'px'
             }).data('pos', { x : x});
 
             setInputColor();
@@ -1438,7 +1449,7 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
 
         function caculateOpacity() {
             var opacityPos = $opacity_drag_bar.data('pos') || { x : 0 };
-            var a = Math.round((opacityPos.x / $opacity.width()) * 100) / 100;
+            var a = Math.round((opacityPos.x / size.opacity_width) * 100) / 100;
 
             return a;
         }
@@ -1447,10 +1458,10 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
             var pos = $drag_pointer.data('pos') || { x : 0, y : 0 };
             var huePos = $drag_bar.data('pos') || { x : 0 };
 
-            var width = $color.width();
-            var height = $color.height();
+            var width = size.color_width;
+            var height = size.color_height;
 
-            var h = (huePos.x / $hue.width()) * 360;
+            var h = (huePos.x / size.hue_width) * 360;
             var s = (pos.x / width);
             var v = ((height - pos.y) / height);
 
@@ -1522,21 +1533,21 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
             $color.css("background-color", c);
 
             var hsv = color.RGBtoHSV(rgb.r, rgb.g, rgb.b),
-                x = $color.width() * hsv.s,
-                y = $color.height() * (1-hsv.v);
+                x = size.color_width * hsv.s,
+                y = size.color_height * (1-hsv.v);
 
             $drag_pointer.css({
                 left : x - 5,
                 top : y - 5
             }).data('pos', { x  : x, y : y });
 
-            var hueX = $hue.width() * (hsv.h / 360);
+            var hueX = size.hue_width * (hsv.h / 360);
 
             $drag_bar.css({
                 left : hueX - 7.5
             }).data('pos', { x : hueX });
 
-            var opacityX = $opacity.width() * (rgb.a || 0);
+            var opacityX = size.opacity_width * (rgb.a || 0);
 
             $opacity_drag_bar.css({
                 left : opacityX - 7.5
@@ -1583,8 +1594,11 @@ jui.defineUI("ui.colorpicker", [ "jquery", "util.base", "util.color" ], function
             self.addEvent($informationInput1, 'keyup', function(e) {
                 var code = $(this).val();
 
-                if(code.charAt(0) == '#' && code.length == 7) {
-                    initColor(code, 'hex');
+                if(e.which == 13) {
+                    if (code.charAt(0) == '#' && (code.length == 7 || code.length == 4)) {
+                        initColor(code, 'hex');
+                        self.emit('enter', [ code, color.rgb(code) ]);
+                    }
                 }
             });
 
@@ -7827,21 +7841,21 @@ jui.defineUI("ui.timepicker", [ "jquery" ], function($) {
      *
      */
     var UI = function() {
-        var $focus = null;
+        var $focus = null, minYear, maxYear;
 
         function getRangeMap(year, month) {
             var lastDate = new Date(year, month, 0);
 
             var rangeMap = {
                 min: {
-                    year: 2015,
+                    year: minYear,
                     month: 1,
                     date: 1,
                     hours: 0,
                     minutes: 0
                 },
                 max: {
-                    year: 2020,
+                    year: maxYear,
                     month: 12,
                     date: lastDate.getDate(),
                     hours: 23,
@@ -7929,7 +7943,7 @@ jui.defineUI("ui.timepicker", [ "jquery" ], function($) {
             $year.on("keypress", validNumberType);
             $year.on("keyup", settingKeyUpEvent);
             $year.on("focusout", function(e) {
-                updateBtnValue(this, 0, 2015, 2020, true);
+                updateBtnValue(this, 0, minYear, maxYear, true);
             });
             $year.on("focus", function(e) {
                 $focus = $year;
@@ -8031,6 +8045,9 @@ jui.defineUI("ui.timepicker", [ "jquery" ], function($) {
         }
 
         this.init = function() {
+            minYear = this.options.minYear;
+            maxYear = this.options.maxYear;
+
             initInputElements(this);
             initBtnElements(this);
 
@@ -8039,7 +8056,7 @@ jui.defineUI("ui.timepicker", [ "jquery" ], function($) {
 
         this.setYear = function(year) {
             var $year = $(this.root).children(".year").val(year);
-            updateBtnValue($year[0], 0, 2015, 2020);
+            updateBtnValue($year[0], 0, minYear, maxYear);
         }
 
         this.getYear = function() {
@@ -8093,7 +8110,10 @@ jui.defineUI("ui.timepicker", [ "jquery" ], function($) {
             month: now.getMonth() + 1,
             date: now.getDate(),
             hours: now.getHours(),
-            minutes: now.getMinutes()
+            minutes: now.getMinutes(),
+
+            minYear: 2015,
+            maxYear: 2020
         };
     }
 
@@ -8229,6 +8249,180 @@ jui.defineUI("ui.numberchecker", [ "jquery" ], function($) {
             min: null,
             max: null,
             message: "Invalid number"
+        };
+    }
+
+    return UI;
+});
+jui.defineUI("ui.stringchecker", [ "jquery" ], function($) {
+
+    /**
+     * @class ui.stringchecker
+     *
+     * @extends core
+     * @alias StringChecker
+     * @requires jquery
+     *
+     */
+    var UI = function() {
+        var patterns = {
+            email: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+            url: /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/,
+            color: /#?([A-Fa-f0-9]){3}(([A-Fa-f0-9]){3})?/
+        };
+
+        function validStringType(self, value, opts, event) {
+            if(opts.validJson) {
+                var jsonStr = '{ "key":"' + value + '" }';
+
+                try {
+                    JSON.parse(jsonStr);
+                } catch (e) {
+                    if(event) {
+                        updatePlaceholder(self, self.emit("invalid", [ "json", value ]));
+                    }
+
+                    return false;
+                }
+            }
+
+            if(opts.validBlank) {
+                if($.trim(value) == "") {
+                    updatePlaceholder(self, self.emit("invalid", [ "blank" ]));
+                }
+            }
+
+            if(opts.pattern != null) {
+                if(typeof(opts.pattern) == "string") {
+                    var result = false,
+                        type = opts.pattern.toLowerCase(),
+                        regex = patterns[type];
+
+                    if(regex != null) {
+                        result = regex.test(value);
+                    }
+
+                    if(!result && event) {
+                        updatePlaceholder(self, self.emit("invalid", [ type, value ]));
+                    }
+
+                    return result;
+                } else if(typeof(opts.pattern) == "object") {
+                    var result = regex.test(value);
+
+                    if(!result && event) {
+                        updatePlaceholder(self, self.emit("invalid", [ "regex", value ]));
+                    }
+
+                    return result;
+                }
+            }
+
+            if(opts.minLength != -1) {
+                if(value.length < opts.minLength) {
+                    updatePlaceholder(self, self.emit("invalid", [ "min", value ]));
+                }
+            }
+
+            if(opts.maxLength != -1) {
+                if(value.length > opts.maxLength) {
+                    updatePlaceholder(self, self.emit("invalid", [ "max", value ]));
+                }
+            }
+
+            return true;
+        }
+
+        function getDefaultValue(self) {
+            var $element = $(self.root);
+
+            var opts = self.options,
+                value = $element.val() || "";
+
+            return {
+                value: value,
+                validJson: opts.validJson,
+                validBlank: opts.validBlank,
+                minLength: opts.minLength,
+                maxLength: opts.maxLength,
+                pattern: opts.pattern
+            }
+        }
+
+        function getValidData(value) {
+            var value = "" + value;
+
+            return {
+                value: value
+            }
+        }
+
+        function updatePlaceholder(self, message) {
+            if(typeof(message) == "string" && message != "") {
+                $(self.root).attr("placeholder", message);
+            } else {
+                var optMessage = self.options.message;
+
+                if(typeof(optMessage) == "string" && optMessage != "") {
+                    $(self.root).attr("placeholder", optMessage);
+                }
+            }
+
+            $(self.root).addClass("invalid").val("");
+        }
+
+        this.init = function() {
+            var self = this,
+                element = this.root,
+                opts = getDefaultValue(this);
+
+            // 입력된 값이 유효하면 value를 변경한다. 차후에 유효성 검사 실패시 초기값으로 사용함.
+            $(element).on("input", function(e) {
+                var value = $(element).val();
+
+                if(validStringType(self, value, opts, false)) {
+                    var data = getValidData(value);
+                    opts.value = data.value;
+                }
+            });
+
+            $(element).on("focus", function(e) {
+                $(element).removeClass("invalid").attr("placeholder", "");
+            });
+
+            $(element).on("focusout", function(e) {
+                var value = $(element).val();
+
+                if(!validStringType(self, value, opts, true)) {
+                    updatePlaceholder(self, null);
+                } else {
+                    var data = getValidData(value);
+                    $(element).val(data.value);
+                }
+            });
+
+            // 초기 값 유효성 검사
+            setTimeout(function() {
+                if(validStringType(self, opts.value, opts, true)) {
+                    $(element).val(opts.value);
+                } else {
+                    updatePlaceholder(self, null);
+                }
+
+            }, 100);
+
+            return this;
+        }
+    }
+
+    UI.setup = function() {
+        return {
+            validJson: true,
+            validBlank: false,
+            minLength: -1,
+            maxLength: -1,
+            pattern: null, // regex or string type (email, url, color, ...)
+            message: null
         };
     }
 
