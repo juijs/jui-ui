@@ -1,5 +1,5 @@
 import $ from "jquery"
-import jui from "juijs"
+import jui from "../main.js"
 
 export default {
     name: "ui.select",

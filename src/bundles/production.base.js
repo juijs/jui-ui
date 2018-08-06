@@ -1,4 +1,3 @@
-import jq from 'jquery'
 import jui from '../main.js'
 import AccordionComp from '../components/accordion.js'
 import DropdownComp from '../components/dropdown.js'
@@ -28,7 +27,8 @@ import TreeComp from '../components/tree.js'
 import WindowComp from '../components/window.js'
 
 jui.use([
-    AccordionComp, DropdownComp, AutocompleteComp, ButtonComp, ColorpickerComp, ComboComp, DatepickerComp, LayoutComp, ModalComp, NotifyComp,
+    AccordionComp,
+    DropdownComp, AutocompleteComp, ButtonComp, ColorpickerComp, ComboComp, DatepickerComp, LayoutComp, ModalComp, NotifyComp,
     NumbercheckerComp, PagingComp, ProgressComp, PropertyComp, SelectComp, SliderComp, SplitterComp, StringcheckerComp, SwitchComp, TabComp,
     TimepickerComp, TooltipComp, TreeNodeMod, TreeBaseMod, TreeComp, WindowComp
 ]);

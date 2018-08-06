@@ -1,5 +1,5 @@
 import $ from "jquery"
-import jui from "juijs"
+import jui from "../main.js"
 import BaseMod from "./tree.base.js"
 
 jui.use(BaseMod);

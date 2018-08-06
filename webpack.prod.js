@@ -1,3 +1,4 @@
+const webpack = require('webpack')
 const path = require('path')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
@@ -6,7 +7,7 @@ module.exports = (theme) => {
     return {
         mode: 'production',
         entry: {
-            vendors: [ 'jquery', 'juijs' ],
+            'vendors': [ 'jquery' ],
             'jui-ui': path.resolve(__dirname, 'src/bundles', `production.${theme}.js`)
         },
         output: {
@@ -40,11 +41,12 @@ module.exports = (theme) => {
             splitChunks: {
                 chunks: 'all',
                 cacheGroups: {
-                    vendors: {
+                    'vendors': {
                         test: /[\\/]node_modules[\\/]/,
                         name: 'vendors',
                         enforce: true,
-                        chunks: 'all'
+                        chunks: 'all',
+                        minChunks: 2
                     }
                 }
             },
@@ -54,6 +56,10 @@ module.exports = (theme) => {
                     filename: `[name].${theme}.css`
                 })
             ]
-        }
+        },
+        plugins: [
+            new webpack.ProvidePlugin({
+            })
+        ]
     }
 }
