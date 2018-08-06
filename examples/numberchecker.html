@@ -1,0 +1,39 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<META charset="UTF-8">
+<title>[JUI Library] - CSS/Accordion</title>
+
+<link rel="stylesheet" href="../dist/jui-ui.classic.css" />
+<script src="../dist/vendors.js"></script>
+<script src="../dist/jui-ui.js"></script>
+
+<style>
+    .col {
+        padding: 50px;
+    }
+</style>
+
+<script>
+    jui.ready([ "ui.numberchecker" ], function(numberchecker) {
+        var list = numberchecker("input", {
+            integer: true,
+            empty: "min",
+            min: 0
+        });
+    });
+</script>
+</head>
+<body class="jui">
+
+<div class="page-header">
+    <h1>Timepicker</h1>
+</div>
+
+<div class="row">
+    <input class="input" type="number" value="1" step="5" max="1000" style="width: 200px;" />
+    <input class="input" type="number" value="2" step="10" />
+    <input class="input" type="text" />
+</div>
+</body>
+</html>

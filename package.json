@@ -1,43 +1,48 @@
 {
   "name": "juijs-ui",
-  "version": "2.1.0",
+  "version": "2.1.0-es6",
+  "sideEffects": false,
   "description": "JUI provide all kinds of UI components that are used in web pages. However, charts and grids are not included.",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "npm run dev",
+    "dev": "webpack-dev-server --env=dev",
+    "prod:classic": "webpack --env=prod",
+    "prod:dark": "webpack --env=prod"
   },
-  "main": "dist/ui.min.js",
+  "main": "src/main.js",
+  "files": [
+    "dist",
+    "examples",
+    "images",
+    "src",
+    "test",
+    "package.json",
+    "README.md",
+    "webpack.config.js",
+    "webpack.dev.js",
+    "webpack.prod.js"
+  ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/juijs/jui.git"
+    "url": "https://github.com/juijs/jui-ui.git"
   },
   "keywords": [
     "HTML5",
     "CSS",
     "JS",
     "JavaScript",
-    "framework",
+    "SVG",
+    "Grid",
+    "Framework",
     "bootstrap",
-    "front-end",
-    "frontend",
-    "web development",
+    "Web Development",
     "free",
     "MIT"
   ],
   "author": "seogi1004",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/juijs/jui/issues"
-  },
-  "devDependencies": {
-    "grunt": "~1.0.3",
-    "grunt-contrib-concat": "~1.0.1",
-    "grunt-contrib-copy": "~1.0.0",
-    "grunt-contrib-cssmin": "~2.2.1",
-    "grunt-contrib-less": "~2.0.0",
-    "grunt-contrib-qunit": "~2.0.0",
-    "grunt-contrib-uglify": "~3.3.0",
-    "grunt-contrib-watch": "~1.1.0",
-    "load-grunt-tasks": "~4.0.0"
+    "url": "https://github.com/juijs/jui-grid/issues"
   },
   "categories": [
     "Frameworks",
@@ -59,20 +64,25 @@
       "email": "yoha@jennifersoft.com"
     }
   ],
-  "jam": {
-    "dependencies": {
-      "jquery": ">=1.8.0"
-    },
-    "main": [
-      "dist/ui.min.js",
-      "dist/ui.min.css",
-      "dist/ui-jennifer.css"
-    ],
-    "shim": {
-      "deps": [
-        "jquery"
-      ],
-      "exports": "juijs-ui"
-    }
+  "dependencies": {
+    "juijs": "2.1.6-es6"
+  },
+  "peerDependencies": {
+    "jquery": "^3.3.1"
+  },
+  "devDependencies": {
+    "css-loader": "^1.0.0",
+    "extract-text-webpack-plugin": "^4.0.0-beta.0",
+    "file-loader": "^1.1.11",
+    "html-webpack-plugin": "^3.2.0",
+    "less": "^3.8.0",
+    "less-loader": "^4.1.0",
+    "style-loader": "^0.21.0",
+    "uglifyjs-webpack-plugin": "^1.2.7",
+    "url-loader": "^1.0.1",
+    "webpack": "^4.16.4",
+    "webpack-bundle-analyzer": "^2.13.1",
+    "webpack-cli": "^3.1.0",
+    "webpack-dev-server": "^3.1.5"
   }
 }
