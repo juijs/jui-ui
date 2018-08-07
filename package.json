@@ -1,6 +1,6 @@
 {
   "name": "juijs-ui",
-  "version": "2.1.0-es6",
+  "version": "2.1.1-es6",
   "sideEffects": false,
   "description": "JUI provide all kinds of UI components that are used in web pages. However, charts and grids are not included.",
   "scripts": {

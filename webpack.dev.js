@@ -7,7 +7,7 @@ module.exports = (theme) => {
     return {
         mode: 'development',
         entry: {
-            'vendors': [ 'jquery' ],
+            vendors: [ 'jquery', 'juijs' ],
             'jui-ui': path.resolve(__dirname, 'src/bundles', 'index.js')
         },
         output: {
