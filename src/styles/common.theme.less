@@ -1,0 +1,51 @@
+select[disabled], textarea[disabled], select[readonly], textarea[readonly] {  // Disabled and read-only inputs
+  background-color: @baseDisabledBackgroundColor;
+}
+
+// 크롬 전용 스크롤 스타일
+.webkit-scrollbar() {
+  &::-webkit-scrollbar {
+    width: @baseScrollHandleSize;
+    height: @baseScrollHandleSize;
+  }
+
+  &::-webkit-scrollbar-corner {
+    background: transparent;
+    border-right: 1px solid @baseScrollBorderColor;
+    border-bottom: 1px solid @baseScrollBorderColor;
+  }
+
+  &::-webkit-scrollbar-track {
+    .btn-bgcolor-2(@baseScrollBackgroundColor1, @baseScrollBackgroundColor2, left);
+    border: 1px solid @baseScrollBorderColor;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: @baseScrollHandleBackgroundColor;
+    border: 1px solid @baseScrollHandleBorderColor;
+    .border-radius(@baseScrollHandleBorderRadius);
+
+    &:hover {
+      background: @baseScrollHandleHoverBackgroundColor;
+      border: 1px solid @baseScrollHandleHoverBorderColor;
+    }
+  }
+}
+
+.webkit-scrollbar-simple() {
+  &::-webkit-scrollbar {
+    width: @baseSimpleScrollHandleSize;
+    height: @baseSimpleScrollHandleSize;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: @baseSimpleScrollBackgroundColor;
+    border: 1px solid @baseSimpleScrollBorderColor;
+    .border-radius(5px);
+
+    &:hover {
+      background: @baseSimpleScrollHoverBackgroundColor;
+      border: 1px solid @baseSimpleScrollHoverBorderColor;
+    }
+  }
+}
