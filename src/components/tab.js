@@ -45,7 +45,7 @@ export default {
             }
 
             function showTarget(target, elem, isInit) {
-                var hash = $(elem).find("[href*=\#]").attr("href");
+                var hash = $(elem).find("[href*=\\#]").attr("href");
 
                 $(target).children("*").each(function(i) {
                     var self = this;

@@ -10,7 +10,7 @@
 <script src="../dist/jui-ui.js"></script>
 
 <script>
-	jui.ready([ "ui.notify" ], function(notify) {
+	jui.ready([ "jquery", "ui.notify" ], function($, notify) {
 		// 알림 1
 		notify1 = notify("body", {
 			position: "top-right",

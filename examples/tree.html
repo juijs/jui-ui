@@ -10,7 +10,7 @@
 <script src="../dist/jui-ui.js"></script>
 
 <script>
-jui.ready([ "ui.tree" ], function(treeFunc) {
+jui.ready([ "jquery", "ui.tree" ], function($, treeFunc) {
     tree = treeFunc(".tree", {
         root: { title: "C:\\" },
         event: {

@@ -10,7 +10,7 @@
 <script src="../dist/jui-ui.js"></script>
 
 <script>
-    jui.ready([ "ui.datepicker" ], function(datepicker) {
+    jui.ready([ "jquery", "ui.datepicker" ], function($, datepicker) {
         datepicker1 = datepicker("#datepicker1", {
             titleFormat: "yyyy MM",
             format: "yyyy/MM/dd",

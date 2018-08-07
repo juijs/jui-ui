@@ -1,11 +1,12 @@
 {
   "name": "juijs-ui",
-  "version": "2.1.3-es6",
+  "version": "2.1.4-es6",
   "sideEffects": false,
   "description": "JUI provide all kinds of UI components that are used in web pages. However, charts and grids are not included.",
   "scripts": {
     "start": "npm run dev",
     "dev": "webpack-dev-server --env=dev",
+    "prod": "webpack --env=prod",
     "prod:classic": "webpack --env=prod",
     "prod:dark": "webpack --env=prod"
   },
@@ -65,10 +66,8 @@
     }
   ],
   "dependencies": {
-    "juijs": "2.1.6-es6"
-  },
-  "peerDependencies": {
-    "jquery": "^3.3.1"
+    "jquery": "^3.3.1",
+    "juijs": "2.1.10-es6"
   },
   "devDependencies": {
     "css-loader": "^1.0.0",

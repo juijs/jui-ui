@@ -479,7 +479,7 @@ export default {
                     'z-index' : 1
                 });
 
-                value = item.value;
+                var value = item.value;
 
                 var postfix = item.postfix || "";
 
