@@ -1,6 +1,6 @@
 import $ from 'jquery'
-import jui from '../main.js'
-import TimepickerComp from '../components/timepicker.js'
+import jui from '../src/main.js'
+import TimepickerComp from '../src/components/timepicker.js'
 import Styles from './index.less'
 
 jui.use(TimepickerComp);
