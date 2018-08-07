@@ -1,4 +1,3 @@
-import $ from 'jquery'
 import jui from '../src/main.js'
 import TimepickerComp from '../src/components/timepicker.js'
 import Styles from './index.less'
