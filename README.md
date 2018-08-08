@@ -1,77 +1,63 @@
-## Getting Started
+## Installation
 
-#### Loading resources
-JUI library only requires the user to load a single package file.
-Access to the jui class must then be configured in the markup.
+### NPM
+```bash
+npm install --save juijs-ui
+```
+
+### Browser
+
 ```html
-<link rel="stylesheet" href="dist/ui.min.css" />
-<link rel="stylesheet" href="dist/ui-jennifer.min.css" />
-<body class="jui">...</body>
+<link rel="stylesheet" href="../dist/jui-ui.classic.css" />
+<script src="../dist/vendors.js"></script>
+<script src="../dist/jui-ui.js"></script>
 ```
 
-As the script works only with jQuery 1.8 or higher, it is necessary to load the jQuery library first.
+### ES Modules
+
+```js
+import jui from 'juijs'
+import TimepickerComp from 'juijs-ui/src/components/timepicker.js'
+import Styles from './index.less'
+
+jui.use(TimepickerComp);
+```
+
+Below is the index.less file. You can only use the style you want to bundle.
+
+```less
+.jui {
+  @import "../node_modules/juijs-ui/src/styles/base/mixins.less";
+  @import "../node_modules/juijs-ui/src/styles/common.less";
+  @import "../node_modules/juijs-ui/src/styles/common.theme.less";
+  @import "../node_modules/juijs-ui/src/styles/icon.less";
+  @import "../node_modules/juijs-ui/src/styles/icon.theme.less";
+  @import "../node_modules/juijs-ui/src/styles/timepicker.less";
+  @import "../node_modules/juijs-ui/src/styles/timepicker.theme.less";
+  @import "../node_modules/juijs-ui/src/styles/theme/classic.less";
+}
+```
+
+## Usage
+
 ```html
-<script src="lib/jquery-1.8.0.min.js"></script>
-<script src="lib/core.min.js"></script>
-<script src="dist/ui.min.js"></script>
+<body class="jui">
+    <div id="timepicker_date" class="timepicker calendar small" style="margin-right: 3px;">
+        <input type="input" class="year" maxlength="4" />-<input type="input" class="month" maxlength="2" />-<input type="input" class="date" maxlength="2" />
+        <i class="icon-calendar"></i>
+    </div>
+    
+    <div id="timepicker_time" class="timepicker small">
+        <input type="input" class="hours" maxlength="2" value="00" /> :
+        <input type="input" class="minutes" maxlength="2" value="00" />
+        <i class="icon-arrow7"></i>
+    </div>
+</body>
 ```
 
-#### Installing in command
+```js
+jui.ready([ "ui.timepicker" ], function(timepicker) {
+    timepicker("#timepicker_date");
+    timepicker("#timepicker_time");
+});
 ```
-npm install juijs-ui
-bower install juijs-ui
-jamjs install juijs-ui
-```
-
-#### To build the project
-Build using a grunt in JUI Library
-```
-grunt       // Build all processes
-grunt js    // Merge and Minifiy JavaScript files
-grunt css   // Compile LESS files
-grunt test  // Unit Tests
-```
-After the build output is shown below.
-```
-dist/ui.js
-dist/ui.min.js
-dist/ui.css
-dist/ui.min.css
-dist/ui-jennifer.css
-dist/ui-jennifer.min.css
-dist/ui-dark.css
-dist/ui-dark.min.css
-```
-
-## Documentation
-
-##### http://jui.io
-##### http://uiplay.jui.io
-
-## Maintainers
-
-Created by Alvin and Jayden, Yoha
-
-## License
-
-MIT License 
-
-Copyright (C) 2016 (```JenniferSoft Inc.```)
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
