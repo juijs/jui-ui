@@ -57,6 +57,8 @@ Below is the index.less file. You can only use the style you want to bundle.
 </body>
 ```
 
+The UI component creation code is the same as the existing one.
+
 ```js
 jui.ready([ "ui.timepicker" ], function(timepicker) {
     timepicker("#timepicker_date");
