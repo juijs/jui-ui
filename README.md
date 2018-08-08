@@ -18,7 +18,7 @@ npm install juijs-ui
 The difference with the existing method is that you need to add the module directly using the 'use' function.
 
 ```js
-import jui from 'juijs'
+import jui from 'juijs-ui'
 import TimepickerComp from 'juijs-ui/src/components/timepicker.js'
 import Styles from './index.less'
 
