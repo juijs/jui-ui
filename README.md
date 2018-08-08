@@ -15,6 +15,8 @@ npm install --save juijs-ui
 
 ### ES Modules
 
+The difference with the existing method is that you need to add the module directly using the 'use' function.
+
 ```js
 import jui from 'juijs'
 import TimepickerComp from 'juijs-ui/src/components/timepicker.js'
