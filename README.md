@@ -2,7 +2,7 @@
 
 ### NPM
 ```bash
-npm install --save juijs-ui
+npm install juijs-ui
 ```
 
 ### Browser
