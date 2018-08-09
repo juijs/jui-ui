@@ -21,8 +21,6 @@ import SwitchComp from '../src/components/switch.js'
 import TabComp from '../src/components/tab.js'
 import TimepickerComp from '../src/components/timepicker.js'
 import TooltipComp from '../src/components/tooltip.js'
-import TreeNodeMod from '../src/components/tree.node.js'
-import TreeBaseMod from '../src/components/tree.base.js'
 import TreeComp from '../src/components/tree.js'
 import WindowComp from '../src/components/window.js'
 
@@ -30,7 +28,7 @@ jui.use([
     AccordionComp,
     DropdownComp, AutocompleteComp, ButtonComp, ColorpickerComp, ComboComp, DatepickerComp, LayoutComp, ModalComp, NotifyComp,
     NumbercheckerComp, PagingComp, ProgressComp, PropertyComp, SelectComp, SliderComp, SplitterComp, StringcheckerComp, SwitchComp, TabComp,
-    TimepickerComp, TooltipComp, TreeNodeMod, TreeBaseMod, TreeComp, WindowComp
+    TimepickerComp, TooltipComp, TreeComp, WindowComp
 ]);
 
 window.jui = window.JUI = jui;
