@@ -92,9 +92,11 @@ export default {
             }
 
             function createModal(self, w, h) {
-                var mi = self.timestamp;
+                var opts = self.options,
+                    mi = self.timestamp,
+                    parent = opts.parent != null ? opts.parent : opts.target;
 
-                if( $modal[mi] != null) return;
+                if($modal[mi] != null) return;
 
                 $modal[mi] = $("<div id='MODAL_" + self.timestamp + "'></div>").css({
                     position: "absolute",
@@ -108,7 +110,7 @@ export default {
                 });
 
                 // 모달 추가
-                $(self.options.target).append($modal[mi]);
+                $(parent).append($modal[mi]);
 
                 // 루트 모달 옆으로 이동
                 $(self.root).insertAfter($modal[mi]);
@@ -225,6 +227,12 @@ export default {
                  * Sets a selector on which a modal is shown
                  */
                 target: "body",
+
+                /**
+                 * @cfg {String/DOMElement} [target="body"]
+                 * Sets a selector on which a modal is shown
+                 */
+                parent: null,
 
                 /**
                  * @cfg {Integer} [index=0]
