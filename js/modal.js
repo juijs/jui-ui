@@ -112,11 +112,11 @@ jui.defineUI("ui.modal", [ "jquery", "util.base" ], function($, _) {
                 "z-index": (z_index + self.options.index) - 1
             });
 
-            // 모달 추가
-            $(opts.target).append($modal[mi]);
+            // parent에 modal을 자식 노드로 추가
+            $(parent).append($modal[mi]);
 
-            // 루트 모달 옆으로 이동
-            $(parent).append(self.root);
+            // root를 modal 배경과 동일한 위치로 이동
+            $(self.root).insertAfter($modal[mi]);
 
             // 모달 닫기 이벤트 걸기
             self.addEvent($modal[mi], "click", function(e) {
