@@ -2,6 +2,7 @@ const webpack = require('webpack')
 const path = require('path')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 
 module.exports = (theme) => {
     return {
@@ -49,8 +50,7 @@ module.exports = (theme) => {
             }]
         },
         plugins: [
-            new webpack.ProvidePlugin({
-            })
+            new OptimizeCssAssetsPlugin()
         ]
     }
 }
