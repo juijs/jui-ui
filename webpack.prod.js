@@ -7,26 +7,17 @@ module.exports = (theme) => {
     return {
         mode: 'production',
         entry: {
-            vendors: [ 'jquery', 'juijs' ],
             'jui-ui': path.resolve(__dirname, 'bundles', `production.${theme}.js`)
         },
         output: {
             path: path.resolve(__dirname, 'dist'),
             filename: '[name].js'
         },
+        externals: {
+            jquery: 'jQuery',
+            'juijs': 'jui'
+        },
         optimization: {
-            splitChunks: {
-                chunks: 'all',
-                cacheGroups: {
-                    'vendors': {
-                        test: /[\\/]node_modules[\\/]/,
-                        name: 'vendors',
-                        enforce: true,
-                        chunks: 'all',
-                        minChunks: 2
-                    }
-                }
-            },
             minimizer: [
                 new UglifyJsPlugin(),
                 new ExtractTextPlugin({
