@@ -218,16 +218,3 @@ export default {
         return UI;
     }
 }
-
-jui.defineUI("ui.tooltip", [ "jquery" ], function($) {
-
-    /**
-     * @class ui.tooltip
-     * Tooltip component can be applied to 4 locations, namely top/bottom/left/right, and a relate message can be entered in the title properties
-     *
-     * @extends core
-     * @alias Tooltip
-     * @requires jquery
-     */
-
-});
