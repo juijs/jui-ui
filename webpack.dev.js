@@ -55,9 +55,9 @@ module.exports = (theme) => {
                 test: /\.(ttf|eot|svg|woff|png|gif)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
                 use: [
                     {
-                        loader: 'url-loader',
+                        loader: 'file-loader',
                         options: {
-                            limit: 1024 * 10
+                            name: '[name].[ext]?[hash]'
                         }
                     }
                 ]
