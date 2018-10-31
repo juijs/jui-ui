@@ -1,6 +1,6 @@
 {
   "name": "juijs-ui",
-  "version": "2.2.1-es6",
+  "version": "2.2.2-es6",
   "sideEffects": false,
   "description": "JUI provide all kinds of UI components that are used in web pages. However, charts and grids are not included.",
   "scripts": {
@@ -8,7 +8,8 @@
     "dev": "webpack-dev-server --env=dev",
     "prod": "webpack --env=prod",
     "prod:classic": "webpack --env=prod",
-    "prod:dark": "webpack --env=prod"
+    "prod:dark": "webpack --env=prod",
+    "test": "jest --config ./jest.config.js"
   },
   "main": "src/main.js",
   "files": [
@@ -67,13 +68,19 @@
   ],
   "dependencies": {
     "jquery": "^3.3.1",
-    "juijs": "2.1.10-es6"
+    "juijs": "2.2.0-es6"
   },
   "devDependencies": {
+    "babel": "^6.23.0",
+    "babel-core": "^6.26.3",
+    "babel-jest": "^23.6.0",
+    "babel-loader": "^7.1.5",
+    "babel-preset-env": "^1.7.0",
     "css-loader": "^1.0.0",
     "extract-text-webpack-plugin": "^4.0.0-beta.0",
     "file-loader": "^1.1.11",
     "html-webpack-plugin": "^3.2.0",
+    "jest": "^23.6.0",
     "less": "^3.8.0",
     "less-loader": "^4.1.0",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
