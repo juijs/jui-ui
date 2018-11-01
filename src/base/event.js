@@ -116,7 +116,6 @@ export default {
          * @deprecated
          */
         let UIEvent = function () {
-            let vo = null;
 
             /**
              * @method find
@@ -218,18 +217,6 @@ export default {
             }
 
             return uiObj;
-        }
-
-        UIEvent.setup = function() {
-            return {
-                /**
-                 * @cfg {Object} [vo=null]
-                 * Configures a binding object of a markup
-                 *
-                 * @deprecated
-                 */
-                vo: null
-            }
         }
 
         return UIEvent;
