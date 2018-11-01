@@ -5,18 +5,18 @@ export default {
     name: "event",
     extend: "core",
     component: function () {
-        var _ = jui.include("util.base");
-        var UIManager = jui.include("manager");
-        var UICollection = jui.include("collection");
+        const _ = jui.include("util.base");
+        const UIManager = jui.include("manager");
+        const UICollection = jui.include("collection");
 
-        var DOMEventListener = function() {
-            var list = [];
+        const DOMEventListener = function() {
+            let list = [];
 
             function settingEventAnimation(e) {
-                var pfx = [ "webkit", "moz", "MS", "o", "" ];
+                let pfx = [ "webkit", "moz", "MS", "o", "" ];
 
-                for (var p = 0; p < pfx.length; p++) {
-                    var type = e.type;
+                for (let p = 0; p < pfx.length; p++) {
+                    let type = e.type;
 
                     if (!pfx[p]) type = type.toLowerCase();
                     $(e.target).on(pfx[p] + type, e.callback);
@@ -56,7 +56,7 @@ export default {
             }
 
             this.add = function (args) {
-                var e = { target: args[0], type: args[1] };
+                let e = { target: args[0], type: args[1] };
 
                 if (_.typeCheck("function", args[2])) {
                     e = $.extend(e, { callback: args[2] });
@@ -64,9 +64,9 @@ export default {
                     e = $.extend(e, { children: args[2], callback: args[3] });
                 }
 
-                var eventTypes = _.typeCheck("array", e.type) ? e.type : [ e.type ];
+                let eventTypes = _.typeCheck("array", e.type) ? e.type : [ e.type ];
 
-                for (var i = 0; i < eventTypes.length; i++) {
+                for (let i = 0; i < eventTypes.length; i++) {
                     e.type = eventTypes[i]
 
                     if (e.type.toLowerCase().indexOf("animation") != -1)
@@ -115,8 +115,8 @@ export default {
          * @requires collection
          * @deprecated
          */
-        var UIEvent = function () {
-            var vo = null;
+        let UIEvent = function () {
+            let vo = null;
 
             /**
              * @method find
@@ -153,34 +153,19 @@ export default {
             }
 
             /**
-             * @method setVo
-             * Dynamically defines the template method of a UI
-             *
-             * @deprecated
-             */
-            this.setVo = function() { // @Deprecated
-                if(!this.options.vo) return;
-
-                if(vo != null) vo.reload();
-                vo = $(this.selector).jbinder();
-
-                this.bind = vo;
-            }
-
-            /**
              * @method destroy
              * Removes all events set in a UI obejct and the DOM element
              *
              */
             this.destroy = function() {
-                for (var i = 0; i < this.listen.size(); i++) {
-                    var obj = this.listen.get(i);
+                for (let i = 0; i < this.listen.size(); i++) {
+                    let obj = this.listen.get(i);
                     $(obj.target).off(obj.type);
                 }
 
                 // 생성된 메소드 메모리에서 제거
                 if(this.__proto__) {
-                    for (var key in this.__proto__) {
+                    for (let key in this.__proto__) {
                         delete this.__proto__[key];
                     }
                 }
@@ -190,7 +175,7 @@ export default {
         UIEvent.build = function(UI) {
 
             return function(selector, options) {
-                var list = [],
+                let list = [],
                     $root = $(selector || "<div />");
 
                 $root.each(function (index) {
@@ -200,7 +185,7 @@ export default {
 
                         $("script").each(function (i) {
                             if (selector == $(this).data("jui") || selector == $(this).data("vo") || selector instanceof HTMLElement) {
-                                var tplName = $(this).data("tpl");
+                                let tplName = $(this).data("tpl");
 
                                 if (tplName == "") {
                                     throw new Error("JUI_CRITICAL_ERR: 'data-tpl' property is required");
@@ -225,7 +210,7 @@ export default {
         }
 
         UIEvent.init = function(UI) {
-            var uiObj = null;
+            let uiObj = null;
 
             if(typeof(UI) === "object") {
                 uiObj = UIEvent.build(UI);
