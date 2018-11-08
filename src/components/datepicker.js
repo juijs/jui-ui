@@ -270,6 +270,12 @@ export default {
 
                 $head = $(this.root).children(".head");
                 $body = $(this.root).children(".body");
+
+                // tbody가 없을 경우에 대한 처리
+                if($body.find("tbody").length == 0) {
+                    $body.append($("<tbody></tbody>"));
+                }
+
                 minDate = (_.typeCheck("date", opts.minDate)) ? opts.minDate : null;
                 maxDate = (_.typeCheck("date", opts.maxDate)) ? opts.maxDate : null;
 
@@ -304,24 +310,20 @@ export default {
              */
             this.page = function(y, m) {
                 if(arguments.length == 0) return;
-                var opts = this.options;
+
+                var opts = this.options,
+                    $tbody = $body.find("tbody").empty();
 
                 if(opts.type == "daily") {
                     year = y;
                     month = m;
-
-                    $body.find("tr:not(:first-child)").remove();
-                    $body.append(getCalendarHtml(this, getDateList(this, year, month)));
+                    $tbody.append(getCalendarHtml(this, getDateList(this, year, month)));
                 } else if(opts.type == "monthly") {
                     year = y;
-
-                    $body.find("tr").remove();
-                    $body.append(getCalendarHtml(this, getMonthList(year)));
+                    $tbody.append(getCalendarHtml(this, getMonthList(year)));
                 } else if(opts.type == "yearly") {
                     year = y;
-
-                    $body.find("tr").remove();
-                    $body.append(getCalendarHtml(this, getYearList(year)));
+                    $tbody.append(getCalendarHtml(this, getYearList(year)));
                 }
 
                 $head.children(".title").html(_.dateFormat(getCalendarDate(this), opts.titleFormat));
