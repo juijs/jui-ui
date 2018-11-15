@@ -8,16 +8,21 @@ export default {
         var UI = function() {
             var activePage = 1, lastPage = 1;
             var $main = null;
-
+            var cnt = 0;
+            
             function setEventAction(self) {
                 self.addEvent($(self.root).find(".prev"), "click", function(e) {
-                    self.prev();
+                    cnt++;
+                    if(cnt == 1) self.prev();
+                    window.setTimeout(function(){cnt = 0;}, 500);
                     return false;
                 });
 
                 self.addEvent($(self.root).find(".next"), "click", function(e) {
-                    self.next();
-                    return false;
+                    cnt++;
+                    if (cnt == 1) self.next();
+                    window.setTimeout(function(){cnt = 0;}, 500);
+                    return false;                
                 });
             }
 
