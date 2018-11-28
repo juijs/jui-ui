@@ -25,10 +25,11 @@ import TreeComp from '../src/components/tree.js'
 import WindowComp from '../src/components/window.js'
 
 jui.use([
-    AccordionComp,
-    DropdownComp, AutocompleteComp, ButtonComp, ColorpickerComp, ComboComp, DatepickerComp, LayoutComp, ModalComp, NotifyComp,
+    AccordionComp, DropdownComp, AutocompleteComp, ButtonComp, ColorpickerComp, ComboComp, DatepickerComp, LayoutComp, ModalComp, NotifyComp,
     NumbercheckerComp, PagingComp, ProgressComp, PropertyComp, SelectComp, SliderComp, SplitterComp, StringcheckerComp, SwitchComp, TabComp,
     TimepickerComp, TooltipComp, TreeComp, WindowComp
 ]);
 
-window.jui = window.JUI = jui;
+if(typeof(window) == "object") {
+    window.jui = window.JUI = jui;
+}

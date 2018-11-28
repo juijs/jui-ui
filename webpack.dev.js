@@ -44,23 +44,18 @@ module.exports = (theme) => {
                     use: [{
                         loader: "css-loader"
                     }, {
-                        loader: "less-loader",
-                        options: {
-
-                        }
+                        loader: "less-loader"
                     }],
                     fallback: "style-loader"
                 })
             }, {
                 test: /\.(ttf|eot|svg|woff|png|gif)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-                use: [
-                    {
-                        loader: 'file-loader',
-                        options: {
-                            name: '[name].[ext]?[hash]'
-                        }
+                use: [{
+                    loader: 'file-loader',
+                    options: {
+                        name: '[name].[ext]?[hash]'
                     }
-                ]
+                }]
             }]
         },
         plugins: [
