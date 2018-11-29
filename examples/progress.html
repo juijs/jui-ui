@@ -1,0 +1,68 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<META charset="UTF-8">
+<title>[JUI Library] - JavaScript/Modal</title>
+
+<link rel="stylesheet" href="../dist/jui-ui.classic.css" />
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/juijs@2.2.1-es6/dist/jui-core.js"></script>
+<script src="../dist/jui-ui.js"></script>
+
+<script>
+    jui.ready([ "ui.progress" ], function(progress) {
+        var p = progress(".progress", {
+            value : 50,
+            striped : true,
+            animated : true
+        });
+
+        for(var i = 0; i < p.length;i++) {
+            (function(p) {
+            })(p[i]);
+        }
+    });
+</script>
+</head>
+
+<body class="jui">
+
+<h1>No Body 1</h1>
+<div style="width:300px;">
+    <div class='progress flat'></div>
+</div>
+
+<h1>No Body 2</h1>
+<div style="width:300px;">
+    <div class='progress simple'></div>
+</div>
+
+<h1>Flat</h1>
+<div style="width:300px;">
+    <div class='progress flat'>
+        <div class='area'>
+            <div class='bar' style="width:30%"></div>
+        </div>
+    </div>
+</div>
+
+<h1>Simple</h1>
+<div style="width:300px">
+    <div class='progress simple'>
+        <div class='area'>
+            <div class='bar striped' style="width:100%"></div>
+        </div>
+    </div>
+</div>
+
+<h1>Simple & Flat</h1>
+<div style="width:300px">
+    <div class='progress simple flat'>
+        <div class='area'>
+            <div class='bar striped' style="width:50%"></div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

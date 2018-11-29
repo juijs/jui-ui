@@ -1,0 +1,145 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+<META charset="UTF-8">
+<title>[JUI Library] - JavaScript/Tooltip</title>
+
+<link rel="stylesheet" href="../dist/jui-ui.classic.css" />
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/juijs@2.2.1-es6/dist/jui-core.js"></script>
+<script src="../dist/jui-ui.js"></script>
+
+<style>
+.tooltip_1, .tooltip_2, .tooltip_3, .tooltip_4 {
+	font-weight: bold;
+}	
+</style>
+
+<script>
+jui.ready([ "ui.tooltip" ], function(tooltip) {
+	
+	// 7-1. 툴팁 Top
+	tooltip_1 = tooltip(".tooltip_1", {
+        tpl: {
+            item: $("#tpl_message").html()
+        }
+    });
+	
+	// 7-2. 툴팁 Bottom
+	tooltip_2 = tooltip(".tooltip_2", {
+		position: "bottom",
+		color: "gray",
+		showType: "click",
+        hideType: "click",
+        event: {
+            show: function() {
+                console.log("show");
+            },
+            hide: function() {
+                console.log("hide");
+            }
+        }
+	});
+	
+	// 7-3. 툴팁 Left
+	tooltip_3 = tooltip(".tooltip_3", {
+		position: "left",
+		delay: 1000,
+        hideType: "click",
+        event: {
+            show: function() {
+                console.log("show");
+            },
+            hide: function() {
+                console.log("hide");
+            }
+        }
+	});
+	
+	// 7-4. 툴팁 Right
+	tooltip_4 = tooltip(".tooltip_4", {
+		position: "right",
+		width: 300,
+		align: "left",
+		hideType: "click",
+		tpl: {
+			item: $("#tpl_popover").html()
+		}
+	});
+
+	setTimeout(function() {
+		tooltip_2.update("sdfsdfsdfsdf");
+	}, 5000);
+});
+
+</script>
+</head>
+<body class="jui">
+
+<script id="tpl_message" type="text/template">
+    <div class="tooltip top">
+        <div class="message" style="font-size: 15px;"><!= message !></div>
+    </div>
+</script>
+
+
+<section>
+	<h2>Top</h2>
+	<p>
+		툴팁의 위치를 상단으로 설정할 수 있으며 기본적으로 마우스 오버시에 툴팁이 보여집니다. 
+		(<span class="tooltip_1" title="Tooltip Top">Over</span>)
+		
+<pre><code class="language-javascript">jui.ready(function(ui, uix, _) {
+	tooltip_1 = ui.tooltip(".tooltip_1");
+});</code></pre>
+	</p>
+</section>
+
+<section>
+	<h2>Bottom</h2>
+	<p>
+		툴팁의 위치를 하단으로 설정할 수 있으며 컬러는 회색으로 툴팁은 마우스 클릭시에 보여집니다. 
+		(<span class="tooltip_2" title="Tooltip Bottom">Click</span>)
+		
+<pre><code class="language-javascript">tooltip_2 = ui.tooltip(".tooltip_2", {
+	position: "bottom",
+	color: "gray",
+	type: "click"
+});</code></pre>
+	</p>
+</section>
+	
+<section>
+	<h2>Left</h2>
+	<p>
+		툴팁의 위치를 좌측으로 설정할 수 있으며 마우스 오버시 1초 후에 툴팁이 보여집니다. 
+		(<span class="tooltip_3" title="Tooltip left">Delay</span>)
+		
+<pre><code class="language-javascript">tooltip_3 = ui.tooltip(".tooltip_3", {
+	position: "left",
+	delay: 1000
+});</code></pre>
+	</p>
+</section>
+	
+<section>
+	<h2>Right</h2>
+	<p>
+		툴팁의 위치를 우측으로 설정할 수 있으며 <strong>max-width</strong> 값을 300px로 정합니다. 만약에 툴팁이 길어지면 자동으로 줄바꿈을 합니다.
+		그리고 툴팁은 가운데 정렬됩니다. (<span class="tooltip_4" title="Tooltip right, Tooltip right, Tooltip right, Tooltip right, Tooltip right, Tooltip right">Over</span>)
+		
+		<script id="tpl_popover" type="text/template">
+			<div class="popover <!= position !> <!= color !>">
+				<div class="head">Subject</div>
+				<div class="body">
+					<div class="image"><i class="icon-caution"></i></div>
+					<div class="message"><!= message !></div>
+				</div>
+			</div>
+		</script>
+	</p>
+</section>
+
+</body>
+</html>

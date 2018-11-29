@@ -1,0 +1,210 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+<META charset="UTF-8">
+<title>[JUI Library] - JavaScript/Dropdown</title>
+
+<link rel="stylesheet" href="../dist/jui-ui.classic.css" />
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/juijs@2.2.1-es6/dist/jui-core.js"></script>
+<script src="../dist/jui-ui.js"></script>
+
+<script>
+jui.ready([ "ui.dropdown" ], function(dropdown) {
+	// 5-1. 드롭다운
+	dd_1 = dropdown("#dd_1");
+	dd_1.on("change", function(data) {
+		alert(data.value + ", " + data.text);
+	});
+
+	// 5-2. 드롭다운, 앵커
+	dd_2 = dropdown("#dd_2", {
+		close: false
+	});
+	dd_2.on("change", function(data) {
+		alert(data.value + ", " + data.text);
+	});
+
+	// 5-3. 드롭다운, 스타일
+	dd_3 = dropdown("#dd_3", {
+		keydown: true
+	});
+	dd_3.on("change", function(data) {
+		alert(data.value + ", " + data.text);
+	});
+
+	// 5-4. 드롭다운, 업데이트
+	dd_4 = dropdown("#dd_4", {
+		nodes: [
+			{ value: 1, text: "text1" },
+			{ value: 2, text: "text2" },
+			{ value: 3, text: "text3" }
+		]
+	});
+	dd_4.on("change", function(data) {
+		alert(data.value + ", " + data.text);
+	});
+});
+
+function dd_4_update() {
+	dd_4.update([
+		{ value: 4, text: "text4" },
+		{ value: 5, text: "text5" },
+		{ value: 6, text: "text6" }
+	]);
+}
+
+</script>
+</head>
+<body class="jui">
+
+<div class="page-header">
+	<h1>Dropdown</h1>
+	<p class="br">
+		드롭다운은 콤보박스와 네이게이션, 테이블 등 다수의 UI 컴포넌트에서 응용해서 사용하는 활용도 높은 UI 컴포넌트입니다.
+	</p>
+</div>
+
+<section>
+	<h2>Default</h2>
+	<p>
+		아래는 드롭다운 컴포넌트의 기본이며 각각의 요소에는 <strong>value</strong>를 지정할 수 있습니다. (숫자 형태만 가능)
+		
+		<div style="display: inline-block; position: relative;">
+			<div class="group">
+				<button class="btn" onclick="dd_1.show();">Show</button>
+				<button class="btn" onclick="dd_1.hide();">Hide</button>
+			</div>
+			
+			<div id="dd_1" class="dropdown large">
+				<ul style="width: 150px;">
+					<li class="disabled" value="1">Dropdown 1</li>
+					<li class="divider"></li>
+					<li value="2">Dropdown 2</li>
+					<li value="3">Dropdown 3</li>
+					<li value="4">Dropdown 4</li>
+				</ul>
+			</div>
+		</div>
+	</p>
+
+</section>
+
+<section>
+	<h2>Anchor + Close</h2>
+	<p>
+		만약에 드롭다운에 말풍선 효과를 주고 싶다면 <strong>dropdown</strong> 태그 안에 <strong>anchor</strong> 클래스를 가진 태그를 추가하면 됩니다.<br/>
+		그리고 말풍선 효과를 우측으로 하고 싶다면 해당 말풍선 태그에 <strong>anchor-right</strong> 클래스를 추가하면 됩니다.
+		
+		<div style="display: inline-block; position: relative;">
+			<div class="group">
+				<button class="btn" onclick="dd_2.show();">Show</button>
+				<button class="btn" onclick="dd_2.hide();">Hide</button>
+			</div>
+			
+			<div id="dd_2" class="dropdown large">
+				<div class="anchor"></div>
+				
+				<ul style="width: 150px;">
+					<li value="1"><a>Dropdown 1</a></li>
+					<li class="divider"></li>
+					<li value="2"><a>Dropdown 2</a></li>
+					<li value="3"><a>Dropdown 3</a></li>
+					<li value="4"><a>Dropdown 4</a></li>
+				</ul>
+			</div>
+		</div>
+	</p>
+
+</section>
+
+<section>
+	<h2>Style + Keydown</h2>
+	<p>
+		만약에 드롭다운을 화면 우측에서 보여주게 되면 메뉴의 일부가 가려지는 문제가 발생할 수 있습니다.<br/>
+		이럴 경우에는 <strong>margin-left</strong> 스타일 값을 음수로 주면 해결 할 수 있습니다.
+		
+		<div class="navbar" style="overflow: hidden;">
+			<div class="inline right">
+				<a class="btn small" onclick="dd_3.show();">Menu List <i class="icon-arrow1 icon-white"></i></a>
+				
+				<div id="dd_3" class="dropdown" style="margin-left: -15px;">
+					<div class="anchor"></div>
+					
+					<ul style="width: 120px;">
+						<li value="1">Dropdown 1</li>
+						<li value="2">Dropdown 2</li>
+                        <li class="divider"></li>
+						<li value="3">Dropdown 3</li>
+						<li value="4">Dropdown 4</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		
+		<p class="br">
+			좌측 마진 값을 조정함으로써 우측 정렬시 드롭다운의 위치를 자연스럽게 맞출 수 있습니다.
+			
+<pre><code class="language-markup">&lt;div id="dd_3" class="dropdown dropdown-black" style="margin-left: -15px;"&gt;
+	&lt;!-- 생략 --&gt;
+&lt;/div&gt;</code></pre>
+		</p>
+
+		<p>
+			<strong>keydown</strong> 옵션을 <strong>true</strong>로 주면 키보드 방향키를 통해서도 리스트를 선택할 수 있습니다.
+			
+<pre><code class="language-javascript">dd_3 = ui.dropdown("#dd_3", {
+	keydown: true
+});</code></pre>
+		</p>
+	</p>
+</section>
+
+<section>
+	<h2>Update</h2>
+	<p>
+		드롭다운은 마크업 뿐만이 아니라 순수 데이터로도 리스트를 구성할 수 있습니다.
+		
+		<div class="navbar" style="overflow: hidden;">
+			<div class="inline right">
+				<a class="btn small" onclick="dd_4_update();">Update</a>
+				<a class="btn small" onclick="dd_4.show();">Menu List <i class="icon-arrow1 icon-white"></i></a>
+				
+				<div id="dd_4" class="dropdown">
+					<div class="anchor"></div>
+					
+					<ul style="width: 120px;">
+					</ul>
+				</div>
+			</div>
+		</div>
+		<script data-jui="#dd_4" data-tpl="node" type="text/template">
+			<li value="<!= value !>"><!= text !></li>
+		</script>
+	</p>
+
+	<p>
+		<strong>node</strong> 템플릿이 설정되어 있다면 아래와 같이 옵션으로 데이터를 설정할 수 있습니다.
+		
+<pre><code class="language-javascript">dd_4 = ui.dropdown("#dd_4", {
+	nodes: [
+		{ value: 1, text: "text1" },
+		{ value: 2, text: "text2" },
+		{ value: 3, text: "text3" }
+	]
+});</code></pre>
+	</p>
+	<p>
+		Update 버튼을 클릭하면 드롭다운 리스트를 변경할 수 있습니다.
+		
+<pre><code class="language-javascript">dd_4.update([
+	{ value: 4, text: "text4" },
+	{ value: 5, text: "text5" },
+	{ value: 6, text: "text6" }
+]);</code></pre>
+	</p>
+</section>
+
+</body>
+</html>

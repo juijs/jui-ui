@@ -1,0 +1,148 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+<META charset="UTF-8">
+<title>[JUI Library] - JavaScript/PropertyView </title>
+
+<link rel="stylesheet" href="../dist/jui-ui.classic.css" />
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/juijs@2.2.1-es6/dist/jui-core.js"></script>
+<script src="../dist/jui-ui.js"></script>
+
+<script>
+    jui.ready(function() {
+        window.prSettings = jui.create("ui.property", '#pr-settings', {
+            items : [
+                { type : 'group', title : 'Views', description : 'Simple theme select info '},
+                { type : 'select', title : 'Theme', key : 'theme' , value : 'white', items : ['white', 'black', 'league', 'beige', 'sky', 'night', 'serif', 'simple', 'solarized', 'mozila' ] },
+                { type : 'group', title : 'Configure'},
+                { type : 'html', title : 'contenteditable', key : 'contenteditable', value : '<strong>dafdsafdsaf</strong>', description : 'paste image'},
+                // custom render function
+                {
+                    type : 'text',
+                    title : 'text readonly',
+                    key : 'htmlValue',
+                    value : '<strong>bold text</strong>',
+                    render : function ($dom, item) {
+                        var $text =  $("<div />").attr('contenteditable', true).html(item.value);
+
+                        $text.on('input', function ()  {
+                            window.prSettings.refreshValue($dom, $text.html());    // reset new html value
+                        });
+
+                        return $text;
+                    }
+                },
+
+                { type : 'checkbox', title : 'Controls', key : 'controls' , value : true, description : 'Display controls in the bottom right corner' },
+                { type : 'switch', title : 'Controls', key : 'controls-2' , value : true, description : 'Display controls in the bottom right corner' },
+                { type : 'date', title : 'Date Picker', key : 'date-picker', description : 'select date' },
+                { type : 'range', title : 'Range Controls', key : 'range-control' , value : 50, min : 0, max : 100, description : 'Display controls in the bottom right corner' },
+                { type : 'range', title : 'Range Step', key : 'range-step' , value : 50, min : 0, max : 100, step : 0.5, description : 'Display controls in the bottom right corner' },
+                { type : 'range', title : 'Range - readonly mode', key : 'range-readonly-mode' , value : 50, min : 0, max : 100, step : 0.5, readonly : true, description : 'Display controls in the bottom right corner' },
+                { type : 'checkbox', title : 'Progress', key : 'progress' , value : true, description : 'Display a presentation progress bar' },
+                { type : 'checkbox', title : 'Slide Number', key : 'slideNumber' , value : false, description : 'Display the page number of the current slide' },
+                { type : 'checkbox', title : 'History', key : 'history' , value : false, description : 'Push each slide change to the browser history' },
+                { type : 'checkbox', title : 'Keyboard', key : 'keyboard' , value : true, description : 'Enable keyboard shortcuts for navigation' },
+                { type : 'checkbox', title : 'Overview', key : 'overview' , value : true, description : 'Enable the slide overview mode' },
+                { type : 'checkbox', title : 'Center', key : 'center' , value : true, description : 'Vertical centering of slides' },
+                { type : 'checkbox', title : 'Touch', key : 'touch' , value : true, description : 'Enables touch navigation on devices with touch input' },
+                { type : 'checkbox', title : 'Loop', key : 'loop' , value : false, description : 'Loop the presentation' },
+                { type : 'checkbox', title : 'RTL', key : 'rtl' , value : false, description : 'Change the presentation direction to be RTL' },
+                { type : 'checkbox', title : 'Shuffle', key : 'shuffle' , value : false, description : 'Randomizes the order of slides each time the presentation loads' },
+                { type : 'checkbox', title : 'Fragments', key : 'fragments' , value : true, description : 'Turns fragments on and off globally' },
+                { type : 'checkbox', title : 'Embedded', key : 'embedded' , value : false, description : 'Flags if the presentation is running in an embedded mode,\ni.e. contained within a limited portion of the screen ' },
+                { type : 'checkbox', title : 'Help', key : 'help' , value : true, description : 'Flags if we should show a help overlay when the questionmark, key is pressed' },
+                { type : 'checkbox', title : 'Show Notes', key : 'showNotes' , value : false, description : '' },
+                { type : 'number', title : 'Auto Slide', key : 'autoSlide' , value : 0, description : '' },
+                { type : 'checkbox', title : 'Auto Slide Stoppable', key : 'autoSlideStoppable' , value : true, description : 'Stop auto-sliding after user input' },
+                { type : 'checkbox', title : 'Auto Slide Method', key : 'autoSlideMethod' , value : 'Reveal.navigateNext', description : 'Use this method for navigation when auto-sliding' },
+                { type : 'checkbox', title : 'Mouse Wheel', key : 'mouseWheel' , value : false, description : 'Enable slide navigation via mouse wheel' },
+                { type : 'checkbox', title : 'Hide Address Bar', key : 'hideAddressBar' , value : true, description : '' },
+                { type : 'checkbox', title : 'Preview Links', key : 'previewLinks' , value : false, description : '' },
+                { type : 'select', title : 'Transition style', key : 'transition' , value : 'default', items : ['default', 'none', 'fade', 'slide', 'convex', 'concave', 'zoom' ] },
+                { type : 'select', title : 'Transition Speed', key : 'transitionSpeed' , value : 'default', items : ['default', 'fast', 'slow' ] },
+                { type : 'select', title : 'Background Transition', key : 'backgroundTransition' , value : 'default', description : 'Transition style for full page slide backgrounds',  items : ['default', 'none', 'fade', 'slide', 'convex', 'concave', 'zoom' ] },
+                { type : 'number', title : 'View Distance', key : 'viewDistance' , value : 3, description : 'Number of slides away from the current that are visible' },
+                { type : 'group', title : 'Parallax'},
+                { type : 'text', title : 'Background Image', key : 'parallaxBackgroundImage' , value : '', description : 'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg' },
+                { type : 'text', title : 'Background Size', key : 'parallaxBackgroundSize' , value : '', description : 'CSS syntax, e.g. "2100px 900px"' },
+                { type : 'text', title : 'Background Horizontal', key : 'parallaxBackgroundHorizontal' , value : '', description : '' },
+                { type : 'text', title : 'Background Vertical', key : 'parallaxBackgroundVertical' , value : '', description : ''  }
+            ],
+            event : {
+                change : function (item, newValue, oldValue) {
+                    console.log('item : ', item);
+                    console.log('all items', this.getValue());
+                }
+            }
+        });
+
+
+
+    });
+
+</script>
+<style type="text/css">
+
+    .container {
+        width:100%;
+        position:relative;
+
+        height:400px;
+    }
+
+    .container h3 {
+        padding-left:20px;
+    }
+
+    .container-left {
+        position:absolute;
+        left:0px;
+        bottom:0px;
+        top:0px;
+        width:500px;
+        box-sizing:border-box;
+        border:1px solid #ececec;
+        margin:10px;
+        overflow:auto;
+    }
+
+    .container-right {
+        position:absolute;
+        left:520px;
+        bottom:0px;
+        top:0px;
+        width:500px;
+        box-sizing:border-box;
+        border:1px solid #ececec;
+        margin:10px;
+        overflow:auto;
+    }
+
+    .all {
+        position:absolute;
+        left:0px;
+        bottom:0px;
+        top:0px;
+        width:700px;
+    }
+</style>
+</head>
+<body class="jui">
+
+<div class="container">
+    <div class="container-left">
+        <h3>Presentation Settings</h3>
+        <div id="pr-settings" class="property"></div>
+    </div>
+    <div class="container-right">
+        <h3>Slider Settings</h3>
+        <div id="slider-settings" class="property"></div>
+    </div>
+</div>
+
+
+</body>
+</html>

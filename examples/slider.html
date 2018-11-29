@@ -1,0 +1,115 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+<META charset="UTF-8">
+<title>[JUI Library] - JavaScript/Combo</title>
+
+<link rel="stylesheet" href="../dist/jui-ui.classic.css" />
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/juijs@2.2.1-es6/dist/jui-core.js"></script>
+<script src="../dist/jui-ui.js"></script>
+
+<script>
+    jui.ready([ "ui.slider" ], function(slider) {
+        slider(".h .slider", {
+            event : {
+                change : function (type, value, preValue) {
+                    console.log(type, value, preValue);
+                }
+            },
+            from: 5,
+            min: 0,
+            max: 10,
+            step: 0.05,
+            tooltip: true
+        });
+
+        slider(".v .slider", {
+            orient : 'vertical',
+            min: 100,
+            max: 1000,
+            step: 10
+        });
+
+        st = slider(".double .slider", {
+            type : 'double',
+            from: 1,
+            to: 5,
+            min: -10,
+            max: 10,
+            event : {
+                change : function () {
+                    console.log('from : ' + this.getFromValue() + " ~ to : " + this.getToValue());
+                }
+            }
+        });
+
+        slider(".double-v .slider", {
+            type : 'double',
+            orient : 'vertical',
+            from: 1,
+            to: 3,
+            event : {
+                change : function () {
+                    console.log('from : ' + this.getFromValue() + " ~ to : " + this.getToValue());
+                }
+            }
+        });
+    });
+
+</script>
+</head>
+<body class="jui">
+
+<div class="page-header">
+    <h1>Slider</h1>
+</div>
+
+<section>
+    <div id="result" style="padding:10px;">
+        <h1>Single Type</h1>
+
+        <div style="overflow:auto;">
+            <div class="h">
+                <div class="slider"></div>
+                <div class="slider"></div>
+            </div>
+
+
+            <div class='v' style="height:300px;float:left;">
+                <div class="slider">
+
+                </div>
+            </div>
+            
+        </div>
+        <h1>Double Type</h1>
+        <div style="overflow:auto;">
+            <div class="double">
+                <div class="slider"></div>
+            </div>
+
+            <div class='double-v' style="width:300px;height:300px;float:left;">
+                <div class="slider"></div>
+            </div>
+
+        </div>
+
+
+    </div>
+</section>
+
+
+<section>
+    <h1>Only style</h1>
+    <div class="slider horizontal">
+        <div class="track">
+            <div class="progress" style="width: 50%;"></div>
+            <div class="handle from" style="left: 50%;"></div>
+        </div>
+    </div>
+</section>
+
+</body>
+</html>

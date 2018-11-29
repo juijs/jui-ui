@@ -1,0 +1,183 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+<META charset="UTF-8">
+<title>[JUI Library] - JavaScript/Notify</title>
+
+<link rel="stylesheet" href="../dist/jui-ui.classic.css" />
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/juijs@2.2.1-es6/dist/jui-core.js"></script>
+<script src="../dist/jui-ui.js"></script>
+
+<script>
+	jui.ready([ "ui.notify" ], function(notify) {
+		// 알림 1
+		notify1 = notify("body", {
+			position: "top-right",
+			event: {
+				show: function(data) {
+					console.log("show : " + JSON.stringify(data));
+				},
+				hide: function(data) {
+					console.log("hide : " + JSON.stringify(data));
+				},
+				click: function(data) {
+					console.log("click : " + JSON.stringify(data));
+				}
+			},
+			tpl: {
+				item: $("#tpl_alarm").html()
+			},
+			padding: {
+				top: 30
+			}
+		});
+
+		// 알림 2
+		notify2 = notify("body", {
+			position: "top-left",
+			timeout: 0,
+			tpl: {
+				item: $("#tpl_alarm").html()
+			}
+		});
+
+		// 알림 3
+		notify3 = notify("body", {
+			position: "top",
+			timeout: 0,
+			tpl: {
+				item: $("#tpl_alarm").html()
+			},
+			padding: {
+				top: 100
+			}
+		});
+
+		// 알림 4
+		notify4 = notify("section:first", {
+			position: "bottom",
+			timeout: 0,
+			distance: 30,
+			tpl: {
+				item: $("#tpl_alarm").html()
+			}
+		});
+
+		// 알림 5
+		notify5 = notify("section:first", {
+			position: "bottom-left",
+			showDuration: 1000,
+			hideDuration: 1000,
+			tpl: {
+				item: $("#tpl_alarm").html()
+			}
+		});
+
+		// 알림 6
+		notify6 = notify("section:first", {
+			position: "bottom-right",
+			showEasing: "linear",
+			tpl: {
+				item: $("#tpl_alarm").html()
+			}
+		});
+	});
+
+	function notifyTest(type, color) {
+		var data = { title: "Caution message Send!!!", message: "Feb 15, 2013-12-24 02:24:19", color: color };
+
+		if(type == 1) notify1.add(data);
+		if(type == 2) notify2.add(data);
+		if(type == 3) notify3.add(data);
+		if(type == 4) notify4.add(data);
+		if(type == 5) notify5.add(data);
+		if(type == 6) notify6.add(data);
+	}
+</script>
+</head>
+
+<body class="jui">
+
+<div class="page-header">
+	<h1>Notify</h1>
+	<p class="br">
+		심각한 문제가 발생하거나 이벤트 등이 발생하였을 때, 알림 기능을 제공하는 UI 컴포넌트입니다.
+	</p>
+</div>
+
+<section>
+	<h2>Default</h2>
+	
+	<p>
+		아래 테이블은 컴포넌트를 쉽게 테스트할 수 있는 예제 목록입니다.
+		
+		<table class="table_s" width="100%"cellpadding="0" cellspacing="0" style="position: relative;">
+			<tr>
+				<td width="80px">Result</td>
+				<td>Options</td>
+			</tr>
+			<tr>
+				<td>
+					<button class="btn" onclick="notifyTest(1, '');"><i class="icon-play"></i> Run</button>
+				</td>
+				<td>
+					{ position: "top-right" }
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<button class="btn" onclick="notifyTest(2, 'danger');"><i class="icon-play"></i> Run</button>
+				</td>
+				<td>
+					{ position: "top-left", timeout: 0 }
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<button class="btn" onclick="notifyTest(3, 'warning');"><i class="icon-play"></i> Run</button>
+				</td>
+				<td>
+					{ position: "top", timeout: 2000, padding: { top: 100 } }
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<button class="btn" onclick="notifyTest(4, 'success');"><i class="icon-play"></i> Run</button>
+				</td>
+				<td>
+					{ position: "bottom", timeout: 0, distance: 50 }
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<button class="btn" onclick="notifyTest(5, 'info');"><i class="icon-play"></i> Run</button>
+				</td>
+				<td>
+					{ position: "bottom-left", showDuration: 1000, hideDuration: 1000 }
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<button class="btn" onclick="notifyTest(6, '');"><i class="icon-play"></i> Run</button>
+				</td>
+				<td>
+					{ position: "bottom-right", showEasing: "linear" }
+				</td>
+			</tr>
+		</table>
+		
+		<script id="tpl_alarm" type="text/template">
+		    <div class="notify <!= color !>">
+		        <div class="title"><!= title !></div>
+		        <div class="message"><!= message !></div>
+		    </div>
+		</script>
+	</p>
+
+
+</section>
+
+</body>
+</html>

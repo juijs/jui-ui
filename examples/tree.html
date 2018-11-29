@@ -1,0 +1,137 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+<META charset="UTF-8">
+<title>[JUI Library] - JavaScript/Tooltip</title>
+
+<link rel="stylesheet" href="../dist/jui-ui.classic.css" />
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/juijs@2.2.1-es6/dist/jui-core.js"></script>
+<script src="../dist/jui-ui.js"></script>
+
+<script>
+jui.ready([ "ui.tree" ], function(treeFunc) {
+    tree = treeFunc(".tree", {
+        root: { title: "C:\\" },
+        event: {
+            select: function(node) {
+                this.select(node.index); // 선택 효과
+                alert("index(" + node.index + "), title(" + node.data.title + ")");
+            }
+        },
+        tpl: {
+            node: $("#tpl_tree").html()
+        }
+    });
+});
+
+function treeUpdateRun(count) {
+    if(!count) count = parseInt($("#count").val());
+
+    var key = "0",
+        nodes = [];
+
+    for(var i = 0; i < count; i++) {
+        nodes.push({ index: key, data: { title: "Hong" + i } });
+        key += ".0";
+    }
+
+    tree.update(nodes);
+}
+
+</script>
+</head>
+<body class="jui">
+
+<div class="group">
+    <input type="number" class="input small" id="count" value="100">
+    <a href="javascript:treeUpdateRun()" class="btn small">Run</a>
+</div>
+
+<br/><br/>
+<ul class="tree arrow"></ul>
+
+<ul class="tree line-file">
+    <li class="open root">
+        <i></i><div><i></i> ROOT</div>
+        <ul>
+            <li class="open">
+                <i></i><div><i></i> Item 1</div>
+                <ul>
+                    <li class="leaf">
+                        <i></i><div><i></i> Item 1.1</div>
+                        <ul></ul>
+                    </li>
+                    <li class="leaf">
+                        <i></i><div><i></i> Item 1.2</div>
+                        <ul></ul>
+                    </li>
+                    <li class="fold last">
+                        <i></i><div><i></i> Item 1.3</div>
+                        <ul>
+                            <li class="open">
+                                <i></i><a href="#"><i></i> Item 2</a>
+                                <ul>
+                                    <li class="leaf last">
+                                        <i></i><div><i></i> Item 2.1</div>
+                                        <ul></ul>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="open">
+                                <i></i><a href="#"><i></i> Item 2</a>
+                                <ul>
+                                    <li class="leaf last">
+                                        <i></i><div><i></i> Item 2.1</div>
+                                        <ul></ul>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="open">
+                                <i></i><a href="#"><i></i> Item 2</a>
+                                <ul>
+                                    <li class="leaf last">
+                                        <i></i><div><i></i> Item 2.1</div>
+                                        <ul></ul>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="open">
+                                <i></i><a href="#"><i></i> Item 2</a>
+                                <ul>
+                                    <li class="leaf last">
+                                        <i></i><div><i></i> Item 2.1</div>
+                                        <ul></ul>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li class="open">
+                <i></i><a href="#"><i></i> Item 2</a>
+                <ul>
+                    <li class="leaf last">
+                        <i></i><div><i></i> Item 2.1</div>
+                        <ul></ul>
+                    </li>
+                </ul>
+            </li>
+            <li class="leaf last">
+                <i></i><div><i></i> Item 3</div>
+                <ul></ul>
+            </li>
+        </ul>
+    </li>
+</ul>tree-line-noblank.gif
+
+<script id="tpl_tree" type="text/template">
+    <li>
+        <div><i></i> <!= title !></div>
+        <ul></ul>
+    </li>
+</script>
+</body>
+</html>

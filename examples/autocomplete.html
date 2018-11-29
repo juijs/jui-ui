@@ -1,0 +1,113 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+<META charset="UTF-8">
+<title>[JUI Library] - JavaScript/AutoComplete</title>
+
+<link rel="stylesheet" href="../dist/jui-ui.classic.css" />
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/juijs@2.2.1-es6/dist/jui-core.js"></script>
+<script src="../dist/jui-ui.js"></script>
+
+<script>
+
+var ac_words = [
+  "ActionScript",
+  "AppleScript",
+  "Asp",
+  "BASIC",
+  "C",
+  "C++",
+  "Clojure",
+  "COBOL",
+  "ColdFusion",
+  "Erlang",
+  "Fortran",
+  "Groovy",
+  "Haskell",
+  "Java",
+  "JavaScript",
+  "Lisp",
+  "Perl",
+  "PHP",
+  "Python",
+  "Ruby",
+  "Scala",
+  "Scheme"
+];
+    
+var ac_words_hangul = [
+	"자바의 정석",
+	"열혈강의 C++",
+	"유쾌한 심리학"
+];
+
+jui.ready([ "ui.autocomplete" ], function(autocomplete) {
+    // 자동완성 
+    ac_1 = autocomplete(".ac", {
+    	target: "input[type=text]",
+		height: 100,
+    	words: ac_words,
+    	event: {
+    		change: function(text) {
+    			$("#tt").val("asdf");
+    		}
+    	},
+        showAll: true
+    });
+});
+
+</script>
+</head>
+<body class="jui">
+	
+<div class="page-header">
+	<h1>Auto Complete</h1>
+	<p class="br">
+		텍스트박스에 문자열을 입력했을 경우, 해당 값이 포함된 키워드 목록을 보여주는 UI 컴포넌트입니다.
+	</p>
+</div>
+	
+<section>
+	<h2>Default</h2>
+	<p>
+		아래 키워드 중에 입력한 문자가 포함되어 있으면, 드롭다운 메뉴에 키워드 목록이 나타납니다.&nbsp;
+		<span class="ac group">
+			<label class="label small"><i class="icon-search"></i></label>
+			<input id="tt"  type="text" class="input small" style="width: 100px" />
+		</span>
+
+	</p>
+	<p class="br">
+		아래는 자동완성 컴포넌트의 마크업과 템플릿입니다. 셀렉터는 그룹 태그이며 텍스트박스는 <strong>target</strong> 옵션을 통해 정할 수 있습니다.<br/>
+
+	</p>
+</section>
+
+<section>
+	<h2>Update</h2>
+	<p>
+		<a class="btn btn-gray btn-mini" href="javascript:ac_1[1].update(ac_words_hangul);">Run</a> - 
+		좌측 버튼을 클릭하면 아래와 같은 단어 목록으로 변경합니다.&nbsp;
+		
+		<span class="ac group">
+			<label class="label small"><i class="icon-search"></i></label>
+			<input type="text" class="input small" style="width: 100px" />
+		</span>
+
+	</p>
+	
+	<script data-jui=".ac" data-tpl="words" type="text/template">
+		<div class="dropdown">
+			<ul>
+			<! for(var i = 0; i < words.length; i++) { !>
+				<li><!= words[i] !></li>
+			<! } !>
+			</ul>
+		</div>
+	</script>
+</section>
+
+</body>
+</html>

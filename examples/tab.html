@@ -1,0 +1,99 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<META charset="UTF-8">
+<title>[JUI Library] - CSS/Tab</title>
+
+<link rel="stylesheet" href="../dist/jui-ui.classic.css" />
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/juijs@2.2.1-es6/dist/jui-core.js"></script>
+<script src="../dist/jui-ui.js"></script>
+
+<style>
+    .col {
+        padding: 50px;
+    }
+</style>
+<script>
+    jui.ready([ "ui.tab" ], function(tab) {
+        tab_1 = tab("#tab_1", {
+            event: {
+                change: function(data) {
+                    alert(data.text);
+                }
+            },
+            target: "#tab_contents_1",
+            index: 1
+        });
+
+        tab_2 = tab("#tab_2", {
+            event: {
+                change: function(data) {
+                    alert(data.text);
+                },
+                changemenu: function(data) {
+                    alert(data.text);
+                }
+            },
+            target: "#tab_contents_2",
+            tpl : {
+                menu: $("#tpl_menu").html()
+            }
+        });
+    });
+</script>
+</head>
+<body class="jui" style="height: 500px;">
+
+<div class="page-header">
+    <h1>Tab</h1>
+</div>
+
+<div class="row">
+   <div class="col col-6">
+       <ul id="tab_1" class="tab top">
+           <li>
+               <a href="#home">Home</a>
+           </li>
+           <li class="disabled"><a href="#css">CSS</a></li>
+           <li><a href="#script">Script</a></li>
+       </ul>
+
+       <div id="tab_contents_1" style="background: #dcdcdc;">
+           <div id="home">home</div>
+           <div id="css">css</div>
+           <div id="script">script</div>
+       </div>
+   </div>
+   <div class="col col-6">
+       <div id="tab_contents_2" style="background: #dcdcdc;">
+           <div id="home">home</div>
+           <div id="css">css</div>
+           <div id="script">script</div>
+       </div>
+
+       <ul id="tab_2" class="pill bottom">
+           <li>
+               <a href="#home">Home</a>
+           </li>
+           <li><a href="#css">CSS</a></li>
+           <li class="disabled"><a href="#script">Script</a></li>
+           <li class="menu"><a href="#">Menu <i class="icon-arrow1"></i></a></li>
+       </ul>
+   </div>
+</div>
+
+<script id="tpl_menu" type="text/template">
+    <div class="dropdown">
+        <div class="anchor"></div>
+        <ul style="width: 150px;">
+            <li><i class="icon-refresh"></i> Combo Box1</li>
+            <li class="divider"></li>
+            <li>Combo Box2</li>
+            <li>Combo Box3</li>
+            <li>Combo Box4</li>
+        </ul>
+    </div>
+</script>
+</body>
+</html>

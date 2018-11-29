@@ -1,0 +1,529 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+<META charset="UTF-8">
+<title>[JUI Library] - JavaScript/Button</title>
+
+<link rel="stylesheet" href="../dist/jui-ui.classic.css" />
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/juijs@2.2.1-es6/dist/jui-core.js"></script>
+<script src="../dist/jui-ui.js"></script>
+
+<script>
+    jui.ready([ "jquery", "ui.datepicker" ], function($, datepicker) {
+        datepicker1 = datepicker("#datepicker1", {
+            titleFormat: "yyyy MM",
+            format: "yyyy/MM/dd",
+            event: {
+                select: function(date, e) {
+                    alert(date);
+                }
+            }
+        });
+
+        datepicker2 = datepicker("#datepicker2", {
+            type: "monthly",
+            titleFormat: "yyyy",
+            format: "yyyy/MM",
+            event: {
+                select: function(date, e) {
+                    alert(date);
+                }
+            }
+        });
+
+        datepicker3 = datepicker("#datepicker3", {
+            type: "yearly",
+            titleFormat: "yyyy",
+            format: "yyyy",
+            event: {
+                select: function(date, e) {
+                    alert(date);
+                }
+            }
+        });
+
+        datepicker4 = datepicker("#datepicker4", {
+            titleFormat: "yyyy MM",
+            format: "yyyy/MM/dd",
+            event: {
+                select: function(date, e) {
+                    $("#datepicker4_group").find("input").val(this.getFormat("yyyyMMdd"));
+                    $("#datepicker4_group").find("a").click();
+                }
+            }
+        });
+
+        // 해당 메소드 호출시 select 이벤트가 발생함
+        datepicker4.select(new Date());
+
+        $("#datepicker4_group").find("a").on("click", function(e) {
+            var $r = $(datepicker4.root);
+
+            if($r.css("display") == "none") {
+                $r.show();
+            } else {
+                $r.hide();
+            }
+        });
+
+        datepicker5 = datepicker("#datepicker5", {
+            titleFormat: "yyyy MM",
+            format: "yyyy/MM/dd",
+            event: {
+                select: function(date, e) {
+                    $("#datepicker5_group").find("input").val(this.getFormat("yyyyMMdd"));
+                    $("#datepicker5_group").find("input").click();
+                }
+            }
+        });
+
+        // 해당 메소드 호출시 select 이벤트가 발생함
+        datepicker5.select(new Date());
+
+        $("#datepicker5_group").find("input").on("click", function(e) {
+            var $r = $(datepicker5.root);
+
+            if($r.css("display") == "none") {
+                $r.show();
+            } else {
+                $r.hide();
+            }
+        });
+
+        datepicker6 = datepicker("#datepicker6", {
+            titleFormat: "yyyy MM",
+            format: "yyyy/MM/dd",
+            minDate: new Date(new Date().setDate(new Date().getDate()-5)),   // new Date('2015-12-25'),
+            maxDate: new Date(new Date().setDate(new Date().getDate()+5)),   // new Date('2016-02-25'),
+            event: {
+                select: function(date, e) {
+                    alert(date);
+                }
+            }
+        });
+
+        datepicker10 = datepicker("#datepicker10", {
+            titleFormat: "yyyy MM",
+            format: "yyyy/MM/dd",
+            minDate: new Date(new Date().setDate(new Date().getDate()-5)),   // new Date('2015-12-25'),
+            event: {
+                select: function(date, e) {
+                    alert(date);
+                }
+            }
+        });
+
+        datepicker11 = datepicker("#datepicker11", {
+            titleFormat: "yyyy MM",
+            format: "yyyy/MM/dd",
+            maxDate: new Date(new Date().setDate(new Date().getDate()+5)),   // new Date('2016-02-25'),
+            event: {
+                select: function(date, e) {
+                    alert(date);
+                }
+            }
+        });
+
+        datepicker7 = datepicker("#datepicker7", {
+            titleFormat: "yyyy MM",
+            format: "yyyy/MM/dd",
+            event: {
+                select: function(date, e) {
+                    $("#datepicker7_group").find("input").val(this.getFormat("yyyyMMdd"));
+                    $("#datepicker7_group").find("a").click();
+                    datepicker8.setOption('minDate', new Date(date));
+                    datepicker8.reload();
+                }
+            }
+        });
+
+        $("#datepicker7_group").find("a").on("click", function(e) {
+            var $r = $(datepicker7.root);
+
+            if($r.css("display") == "none") {
+                $r.show();
+            } else {
+                $r.hide();
+            }
+        });
+
+        datepicker8 = datepicker("#datepicker8", {
+            titleFormat: "yyyy MM",
+            format: "yyyy/MM/dd",
+            event: {
+                select: function(date, e) {
+                    $("#datepicker8_group").find("input").val(this.getFormat("yyyyMMdd"));
+                    $("#datepicker8_group").find("a").click();
+                    datepicker7.setOption('maxDate', new Date(date));
+                    datepicker7.reload();
+                }
+            }
+        });
+
+        $("#datepicker8_group").find("a").on("click", function(e) {
+            var $r = $(datepicker8.root);
+
+            if($r.css("display") == "none") {
+                $r.show();
+            } else {
+                $r.hide();
+            }
+        });
+
+        datepicker9 = datepicker("#datepicker9", {
+        titleFormat: "yyyy. MM",
+        format: "yyyy-MM-dd",
+        event: {
+            select: function(date, e) {
+                alert(date);
+            }
+        },
+        tpl: {
+            date: $("#tpl_date").html()
+        }
+    });
+
+    });
+</script>
+
+</head>
+<body class="jui">
+
+<div class="page-header">
+	<h1>Datepicker</h1>
+</div>
+
+<section>
+	<h2>Type</h2>
+
+    <p>
+		<strong>type</strong> 옵션에 따라 아래의 세 종류의 datepicker을 이용할 수 있습니다. (<strong>daliy</strong>이 기본값으로 설정되어 있습니다.)
+
+    <div style="display: inline-block; position: relative;">
+        <h3>Daily (Default)</h3>
+        <div id="datepicker1" class="datepicker">
+            <div class="head move-year">
+                <div class="prev-year">≪</div>
+                <div class="prev"><i class="icon-chevron-left"></i></div>
+                <div class="title"></div>
+                <div class="next"><i class="icon-chevron-right"></i></div>
+                <div class="next-year">≫</div>
+            </div>
+            <table class="body">
+                <tr>
+                    <th>S</th><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div style="display: inline-block; position: relative;">
+        <h3>Monthly</h3>
+        <div id="datepicker2" class="datepicker large">
+            <div class="head">
+                <div class="prev"><i class="icon-chevron-left"></i></div>
+                <div class="title"></div>
+                <div class="next"><i class="icon-chevron-right"></i></div>
+            </div>
+            <table class="body">
+            </table>
+        </div>
+    </div>
+
+    <div style="display: inline-block; position: relative;">
+        <h3>Yearly</h3>
+        <div id="datepicker3" class="datepicker large">
+            <div class="head">
+                <div class="prev"><i class="icon-chevron-left"></i></div>
+                <div class="title"></div>
+                <div class="next"><i class="icon-chevron-right"></i></div>
+            </div>
+            <table class="body">
+            </table>
+        </div>
+    </div>
+    </p>
+</section>
+
+<section>
+	<h2>Datepicker with input and button</h2>
+	<p>
+        아래와 같이 <strong>input</strong>과 <strong>button</strong>을 함께 사용할 수 있습니다.
+
+        <div style="display: inline-block; position: relative;">
+            <div id="datepicker4_group" class="group">
+                <input type="text" class="input" style="width: 157px;" />
+                <a class="btn btn-gray"><i class="icon-calendar"></i></a>
+
+                <div id="datepicker4" class="datepicker" style="display: none; position: absolute; z-index: 999; margin-left: 1px; margin-top: 1px;">
+                    <div class="head">
+                        <div class="prev"><i class="icon-chevron-left"></i></div>
+                        <div class="title"></div>
+                        <div class="next"><i class="icon-chevron-right"></i></div>
+                    </div>
+                    <table class="body">
+                        <tr>
+                            <th>S</th><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div style="display: inline-block; position: relative;">
+                <div id="datepicker5_group">
+                    <input type="text" class="input" style="width: 192px;" />
+
+                    <div id="datepicker5" class="datepicker" style="display: none; position: absolute; z-index: 999; margin-left: 1px; margin-top: 1px;">
+                        <div class="head">
+                            <div class="prev"><i class="icon-chevron-left"></i></div>
+                            <div class="title"></div>
+                            <div class="next"><i class="icon-chevron-right"></i></div>
+                        </div>
+                        <table class="body">
+                            <tr>
+                                <th>S</th><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <pre><code class="language-markup">
+&lt;div id="datepicker4_group" class="group"&gt;
+    &lt;input type="text" class="input" style="width: 157px;" /&gt;
+    &lt;a class="btn btn-gray"&gt;&lt;i class="icon-calendar">&lt;/i&gt;&lt;/a&gt;
+
+    &lt;div id="datepicker4" class="datepicker" style="display: none; position: absolute; z-index: 999; margin-left: 1px; margin-top: 1px;"&gt;
+        &lt;!-- 생략 --&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+        </div>
+    </p>
+</section>
+
+<section>
+	<h2>Set the date range</h2>
+	<p>
+        <strong>minDate</strong>와 <strong>maxDate</strong> 옵션을 설정하여, 선택할 수 있는 날짜를 제한할 수 있습니다.
+
+        <div style="display: inline-block; position: relative;">
+            <div id="datepicker6" class="datepicker">
+                <div class="head">
+                    <div class="prev"><i class="icon-chevron-left"></i></div>
+                    <div class="title"></div>
+                    <div class="next"><i class="icon-chevron-right"></i></div>
+                </div>
+                <table class="body">
+                    <tr>
+                        <th>S</th><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div style="display: inline-block; position: relative;">
+            <div id="datepicker10" class="datepicker">
+                <div class="head">
+                    <div class="prev"><i class="icon-chevron-left"></i></div>
+                    <div class="title"></div>
+                    <div class="next"><i class="icon-chevron-right"></i></div>
+                </div>
+                <table class="body">
+                    <tr>
+                        <th>S</th><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div style="display: inline-block; position: relative;">
+            <div id="datepicker11" class="datepicker">
+                <div class="head">
+                    <div class="prev"><i class="icon-chevron-left"></i></div>
+                    <div class="title"></div>
+                    <div class="next"><i class="icon-chevron-right"></i></div>
+                </div>
+                <table class="body">
+                    <tr>
+                        <th>S</th><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <br/><br/>
+
+        <strong>setOption</strong>와 <strong>reload</strong> 함수를 사용하여
+        <strong>select</strong> 이벤트를 설정하면, 아래와 같이 날짜의 선택에 따라 다른 datepicker에 영향을 줄 수 있습니다.
+
+        <br/><br/>
+
+        <div style="display: inline-block; position: relative;">
+            <div id="datepicker7_group" class="group">
+                <input type="text" class="input" style="width: 157px;" value="From" />
+                <a class="btn btn-gray"><i class="icon-calendar"></i></a>
+                <div id="datepicker7" class="datepicker" style="display: none; position: absolute; z-index: 999; margin-left: 1px; margin-top: 1px;">
+                    <div class="head">
+                        <div class="prev"><i class="icon-chevron-left"></i></div>
+                        <div class="title"></div>
+                        <div class="next"><i class="icon-chevron-right"></i></div>
+                    </div>
+                    <table class="body">
+                        <tr>
+                            <th>S</th><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th>e
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div id="datepicker8_group" class="group">
+                <input type="text" class="input" style="width: 157px;" value="To" />
+                <a class="btn btn-gray"><i class="icon-calendar"></i></a>
+                <div id="datepicker8" class="datepicker" style="display: none; position: absolute; z-index: 999; margin-left: 1px; margin-top: 1px;">
+                    <div class="head">
+                        <div class="prev"><i class="icon-chevron-left"></i></div>
+                        <div class="title"></div>
+                        <div class="next"><i class="icon-chevron-right"></i></div>
+                    </div>
+                    <table class="body">
+                        <tr>
+                            <th>S</th><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <pre><code class="language-markup">
+event: {
+    select: function(date, e) {
+        // 생략
+        datepicker7.setOption('maxDate', new Date(date));
+        datepicker7.reload();
+    }
+}</code></pre>
+        </div>
+    </p>
+</section>
+
+<section>
+	<h2>Daily Calendar</h2>
+	<p>
+        아래와 같이 달력형도 제공합니다.
+
+        <div style="display: inline-block; position: relative;">
+            <div id="datepicker9" class="calendar" style="width: 800px; height: 550px;">
+                <div class="head">
+                    <div class="prev"><i class="icon-chevron-left"></i></div>
+                    <div class="title"></div>
+                    <div class="next"><i class="icon-chevron-right"></i></div>
+                </div>
+                <table class="body">
+                    <thead>
+                    <tr>
+                        <th>SUN</th><th>MON</th><th>TUE</th><th>WED</th><th>THU</th><th>FRI</th><th>SAT</th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+
+    </p>
+</section>
+
+<script data-jui="#datepicker1" data-tpl="dates" type="text/template">
+    <tr>
+        <! for(var i = 0; i < dates.length; i++) { !>
+        <td><!= dates[i] !></td>
+        <! } !>
+    </tr>
+</script>
+
+<script data-jui="#datepicker2" data-tpl="dates" type="text/template">
+    <tr>
+        <! for(var i = 0; i < dates.length; i++) { !>
+        <td><!= dates[i] !>월</td>
+        <! } !>
+    </tr>
+</script>
+
+<script data-jui="#datepicker3" data-tpl="dates" type="text/template">
+    <tr>
+        <! for(var i = 0; i < dates.length; i++) { !>
+        <td><!= dates[i] !>년</td>
+        <! } !>
+    </tr>
+</script>
+
+<script data-jui="#datepicker4" data-tpl="dates" type="text/template">
+    <tr>
+        <! for(var i = 0; i < dates.length; i++) { !>
+        <td><!= dates[i] !></td>
+        <! } !>
+    </tr>
+</script>
+
+<script data-jui="#datepicker5" data-tpl="dates" type="text/template">
+    <tr>
+        <! for(var i = 0; i < dates.length; i++) { !>
+        <td><!= dates[i] !></td>
+        <! } !>
+    </tr>
+</script>
+
+<script data-jui="#datepicker6" data-tpl="dates" type="text/template">
+    <tr>
+        <! for(var i = 0; i < dates.length; i++) { !>
+        <td><!= dates[i] !></td>
+        <! } !>
+    </tr>
+</script>
+
+<script data-jui="#datepicker10" data-tpl="dates" type="text/template">
+    <tr>
+        <! for(var i = 0; i < dates.length; i++) { !>
+        <td><!= dates[i] !></td>
+        <! } !>
+    </tr>
+</script>
+
+<script data-jui="#datepicker11" data-tpl="dates" type="text/template">
+    <tr>
+        <! for(var i = 0; i < dates.length; i++) { !>
+        <td><!= dates[i] !></td>
+        <! } !>
+    </tr>
+</script>
+
+<script data-jui="#datepicker7" data-tpl="dates" type="text/template">
+    <tr>
+        <! for(var i = 0; i < dates.length; i++) { !>
+        <td><!= dates[i] !></td>
+        <! } !>
+    </tr>
+</script>
+
+<script data-jui="#datepicker8" data-tpl="dates" type="text/template">
+    <tr>
+        <! for(var i = 0; i < dates.length; i++) { !>
+        <td><!= dates[i] !></td>
+        <! } !>
+    </tr>
+</script>
+
+<script id="tpl_date" type="text/template">
+    <td>
+    <! if(type != "none") { !>
+        <! if(day == 0) { !>
+        <span style="color: red;"><!= date !></span>
+        <! } else if(day == 6) { !>
+        <span style="color: blue;"><!= date !></span>
+        <! } else { !>
+        <span><!= date !></span>
+        <! } !>
+    <! } !>
+    </td>
+</script>
+
+</body>
+</html>
