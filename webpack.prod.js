@@ -4,10 +4,13 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 
 module.exports = (theme) => {
+    const entry = path.resolve(__dirname, 'bundles', `production.${theme}.js`);
+
     return {
         mode: 'production',
         entry: {
-            'jui-ui': path.resolve(__dirname, 'bundles', `production.${theme}.js`)
+            'jui-ui': entry,
+            'jui-ui.min': entry
         },
         output: {
             path: path.resolve(__dirname, 'dist'),
@@ -19,7 +22,9 @@ module.exports = (theme) => {
         },
         optimization: {
             minimizer: [
-                new UglifyJsPlugin(),
+                new UglifyJsPlugin({
+                    include: /\.min\.js$/
+                }),
                 new ExtractTextPlugin({
                     filename: `[name].${theme}.css`
                 })
