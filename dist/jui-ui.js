@@ -6982,10 +6982,6 @@ var _jquery = __webpack_require__(1);
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
-var _main = __webpack_require__(0);
-
-var _main2 = _interopRequireDefault(_main);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = {
@@ -7071,7 +7067,7 @@ exports.default = {
 
                 var dist = 0,
                     focusKey = $focus.attr("class"),
-                    rangeMap = getRangeMap($root.children(".year").val(), $root.children(".month").val());
+                    rangeMap = getRangeMap($root.find(".year").val(), $root.find(".month").val());
 
                 if (e.which == 38) dist = 1;else if (e.which == 40) dist = -1;
 
@@ -7087,16 +7083,17 @@ exports.default = {
                     hours = self.options.hours,
                     minutes = self.options.minutes;
 
-                var $year = (0, _jquery2.default)(self.root).children(".year").attr("maxlength", 4),
-                    $month = (0, _jquery2.default)(self.root).children(".month").attr("maxlength", 2),
-                    $date = (0, _jquery2.default)(self.root).children(".date").attr("maxlength", 2),
-                    $hours = (0, _jquery2.default)(self.root).children(".hours").attr("maxlength", 2),
-                    $minutes = (0, _jquery2.default)(self.root).children(".minutes").attr("maxlength", 2);
+                var $year = (0, _jquery2.default)(self.root).find(".year").attr("maxlength", 4),
+                    $month = (0, _jquery2.default)(self.root).find(".month").attr("maxlength", 2),
+                    $date = (0, _jquery2.default)(self.root).find(".date").attr("maxlength", 2),
+                    $hours = (0, _jquery2.default)(self.root).find(".hours").attr("maxlength", 2),
+                    $minutes = (0, _jquery2.default)(self.root).find(".minutes").attr("maxlength", 2);
 
                 $year.on("keypress", validNumberType);
                 $year.on("keyup", settingKeyUpEvent);
                 $year.on("focusout", function (e) {
                     updateBtnValue(this, 0, minYear, maxYear, true);
+                    emitChangeEvent(self);
                 });
                 $year.on("focus", function (e) {
                     $focus = $year;
@@ -7107,6 +7104,7 @@ exports.default = {
                 $month.on("keyup", settingKeyUpEvent);
                 $month.on("focusout", function (e) {
                     updateBtnValue(this, 0, 1, 12, true);
+                    emitChangeEvent(self);
                 });
                 $month.on("focus", function (e) {
                     $focus = $month;
@@ -7118,6 +7116,7 @@ exports.default = {
                 $date.on("focusout", function (e) {
                     var rangeMap = getRangeMap($year.val(), $month.val());
                     updateBtnValue(this, 0, 1, rangeMap.max.date, true);
+                    emitChangeEvent(self);
                 });
                 $date.on("focus", function (e) {
                     $focus = $date;
@@ -7128,6 +7127,7 @@ exports.default = {
                 $hours.on("keyup", settingKeyUpEvent);
                 $hours.on("focusout", function (e) {
                     updateBtnValue(this, 0, 0, 23, true);
+                    emitChangeEvent(self);
                 });
                 $hours.on("focus", function (e) {
                     $focus = $hours;
@@ -7138,6 +7138,7 @@ exports.default = {
                 $minutes.on("keyup", settingKeyUpEvent);
                 $minutes.on("focusout", function (e) {
                     updateBtnValue(this, 0, 0, 59, true);
+                    emitChangeEvent(self);
                 });
                 $minutes.on("focus", function (e) {
                     $focus = $minutes;
@@ -7155,18 +7156,26 @@ exports.default = {
                 $focus = $year.length == 0 ? $hours : $year;
             }
 
+            function emitChangeEvent(self) {
+                self.emit("change", {
+                    year: self.getYear(),
+                    month: self.getMonth(),
+                    date: self.getDate(),
+                    hours: self.getHours(),
+                    minutes: self.getMinutes()
+                });
+            }
+
             function initBtnElements(self) {
-                var $icon = (0, _jquery2.default)(self.root).children("i"),
-                    $up = (0, _jquery2.default)("<div></div>"),
+                var $up = (0, _jquery2.default)("<div></div>"),
                     $down = (0, _jquery2.default)("<div></div>"),
-                    $year = (0, _jquery2.default)(self.root).children(".year"),
-                    $month = (0, _jquery2.default)(self.root).children(".month"),
-                    $date = (0, _jquery2.default)(self.root).children(".date"),
-                    $hours = (0, _jquery2.default)(self.root).children(".hours"),
-                    $minutes = (0, _jquery2.default)(self.root).children(".minutes");
+                    $year = (0, _jquery2.default)(self.root).find(".year"),
+                    $month = (0, _jquery2.default)(self.root).find(".month"),
+                    $hours = (0, _jquery2.default)(self.root).find(".hours"),
+                    $minutes = (0, _jquery2.default)(self.root).find(".minutes");
 
                 // 년/월/일 모드일 때, 위/아래 숫자 변경은 사용하지 않는다.
-                if ($year.length > 0) return;
+                if ($hours.length == 0 || $minutes.length == 0) return;
 
                 var size = (0, _jquery2.default)(self.root).outerHeight() / 2,
                     styles = {
@@ -7174,23 +7183,29 @@ exports.default = {
                     width: size,
                     height: size,
                     cursor: "pointer",
-                    right: $icon.css("right")
+                    right: "2px"
                 };
 
                 $up.css(_jquery2.default.extend({ top: "0px" }, styles));
                 $down.css(_jquery2.default.extend({ top: size + "px" }, styles));
 
-                $up.on("click", function (e) {
+                $up.on("mouseup", function (e) {
                     var focusKey = $focus.attr("class"),
                         rangeMap = getRangeMap($year.val(), $month.val());
 
                     updateBtnValue($focus[0], 1, rangeMap.min[focusKey], rangeMap.max[focusKey]);
+                    emitChangeEvent(self);
+
+                    return false;
                 });
-                $down.on("click", function (e) {
+                $down.on("mouseup", function (e) {
                     var focusKey = $focus.attr("class"),
                         rangeMap = getRangeMap($year.val(), $month.val());
 
                     updateBtnValue($focus[0], -1, rangeMap.min[focusKey], rangeMap.max[focusKey]);
+                    emitChangeEvent(self);
+
+                    return false;
                 });
 
                 (0, _jquery2.default)(self.root).append($up);
@@ -7208,50 +7223,50 @@ exports.default = {
             };
 
             this.setYear = function (year) {
-                var $year = (0, _jquery2.default)(this.root).children(".year").val(year);
+                var $year = (0, _jquery2.default)(this.root).find(".year").val(year);
                 updateBtnValue($year[0], 0, minYear, maxYear);
             };
 
             this.getYear = function () {
-                return parseInt((0, _jquery2.default)(this.root).children(".year").val());
+                return parseInt((0, _jquery2.default)(this.root).find(".year").val());
             };
 
             this.setMonth = function (month) {
-                var $month = (0, _jquery2.default)(this.root).children(".month").val(month);
+                var $month = (0, _jquery2.default)(this.root).find(".month").val(month);
                 updateBtnValue($month[0], 0, 1, 12);
             };
 
             this.getMonth = function () {
-                return parseInt((0, _jquery2.default)(this.root).children(".month").val());
+                return parseInt((0, _jquery2.default)(this.root).find(".month").val());
             };
 
             this.setDate = function (date) {
                 var rangeMap = getRangeMap(this.getYear(), this.getMonth());
-                var $date = (0, _jquery2.default)(this.root).children(".date").val(date);
+                var $date = (0, _jquery2.default)(this.root).find(".date").val(date);
 
                 updateBtnValue($date[0], 0, 1, rangeMap.max.date);
             };
 
             this.getDate = function () {
-                return parseInt((0, _jquery2.default)(this.root).children(".date").val());
+                return parseInt((0, _jquery2.default)(this.root).find(".date").val());
             };
 
             this.setHours = function (hours) {
-                var $hours = (0, _jquery2.default)(this.root).children(".hours").val(hours);
+                var $hours = (0, _jquery2.default)(this.root).find(".hours").val(hours);
                 updateBtnValue($hours[0], 0, 0, 23);
             };
 
             this.getHours = function () {
-                return parseInt((0, _jquery2.default)(this.root).children(".hours").val());
+                return parseInt((0, _jquery2.default)(this.root).find(".hours").val());
             };
 
             this.setMinutes = function (minutes) {
-                var $minutes = (0, _jquery2.default)(this.root).children(".minutes").val(minutes);
+                var $minutes = (0, _jquery2.default)(this.root).find(".minutes").val(minutes);
                 updateBtnValue($minutes[0], 0, 0, 59);
             };
 
             this.getMinutes = function () {
-                return parseInt((0, _jquery2.default)(this.root).children(".minutes").val());
+                return parseInt((0, _jquery2.default)(this.root).find(".minutes").val());
             };
         };
 

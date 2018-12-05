@@ -1,7 +1,6 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
 module.exports = (theme) => {
     return {
@@ -69,8 +68,7 @@ module.exports = (theme) => {
                     removeComments: true,
                     collapseWhitespace: true,
                 }
-            }),
-            new BundleAnalyzerPlugin()
+            })
         ],
         devServer: {
             port: 3000,
