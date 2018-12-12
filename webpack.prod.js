@@ -63,8 +63,8 @@ module.exports = (theme) => {
             }]
         },
         plugins: [
-            new OptimizeCssAssetsPlugin(),
-            new BundleAnalyzerPlugin()
+            new OptimizeCssAssetsPlugin()
+            // , new BundleAnalyzerPlugin()
         ]
     }
 }
