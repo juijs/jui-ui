@@ -11,9 +11,22 @@
 <script src="../dist/jui-ui.js"></script>
 
 <style>
-    .dir.leaf > div > i {
-        width: 15px !important;
-        background-position: 0px -165px !important;
+    .tree i.symbol {
+        display: inline-block;
+        width: 14px;
+        height: 14px;
+    }
+
+    .tree i.symbol.dir1 {
+        background-color: red;
+    }
+
+    .tree i.symbol.dir2 {
+        background-color: orange;
+    }
+
+    .tree i.symbol.file {
+        background-color: blue;
     }
 </style>
 
@@ -41,14 +54,14 @@ jui.ready([ "ui.tree" ], function(treeFunc) {
         }
     });
 
-    tree_3.append({ title: "Windows", symbol: "dir" });
-    tree_3.append({ title: "Download", symbol: "dir" });
-    tree_3.append({ title: "Program Files", symbol: "dir" });
-    tree_3.append({ title: "Apache", symbol: "dir" });
+    tree_3.append({ title: "Windows", symbol: "dir1" });
+    tree_3.append({ title: "Download", symbol: "dir1" });
+    tree_3.append({ title: "Program Files", symbol: "dir1" });
+    tree_3.append({ title: "Apache", symbol: "dir2" });
     tree_3.append("0", { title: "run.exe", symbol: "file" });
     tree_3.append("0", { title: "setting.conf", symbol: "file" });
     tree_3.append("1", { title: "jui.torrrent", symbol: "file" });
-    tree_3.insert("2.0", { title: "Riot Games", symbol: "dir" });
+    tree_3.insert("2.0", { title: "Riot Games", symbol: "dir2" });
     tree_3.insert("2.0.0", { title: "lol.exe", symbol: "file" });
     tree_3.append("3", { title: "startup.bat", symbol: "file" });
     tree_3.fold("0");
@@ -61,11 +74,11 @@ jui.ready([ "ui.tree" ], function(treeFunc) {
 <body class="jui">
 
 <br/><br/>
-<ul class="tree line-file"></ul>
+<ul class="tree line"></ul>
 
 <script id="tpl_tree" type="text/template">
-    <li class="<!= symbol !>">
-        <div><i></i> <!= title !></div>
+    <li>
+        <div><i class="symbol <!= symbol !>"></i> <!= title !></div>
         <ul></ul>
     </li>
 </script>
