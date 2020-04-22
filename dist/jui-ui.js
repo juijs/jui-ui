@@ -6588,7 +6588,7 @@ exports.default = {
                             }
                         } else {
                             self.emit("menu", [{ index: i, text: text }, e]);
-                            if (ui_menu.type != "show") showMenu(self, this);
+                            if (ui_menu && ui_menu.type != "show") showMenu(self, this);
                         }
 
                         return false;
