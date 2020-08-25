@@ -4729,7 +4729,7 @@ exports.default = {
             };
 
             renderer.text = function ($dom, item) {
-                var $text = (0, _jquery2.default)("<input type='text' />").css({
+                var $input = (0, _jquery2.default)("<input type='text' />").css({
                     width: '100%'
                 }).attr({
                     placeholder: 'Type here'
@@ -4738,16 +4738,16 @@ exports.default = {
                 if (item.readonly) {
                     $input.attr('readonly', true);
                 }
-                $text.val(item.value);
+                $input.val(item.value);
 
-                $text.on('input', debounce(function () {
+                $input.on('input', debounce(function () {
                     var value = (0, _jquery2.default)(this).val();
                     value = _.typeCheck('array', item.value) ? renderer.str2array(value) : value;
 
                     self.refreshValue($dom, value);
-                }, 250, $text));
+                }, 250, $input));
 
-                return (0, _jquery2.default)([$text[0]]);
+                return (0, _jquery2.default)([$input[0]]);
             };
 
             renderer.textarea = function ($dom, item) {
