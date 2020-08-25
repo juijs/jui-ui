@@ -385,7 +385,7 @@ export default {
             }
 
             renderer.text = function ($dom, item) {
-                var $text = $("<input type='text' />").css({
+                var $input = $("<input type='text' />").css({
                     width: '100%'
                 }).attr({
                     placeholder : 'Type here'
@@ -394,16 +394,16 @@ export default {
                 if (item.readonly) {
                     $input.attr('readonly', true);
                 }
-                $text.val(item.value);
+                $input.val(item.value);
 
-                $text.on('input', debounce(function () {
+                $input.on('input', debounce(function () {
                     var value = $(this).val();
                     value = (_.typeCheck('array', item.value)) ? renderer.str2array(value) : value;
 
                     self.refreshValue($dom, value);
-                }, 250, $text));
+                }, 250, $input));
 
-                return $([$text[0]]);
+                return $([$input[0]]);
             }
 
             renderer.textarea = function ($dom, item) {
